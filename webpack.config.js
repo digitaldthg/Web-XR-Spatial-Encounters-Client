@@ -51,7 +51,7 @@ module.exports = {
             ]
           },
           {
-            test: /\.(bin)$/,
+            test: /\.(bin|glb)$/,
             use: [
               {
                 loader: 'file-loader',

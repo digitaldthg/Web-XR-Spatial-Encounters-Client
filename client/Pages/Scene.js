@@ -16,10 +16,15 @@ import { Vector3 , Color} from "three";
 
 import webXRScene from '../webXRScene/src';
 
+import playAreaURL from '../Model/playarea.glb';
+import UserData from "../Factory/Userdata.js";
+
 
 class Scene{
 
-  constructor(socket){
+  constructor(socket, context){
+
+    this.context = context;
 
     this.AddClient = this.AddClient.bind(this);
 
@@ -36,19 +41,45 @@ class Scene{
 
     this.xr.Events.addEventListener("OnAnimationLoop",this.Animate);
 
+
+    var ambientLight = new THREE.AmbientLight(0xeeeeee,1);
+    this.xr.Scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    directionalLight.position.set(0,10,-5);
+    this.xr.Scene.add( directionalLight );
+
+
     var fov = 80;
     var roomSize = 16;
     var sections = 50;
 
-    this.room = new THREE.LineSegments(
-      new BoxLineGeometry(roomSize, roomSize, roomSize, sections,sections,sections),
-      new THREE.LineBasicMaterial({ color: 0x808080 })
-    );
+    //var geo =  new BoxLineGeometry(roomSize, roomSize, roomSize, sections,sections,sections);
+    //this.room = new THREE.LineSegments(
+    //  geo,
+    //  new THREE.LineBasicMaterial({ color: 0x808080 })
+    //);
+//
+    //this.room.geometry.translate(0, roomSize / 2, 0);
+//
+    //console.log(this.xr);
+    //this.xr.Scene.add(this.room);
 
-    this.room.geometry.translate(0, roomSize / 2, 0);
 
-    console.log(this.xr);
-    this.xr.Scene.add(this.room);
+
+    this.xr.Loader.load({
+      name : "PlayArea", 
+      url : playAreaURL,
+      progress: ()=>{
+        console.log("load");
+      }
+    }).then((glbScene)=>{
+      console.log(glbScene);
+
+      this.xr.Scene.add(glbScene.scene);
+    })
+
+
 
 
     this.users = {};
@@ -82,7 +113,9 @@ class Scene{
 
 
     this.socket.on("server-friends-update", (data)=>{
-     //console.log("server-friends-update",data);
+     console.log("server-friends-update",data, this.context);
+
+     this.context.SetFriends(data);
      
       Object.keys(data).map((d)=>{
 
@@ -105,7 +138,7 @@ class Scene{
     });
 
     this.socket.on("server-trace-update", (lines)=>{
-      console.log(lines);
+      //console.log(lines);
 
       this.UpdateTraceLines(lines);
 
@@ -117,10 +150,12 @@ class Scene{
   UpdateTraceLines(d){
 
     //if(d.id === this.ownSocketID){return;}
-    console.log(d);
-
+   
     Object.keys(d).map(l => {
       if(!this.traceLines.hasOwnProperty(l)){
+
+        console.log("updateTraceLine" , d[l] , d, l);
+
         this.traceLines[l] = {};
         this.traceLines[l].line = new MeshLine();
         this.traceLines[l].material = new MeshLineMaterial({
@@ -134,12 +169,10 @@ class Scene{
 
       var points = d[l].linePoints.map(p => new Vector3(p.position.x,p.position.y,p.position.z));
 
-      var geometry = new THREE.Geometry().setFromPoints(points);
-      this.traceLines[l].line.setGeometry(geometry);
+     // var geometry = new THREE.Geometry().setFromPoints(points);
+     // this.traceLines[l].line.setGeometry(geometry);
   
       //this.traceLines[l].line.setPoints(points);
-
-      console.log(points);
     });
   }
 
@@ -155,12 +188,16 @@ class Scene{
   Animate = ()=>{
     
     if(this.gizmo.dragging){
-      this.socket.emit("client-player",{
+
+      console.log(this.controlledByGizmo.id);
+
+      this.socket.emit("client-player", UserData({
         id : this.controlledByGizmo.id,
         transform : {
           position : this.controlledByGizmo.instance.position
         }
-      });
+      })
+      );
     }
 
   }

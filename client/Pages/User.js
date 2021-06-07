@@ -14,14 +14,13 @@ class User{
 
     this.controlled = firstUser;
 
-
     if(firstUser){
       gizmo.attach(this.instance);
     }
   }
 
   CreateUser(){
-    var cubeGeo = new THREE.BoxGeometry(.1,.1,.1);
+    var cubeGeo = new THREE.BoxGeometry(1,1,1);
     var cubeMat = new THREE.MeshNormalMaterial();
     let userMesh = new THREE.Mesh(cubeGeo, cubeMat);
 
@@ -44,8 +43,11 @@ class User{
 
   UpdateUser(data){
 
-    console.log(data);
+    console.log("data updateUser" , data);
+
     this.instance.position.set(data.transform.position.x, data.transform.position.y,data.transform.position.z);
+
+    this.instance.quaternion.set(data.transform.rotation.x, data.transform.rotation.y,data.transform.rotation.z,data.transform.rotation.w);
   }
 
 }

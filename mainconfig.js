@@ -1,5 +1,5 @@
 const MainConfig = {
-  IP : "http://192.168.86.31",
+  IP : "http://192.168.56.1",
   PORT: 3000
 }
 
