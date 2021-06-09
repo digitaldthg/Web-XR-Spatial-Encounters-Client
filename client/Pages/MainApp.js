@@ -6,25 +6,27 @@ import MainConfig from '../../mainconfig';
 
 import RangeSlider from './RangeSlider';
 import Checkbox from './Checkbox';
+import UserTable from '../Components/Dev/UserTable';
 
-const socket = io.connect(MainConfig.IP + ":" + MainConfig.PORT,{
+const socketURL = MainConfig.IP + ":" + MainConfig.PORT
+const socketOptions = {
   secure : true,
   rejectUnauthorized : false
-});
-
+};
 
 class MainApp extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      scene: null,
+      socket :  io.connect( socketURL ,socketOptions),
       socketID : null,
       friends : null,
       controls : {
         timeOffset : 0,
         locationSync : true
       }
-      
     }
 
     
@@ -33,22 +35,17 @@ class MainApp extends Component {
   }
   
   componentDidMount(){
-    var scene = new Scene(socket, this);
-    socket.on('connect', () => {
-      console.log("connect " , socket.id);
-
-      this.setState({
-        socketID : socket.id
-      });
-      scene.AddClient(socket.id);
-    });
+    var scene = new Scene(this);
+    this.setState({
+      scene : scene
+    })
   }
 
   ChangeTime (value){
     let stateCopy = Object.assign({}, this.state);
     stateCopy.controls.timeOffset = value;
     this.setState(stateCopy,()=>{
-      socket.emit("dev-controls", this.state.controls);
+      this.state.socket.emit("dev-controls", this.state.controls);
     });
 
   }
@@ -58,7 +55,7 @@ class MainApp extends Component {
     let stateCopy = Object.assign({}, this.state);
     stateCopy.controls.locationSync = value;
     this.setState(stateCopy,()=>{
-      socket.emit("dev-controls", this.state.controls);
+      this.state.socket.emit("dev-controls", this.state.controls);
     });
   }
 
@@ -66,6 +63,46 @@ class MainApp extends Component {
   SetFriends = (friends) => {
     this.setState({
       friends : friends
+    });
+  }
+
+  AddPlayer = () =>{
+    var newSocketConnection = io.connect(socketURL, socketOptions);
+    newSocketConnection.on("connect", ()=>{
+      console.log("new Socket by other User", newSocketConnection.id);
+
+      this.state.scene.AddUserSocket(newSocketConnection);
+    });
+
+
+    console.log("add player with connect", newSocketConnection);
+  }
+
+  SelectPlayer = (id) =>{
+
+
+    console.log("select " , id);
+
+    this.state.scene.SelectPlayer(id);
+  }
+
+
+  ChangeRole = (id, role) => { 
+
+    console.log(id, role);
+
+    this.state.socket.emit("client-change-role", {
+      id: id,
+      role : role
+    })
+
+  }
+  
+  ChangeFrequency(value){
+
+    console.log(value);
+    this.state.socket.emit("client-change-frequency", {
+      frequency : parseFloat(value)
     })
   }
 
@@ -74,26 +111,31 @@ class MainApp extends Component {
       <div className="main">
         <div className="controls">
 
-          <div className="own-player">
-            {this.state.socketIsD}
-          </div>
+        {this.state.scene != null && this.state.scene.users.hasOwnProperty(this.state.socket.id) &&
+          <UserTable user={this.state.scene.users[this.state.socket.id]} onSelect={e => this.SelectPlayer(this.state.socket.id)}/>
+        }
 
-
-
-          {this.state.friends != null &&
-            <div className="friends">
-            {
-              Object.keys(this.state.friends).map((friend,index)=>{
-                if(this.state.friends[friend].id == this.state.socketID){return null;}
-                return <div className="friend" key={index}>
-                  {this.state.friends[friend].id}
-                </div>
-              })
+        <div className="global-controls"> 
+          <input type="range" onChange={e => this.ChangeFrequency(e.target.value)}/>
+        </div>
+          <div className="connections">
+            
+            {this.state.friends != null &&
+              <div className="friends">
+              {
+                Object.keys(this.state.friends).map((friend,index)=>{
+                  if(this.state.friends[friend].id == this.state.socket.id){return null;}
+                  return <UserTable 
+                    user={this.state.friends[friend]} 
+                    onSelect={e => this.SelectPlayer(this.state.friends[friend].id)}
+                    onChangeRole={this.ChangeRole}
+                    key={index} />
+                })
+              }
+              </div>
             }
-            </div>
-          }
-
-          <RangeSlider onChange={this.ChangeTime} value={this.state.controls.timeOffset}/>
+            <button onClick={this.AddPlayer}>Add player</button>
+          </div>
 
           <Checkbox onChange={this.HandleSync} checked={this.state.controls.locationSync} />
         </div>

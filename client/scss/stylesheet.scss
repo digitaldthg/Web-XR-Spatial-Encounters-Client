@@ -1,6 +1,7 @@
 *{
   margin:0;
   padding:0;
+  font-family:Verdana, Geneva, Tahoma, sans-serifs;
 }
 
 html,body{
@@ -16,6 +17,19 @@ html,body{
 
 }
 
+button{
+  border:0;
+  background: #607d8b;
+  color:#fff;
+  padding:.5rem 1rem;
+  
+  &:hover{
+    cursor: pointer;
+    background:#3a4c54;
+  }
+}
+
+
 .controls{
   position: absolute;
   top:1rem;
@@ -27,4 +41,49 @@ html,body{
 
 label{
   display: block;
+}
+
+
+.connections{
+
+}
+
+.connections {
+  padding: 1rem;
+  background: #eee;
+}
+
+.friend {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  margin-bottom: .5rem;
+}
+
+
+/* Table */
+.table{
+  display: table;
+}
+
+.table-header{
+  font-weight: 700;
+  display: table-header-group;
+}
+.table-row{
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+  box-shadow: 0 0 0 1px;
+  padding: .5rem 1rem;
+}
+
+.global-controls{
+  background:#eee;
+  padding:1rem;
 }

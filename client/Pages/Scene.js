@@ -18,29 +18,29 @@ import webXRScene from '../webXRScene/src';
 
 import playAreaURL from '../Model/playarea.glb';
 import UserData from "../Factory/Userdata.js";
+import EnvironmentController from "../Factory/EnvironmentController.js";
 
 
 class Scene{
 
-  constructor(socket, context){
-
+  constructor(context){
+    this.friends = [];
     this.context = context;
 
-    this.AddClient = this.AddClient.bind(this);
-
-    this.traceLines = {};
     this.controlledByGizmo = null;
 
-    this.socket = socket;
+    this.socket = context.state.socket;
+    this.pendingSockets = [];
+
+    this.AddSocket(this.socket);
     
     this.xr = new webXRScene("sceneHolder");
     this.xr.Controls.ChangeToDefault();
 
     this.xr.Controls.SetPosition(0,2,5);
-
-
     this.xr.Events.addEventListener("OnAnimationLoop",this.Animate);
 
+    this.environmentController = new EnvironmentController(this);
 
     var ambientLight = new THREE.AmbientLight(0xeeeeee,1);
     this.xr.Scene.add(ambientLight);
@@ -50,23 +50,7 @@ class Scene{
     this.xr.Scene.add( directionalLight );
 
 
-    var fov = 80;
-    var roomSize = 16;
-    var sections = 50;
-
-    //var geo =  new BoxLineGeometry(roomSize, roomSize, roomSize, sections,sections,sections);
-    //this.room = new THREE.LineSegments(
-    //  geo,
-    //  new THREE.LineBasicMaterial({ color: 0x808080 })
-    //);
-//
-    //this.room.geometry.translate(0, roomSize / 2, 0);
-//
-    //console.log(this.xr);
-    //this.xr.Scene.add(this.room);
-
-
-
+    /** Load Environment */
     this.xr.Loader.load({
       name : "PlayArea", 
       url : playAreaURL,
@@ -77,127 +61,118 @@ class Scene{
       console.log(glbScene);
 
       this.xr.Scene.add(glbScene.scene);
-    })
-
-
+    });
 
 
     this.users = {};
 
+    
 
     this.gizmo = new TransformControls( this.xr.Camera.instance, this.xr.Renderer.instance.domElement );
 	//	this.gizmo.addEventListener( 'change', this.render );
 
 		this.gizmo.addEventListener( 'dragging-changed', ( event ) => {
 
-			this.xr.Controls.enabled = ! event.value;
+      console.log(this.xr.Controls, !event.value);
+
+      this.controlledByGizmo.SetExternalControls(true);
+
+			this.xr.Controls.SetActive(!event.value);
 
       this.controlledByGizmo.isControlled = event.value;
-      
-      console.log(this.controlledByGizmo.instance.position);
-
 		});
 
     this.xr.Scene.add(this.gizmo);
 
+  }
+
+  AddClient = (id , throughConnection = false) => {
+    this.users[id] = new User(this.xr,{id:id}, this.socket, throughConnection);
+  }
+
+  AddUserSocket(socket){
+
+    console.log("AddUserSocket"  , socket, this.users,this.users.hasOwnProperty(socket.id));
+
+
+    if(this.users.hasOwnProperty(socket.id)){
+      console.log("Add own socket to user");
+
+      this.users[socket.id] = new User(this.xr,{id:socket.id},socket);
+    }else{
+      this.pendingSockets.push(socket);
+    }
+  }
+  
+  AddSocket = (socket) =>{
+    this.socket = socket;
+
+    this.socket.on('connect', () => {
+      this.AddClient(this.socket.id, true);
+    });
 
     this.socket.on("server-friends-delete", (data)=>{
-      console.log(this.users,data);
-
-      console.warn("delete user" , data);
       this.xr.Scene.remove(this.users[data.id].mesh);
-      this.xr.Scene.remove(this.traceLines[data.id].mesh);
       delete this.users[data.id];
-
     });
 
 
     this.socket.on("server-friends-update", (data)=>{
-     console.log("server-friends-update",data, this.context);
-
-     this.context.SetFriends(data);
+      this.friends = data;
+      this.context.SetFriends(data);
      
       Object.keys(data).map((d)=>{
 
         
         var userID = data[d].id;
         
-        if(userID == this.ownSocketID){return}
+        if(userID == this.socket.id){ return }
         
         //console.log(userID);
         if( !this.users.hasOwnProperty(userID)){
           
-          this.users[userID] = new User(this.xr, data[d], false);
+          this.users[userID] = new User(this.xr, data[d], this.socket);
 
         }
-
 
         this.users[userID].UpdateUser(data[d]);
         
       });
     });
-
-    this.socket.on("server-trace-update", (lines)=>{
-      //console.log(lines);
-
-      this.UpdateTraceLines(lines);
-
-    });
-
   }
 
+  SelectPlayer(id){
+    
+    this.gizmo.detach();
+    if(this.controlledByGizmo != null){
+      this.controlledByGizmo.SetExternalControls(false);
+    }
 
-  UpdateTraceLines(d){
-
-    //if(d.id === this.ownSocketID){return;}
-   
-    Object.keys(d).map(l => {
-      if(!this.traceLines.hasOwnProperty(l)){
-
-        console.log("updateTraceLine" , d[l] , d, l);
-
-        this.traceLines[l] = {};
-        this.traceLines[l].line = new MeshLine();
-        this.traceLines[l].material = new MeshLineMaterial({
-          color : new Color(d[l].color.r,d[l].color.g,d[l].color.b ),
-          lineWidth : .1
-        });
-
-        this.traceLines[l].mesh = new THREE.Mesh(this.traceLines[l].line, this.traceLines[l].material);
-        this.xr.Scene.add(this.traceLines[l].mesh);
-      }
-
-      var points = d[l].linePoints.map(p => new Vector3(p.position.x,p.position.y,p.position.z));
-
-     // var geometry = new THREE.Geometry().setFromPoints(points);
-     // this.traceLines[l].line.setGeometry(geometry);
-  
-      //this.traceLines[l].line.setPoints(points);
-    });
-  }
-
-  AddClient(id){
-    this.ownSocketID = id;
-
-    this.users[id] = new User(this.xr,{id:id}, true, this.gizmo);
-
+    this.gizmo.attach(this.users[id].instance);
     this.controlledByGizmo = this.users[id];
-
   }
 
   Animate = ()=>{
     
-    if(this.gizmo.dragging){
+    if(this.gizmo.dragging && this.controlledByGizmo != null ){
+      this.controlledByGizmo.EmitUser();
+    }
 
-      console.log(this.controlledByGizmo.id);
-
-      this.socket.emit("client-player", UserData({
-        id : this.controlledByGizmo.id,
-        transform : {
-          position : this.controlledByGizmo.instance.position
+    if(this.pendingSockets.length > 0){
+      let socketsToRemoves = [];
+      this.pendingSockets.map((socket) => {
+        if(this.users.hasOwnProperty(socket.id)){
+          this.users[socket.id].socket = socket;
+          socketsToRemoves.push(socket);
+          console.log("add socket to user");
         }
-      })
-      );
+      });
+
+      if(socketsToRemoves.length > 0){
+        socketsToRemoves.map(s => {
+          this.pendingSockets = this.pendingSockets.filter(pS => pS.id != s.id);
+        });
+      }
     }
 
   }

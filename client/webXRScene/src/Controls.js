@@ -89,6 +89,18 @@ class Controls{
 
   }
 
+  SetActive = (boolean) =>{
+    if(boolean){
+      this.Desktop.orbit.enabled = true;
+      this.Desktop.static.enabled = false;
+    }else{
+      this.Desktop.orbit.enabled = false;
+      this.Desktop.static.enabled = false;
+    }
+
+    this.enabled = boolean;
+  }
+
   SetupMouse(settings){
     this.mouse = new THREE.Vector2();
     this.mouse.x = null;
