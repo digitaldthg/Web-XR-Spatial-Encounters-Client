@@ -19,10 +19,10 @@ class UserTable extends React.Component{
 
     const user = this.props.user;
     if(user == null){return null;}
-    if( typeof(user.color) == "undefined" ){return null;}
+    //if( typeof(user.color) == "undefined" ){return null;}
 
     console.log(user);
-    console.log(user.color);
+    //console.log(user.color);
     
     return <div className="friend">
       <div className="table">
@@ -48,7 +48,7 @@ class UserTable extends React.Component{
             </select>
           </div>
           <div className="table-cell">
-            {!this.state.colorOpen &&
+            {/*{!this.state.colorOpen &&
               <button style={{background: `rgba(${user.color.r} , ${user.color.g}, ${user.color.b}, ${user.color.a})`}} onClick={e => this.setState({ colorOpen : true }) }></button>
             }
             {this.state.colorOpen && 
@@ -59,7 +59,7 @@ class UserTable extends React.Component{
                 />
                 <button onClick={e => this.setState({ colorOpen : false }) }>close</button>  
               </>
-            }
+            }*/}
           </div>
 
           <div className="table-cell">

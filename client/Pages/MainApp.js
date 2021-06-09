@@ -106,6 +106,14 @@ class MainApp extends Component {
     })
   }
 
+  ChangeScale(value){
+
+    console.log("SCale:"+value);
+    this.state.socket.emit("client-change-scale", {
+      scale : parseFloat(value)
+    })
+  }
+
   render() {
     return (
       <div className="main">
@@ -115,8 +123,13 @@ class MainApp extends Component {
           <UserTable user={this.state.scene.users[this.state.socket.id]} onSelect={e => this.SelectPlayer(this.state.socket.id)}/>
         }
 
+        <div className="global-controls">
+          <h4>Frequenz (Dreiecke/Sek, 0-3)</h4> 
+          <input type="range" min="0" max="3" step="0.01" onChange={e => this.ChangeFrequency(e.target.value)}/>
+        </div>
         <div className="global-controls"> 
-          <input type="range" onChange={e => this.ChangeFrequency(e.target.value)}/>
+        <h4>Dreiecks Skalierung( 0-1)</h4> 
+          <input type="range" min="0" max="1" step="0.01" onChange={e => this.ChangeScale(e.target.value)}/>
         </div>
           <div className="connections">
             
