@@ -44,7 +44,7 @@ export default {
   methods:{
     InitPlayer(){
 
-      this.player = new Mesh(new BoxGeometry(1,1,1), new MeshBasicMaterial({
+      this.player = new Mesh(new BoxGeometry(0.5,0.5,0.5), new MeshBasicMaterial({
         color : new Color(this.data.color.r,this.data.color.g,this.data.color.b,this.data.color.a)
       }));
 

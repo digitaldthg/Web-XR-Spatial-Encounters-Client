@@ -1,6 +1,7 @@
 const UserData = {
   id : null,
   role : 0,
+
   transform : {
       position : { 
           x : 0,
@@ -11,10 +12,10 @@ const UserData = {
       scale : { x : 1,y : 1, z: 1},
   },
   color : {
-      r : Math.random(),
-      g : Math.random(),
-      b : Math.random(),
-      a : Math.random(),
-  },
+            r : 0.81,
+            g : 0.88,
+            b : 0.88,
+            a : 1,
+        },
 }
 export default UserData;

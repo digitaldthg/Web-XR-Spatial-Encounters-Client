@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     {{id}}
-
+<Controls/>
     <Scene />
   </div>
 </template>
@@ -9,11 +9,12 @@
 <script>
 import config from "../main.config";
 import Scene from './components/Scene.vue';
+import Controls from './components/Controls.vue'
 import store from './store';
 
 export default {
   store,
-  components: { Scene },
+  components: { Scene,Controls },
   name: 'App',
   data(){
     return {
