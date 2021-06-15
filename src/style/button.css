@@ -1,0 +1,28 @@
+button{
+  border:0;
+  outline:0;
+  cursor: pointer;
+
+}
+
+button[disabled]{
+  background:#aaa;
+  color:#eee;
+}
+
+.cta-button{
+  background:tomato;
+  color:#fff;
+  padding:.5rem 1rem;
+  border-radius: 5px;
+}
+
+.cta-button.--large{
+  padding: 1rem 2rem;
+  width:100%;
+  font-size: 1.2rem;
+}
+
+.cta-button:hover{
+  background:rgb(153, 56, 39);
+}

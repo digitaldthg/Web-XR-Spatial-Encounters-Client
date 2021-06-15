@@ -6,18 +6,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
       xr : null,
+      room : null,
     },
     mutations: {
       xr(state, data){
         state.xr = data;
+      },
+      room(state,data){
+        state.room = data;
       }
-        // "<MUTATION_PREFIX><EVENT_NAME>"() {
-        //     // do something
-        // }
     },
     actions: {
-        // "<ACTION_PREFIX><EVENT_NAME>"() {
-        //     // do something
-        // }
     }
 });

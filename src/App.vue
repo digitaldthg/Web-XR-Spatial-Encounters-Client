@@ -1,19 +1,23 @@
 <template>
   <div id="app">
-    {{id}}
+    <div id="dev">
+      {{id}}
+      {{this.$store.state.room}}
 
-    <Scene />
+      <router-link to="/">Home</router-link>
+    </div>
+    <router-view></router-view>
+    
   </div>
 </template>
 
 <script>
 import config from "../main.config";
-import Scene from './components/Scene.vue';
+
 import store from './store';
 
 export default {
   store,
-  components: { Scene },
   name: 'App',
   data(){
     return {
@@ -22,22 +26,42 @@ export default {
   },
   sockets: {
     connect: function (d) {
-      console.log(this.$socket.id);
       this.id = this.$socket.id;
-    },
-   
-    
+    },    
   },
 }
 </script>
 
+<style src="./style/button.css"></style>
 <style>
-#app {
+*{
+  box-sizing: border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+}
+body{
+  margin:0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+#app {
+  
+  width:100%;
+  height:100%;
+}
+
+#dev{
+  position: absolute;
+  top:0;
+  padding:1rem;
+  z-index: 999;
+  background: #fff;
 }
 </style>

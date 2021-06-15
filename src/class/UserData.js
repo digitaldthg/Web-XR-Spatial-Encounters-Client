@@ -1,6 +1,7 @@
 const UserData = {
   id : null,
   role : 0,
+  room : null,
   transform : {
       position : { 
           x : 0,

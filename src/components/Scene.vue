@@ -19,11 +19,6 @@ export default {
       xr : null,
     } 
   },
-  sockets: {
-  //  "server-friends-update": function (d) {
-  //     //console.log(d);
-  //   },
-  },
   mounted(){
     this.InitScene();
   },
@@ -33,7 +28,10 @@ export default {
 
       this.xr.Controls.SetPosition(0,5,10);
       this.$store.commit("xr", this.xr);
-    }
+
+    },
+    
+
   }
 }
 </script>

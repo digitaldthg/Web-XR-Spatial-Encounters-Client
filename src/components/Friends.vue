@@ -16,10 +16,8 @@ export default {
   },
   watch:{
     "$store.state.xr" : function(xr){
-      if(typeof(xr) == "undefined") {return;}
-      this.xr = xr;
-
-      this.xr.Events.addEventListener("OnAnimationLoop" ,this.AnimateFriends  );
+      
+      this.$store.state.xr.Events.addEventListener("OnAnimationLoop" ,this.AnimateFriends  );
     }
   },
   sockets : {
@@ -34,15 +32,21 @@ export default {
       }
     },
     "server-friends-update": function (d) {
+
+
       var serverFriends = Object.assign({}, d);
       var localFriends = Object.assign({}, this.friends);
       delete serverFriends[this.$socket.id];
 
+      console.log("serverFriends" , serverFriends);
+
       Object.keys(serverFriends).map((f)=>{
         if(!localFriends.hasOwnProperty(f)){
+          console.log("createLocalfriend");
           localFriends[f] = this.CreateFriend(serverFriends[f]);
         }else{
-          this.UpdateFriend(f,serverFriends[f]);
+          console.log("update");
+           localFriends[f] = this.UpdateFriend(f,serverFriends[f]);
         }
       });
 
@@ -71,14 +75,20 @@ export default {
     },
     UpdateFriend(friendId, serverData){
 
+      console.log("UpdateFriend" , friendId, serverData.transform.position);
+
       this.friends[friendId].userData.targetPosition = new Vector3(serverData.transform.position.x,serverData.transform.position.y,serverData.transform.position.z);
 
       this.friends[friendId].userData.lastPosition = this.friends[friendId].position.clone();
       this.friends[friendId].userData.lerpAlpha = 0;
       this.friends[friendId].userData.color = Object.assign({}, serverData.color);
 
+      return this.friends[friendId];
+
     },
     AnimateFriends(){
+
+      //console.log("AnimateFriends", this.friends);
 
       Object.values(this.friends).map(friend =>{
 

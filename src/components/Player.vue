@@ -1,6 +1,4 @@
-<template>
-  
-</template>
+<template></template>
 <script>
 
 import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color} from 'three';
@@ -12,7 +10,7 @@ export default {
   data(){
     return {
       delta : 0,
-      fps : .5,
+      fps : .25,
       player : null,
       ready : false,
       keyArray : ["w","a","s","d"],
@@ -37,9 +35,7 @@ export default {
   },
 
   mounted(){
-    console.log("player" );
-
-    console.log(this.$store.state.xr);
+    
   },
   methods:{
     InitPlayer(){
@@ -49,6 +45,10 @@ export default {
       }));
 
       this.$store.state.xr.Scene.add(this.player);
+
+      this.data.room = this.$route.params.roomID;
+
+      console.log(this.$route.params.roomID);
 
       this.InitEvents();
 

@@ -6,7 +6,7 @@ export default {
   name : "Environment",
   data(){
     return {
-      ready : false
+      ready : false,
     }
   },
   watch:{
