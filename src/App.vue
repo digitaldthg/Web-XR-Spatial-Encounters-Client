@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    {{id}}
-<Controls/>
-    <Scene />
+    
+    <router-view></router-view>
   </div>
 </template>
 
@@ -32,13 +31,24 @@ export default {
 }
 </script>
 
+<style src="./style/button.css"></style>
 <style>
-#app {
+
+*{
+  box-sizing: border-box;
+}
+
+html,body, #app{
+  width:100%;
+  height:100%;
+}
+body{
+  margin:0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
 </style>

@@ -1,5 +1,7 @@
 <template>
   <div class="page">
+    <Controls/>
+    
     <div class="errorMessage" v-if="errorMsg != null">
       {{errorMsg}}
     </div>
@@ -8,10 +10,11 @@
 </template>
 
 <script>
+import Controls from '../components/Controls.vue';
 import Scene from '../components/Scene.vue';
 export default {
   name : "Room",
-  components: { Scene },
+  components: { Scene, Controls },
   data(){
     return {
       errorMsg : null,
@@ -28,13 +31,7 @@ export default {
     });
   },
   mounted(){
-    // if(typeof(this.$socket.io.id) == "undefined"){
-    //   this.$nextTick(()=>{
-    //     this.CheckForRoom();
-    //   })
-    // }else{
-      
-    // }
+    
     this.CheckForRoom();
   },
  
