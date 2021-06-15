@@ -90,15 +90,6 @@ class Triangle {
             positions[0].x, 0, positions[0].z,
             positions[1].x, height, positions[1].z,
             positions[1].x, 0, positions[1].z,
-
-            //SecondSide
-            positions[1].x, 0, positions[1].z,
-            positions[1].x, height, positions[1].z,
-            positions[2].x, height, positions[2].z,
-
-            positions[1].x, 0, positions[1].z,
-            positions[2].x, height, positions[2].z,
-            positions[2].x, 0, positions[2].z,
         ]);
     }
 
