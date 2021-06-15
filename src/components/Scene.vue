@@ -12,6 +12,14 @@ import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 
 import * as THREE from "three";
+import {
+  BloomEffect,
+  EffectComposer,
+  EffectPass,
+  RenderPass,
+  UnrealBloomPass
+} from "postprocessing";
+
 export default {
   components: { Player, Friends, Environment },
   name: "Scene",
@@ -33,10 +41,18 @@ export default {
       this.xr = new webXRScene("scene");
       var fogColor = new THREE.Color(0.5, 0.5, 0.5);
       this.xr.Scene.fog = new THREE.Fog(fogColor, 6, 20);
-      
-      this.xr.Renderer.instance.setClearColor(fogColor);
 
-      const geometry = new THREE.PlaneGeometry(10, 10);
+      this.xr.Renderer.instance.setClearColor(fogColor);
+      
+
+
+      this.composer = new EffectComposer(this.xr.Renderer.instance);
+      this.composer.addPass(new RenderPass(this.xr.Scene, this.xr.Camera.instance));
+      this.composer.addPass(
+        new EffectPass(this.xr.Camera.instance, new BloomEffect())
+      );
+
+      const geometry = new THREE.PlaneGeometry(50, 50);
       const material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
@@ -46,8 +62,16 @@ export default {
       this.xr.Scene.add(plane);
 
       this.xr.Controls.SetPosition(0, 5, 10);
-      
+
       this.$store.commit("xr", this.xr);
+      this.clock = new THREE.Clock();
+      this.$store.state.xr.Events.addEventListener(
+        "OnAnimationLoop",
+        this.RenderLoop
+      );
+    },
+    RenderLoop() {
+      this.composer.render(this.clock.getDelta());
     },
   },
 };
