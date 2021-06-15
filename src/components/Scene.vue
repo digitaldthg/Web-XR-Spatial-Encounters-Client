@@ -39,22 +39,22 @@ export default {
   methods: {
     InitScene() {
       this.xr = new webXRScene("scene");
-      var fogColor = new THREE.Color(0.5, 0.5, 0.5);
-      this.xr.Scene.fog = new THREE.Fog(fogColor, 6, 20);
+      var fogColor = new THREE.Color(0, 0, 0);
+      this.xr.Scene.fog = new THREE.Fog(fogColor, 15, 20);
 
       this.xr.Renderer.instance.setClearColor(fogColor);
       
 
 
-      this.composer = new EffectComposer(this.xr.Renderer.instance);
+      /*this.composer = new EffectComposer(this.xr.Renderer.instance);
       this.composer.addPass(new RenderPass(this.xr.Scene, this.xr.Camera.instance));
       this.composer.addPass(
         new EffectPass(this.xr.Camera.instance, new BloomEffect())
-      );
+      );*/
 
       const geometry = new THREE.PlaneGeometry(50, 50);
       const material = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
+        color: 0x111111,
         side: THREE.DoubleSide,
       });
       const plane = new THREE.Mesh(geometry, material);
@@ -71,7 +71,7 @@ export default {
       );
     },
     RenderLoop() {
-      this.composer.render(this.clock.getDelta());
+      //this.composer.render(this.clock.getDelta());
     },
   },
 };

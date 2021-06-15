@@ -30,7 +30,7 @@ class Renderer {
     this.context = context;
     this.clock = new THREE.Clock();
     this.postprocessing = {
-      enabled : false,
+      enabled : true,
       initialized : false
     };
     this.context.Events.registerEvent('OnAnimationLoop');
@@ -107,12 +107,12 @@ class Renderer {
       minFilter: THREE.LinearFilter, 
       magFilter: THREE.LinearFilter, 
       format: THREE.RGBAFormat, 
-      stencilBuffer: true
+      stencilBuffer: false
     });
     this.renderTarget.depthBuffer = true
     this.renderTarget.depthTexture = new THREE.DepthTexture();
 
-    this.motionBlurRenderTarget = new THREE.WebGLRenderTarget(
+    /*this.motionBlurRenderTarget = new THREE.WebGLRenderTarget(
       this.size.x,
       this.size.y,
       {
@@ -121,7 +121,7 @@ class Renderer {
         format: THREE.RGBAFormat,
         stencilBuffer: false
       }
-    )
+    )*/
 
 
 
@@ -138,30 +138,30 @@ class Renderer {
    
    
     //Bloom
-    this.postprocessing.bloomPass = new UnrealBloomPass( new Vector2(512,512), .94,.9,.5 );
-    this.postprocessing.bloomPass.threshold = .95;
-    this.postprocessing.bloomPass.strength = 2.9;
-    this.postprocessing.bloomPass.radius = .2;
-    this.postprocessing.bloomPass.exposure = 2.0;
+    this.postprocessing.bloomPass = new UnrealBloomPass( new Vector2(1024,1024), .94,.9,.5 );
+    this.postprocessing.bloomPass.threshold = 0.15;
+    this.postprocessing.bloomPass.strength = .6
+    this.postprocessing.bloomPass.radius = 0;
+
 // 
     // 
-    //this.postprocessing.composer.addPass( this.postprocessing.bloomPass );
+    this.postprocessing.composer.addPass( this.postprocessing.bloomPass );
 
    
     //Bokeh
     
-    this.postprocessing.bokehPass = new BokehPass( this.context.Scene , this.context.Camera.instance, {
+    /*this.postprocessing.bokehPass = new BokehPass( this.context.Scene , this.context.Camera.instance, {
       focus: .62,
       aperture: .09,
       maxblur: 0.02,
 
       width: this.size.x,
       height: this.size.y
-    });
+    });*/
     
 
 
-    this.postprocessing.savePass = new SavePass( new THREE.WebGLRenderTarget( this.size.x,this.size.y, {
+    /*this.postprocessing.savePass = new SavePass( new THREE.WebGLRenderTarget( this.size.x,this.size.y, {
 			minFilter: THREE.LinearFilter,
 			magFilter: THREE.LinearFilter,
 			stencilBuffer: false
@@ -171,7 +171,7 @@ class Renderer {
 		this.postprocessing.blendPass.uniforms[ 'tDiffuse2' ].value = this.postprocessing.savePass.renderTarget.texture;
 		this.postprocessing.blendPass.uniforms[ 'mixRatio' ].value = 0.95;
 
-    this.postprocessing.outputPass = new ShaderPass( CopyShader );
+    this.postprocessing.outputPass = new ShaderPass( CopyShader );*/
 		//outputPass.renderToScreen = true;
 
 
@@ -179,7 +179,7 @@ class Renderer {
 		// this.postprocessing.composer.addPass( this.postprocessing.savePass );
     // this.postprocessing.composer.addPass( this.postprocessing.outputPass );
     // 
-    this.postprocessing.composer.addPass( this.postprocessing.bokehPass );
+    //this.postprocessing.composer.addPass( this.postprocessing.bokehPass );
 
 
     this.postprocessing.initialized = true;

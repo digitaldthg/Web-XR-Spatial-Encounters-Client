@@ -28,7 +28,7 @@ export default {
   },
   sockets: {
     "server-environment-update": function (data) {
-      console.log(data);
+      //sole.log(data);
       this.data = data;
     },
   },
