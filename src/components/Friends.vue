@@ -38,15 +38,11 @@ export default {
       var localFriends = Object.assign({}, this.friends);
       delete serverFriends[this.$socket.id];
 
-      console.log("serverFriends" , serverFriends);
-
       Object.keys(serverFriends).map((f)=>{
         if(!localFriends.hasOwnProperty(f)){
-          console.log("createLocalfriend");
           localFriends[f] = this.CreateFriend(serverFriends[f]);
         }else{
-          console.log("update");
-           localFriends[f] = this.UpdateFriend(f,serverFriends[f]);
+          localFriends[f] = this.UpdateFriend(f,serverFriends[f]);
         }
       });
 
@@ -74,8 +70,6 @@ export default {
       return friend;
     },
     UpdateFriend(friendId, serverData){
-
-      console.log("UpdateFriend" , friendId, serverData.transform.position);
 
       this.friends[friendId].userData.targetPosition = new Vector3(serverData.transform.position.x,serverData.transform.position.y,serverData.transform.position.z);
 
