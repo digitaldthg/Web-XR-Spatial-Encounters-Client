@@ -17,7 +17,11 @@ const socketConnection = new VueSocketIO({
       mutationPrefix: 'SOCKET_'
   },
   options: { 
+    secure: true,
     withCredentials: true,
+    rejectUnauthorized: false,
+    //transports: ['websocket'], 
+    upgrade: false
   }
 });
 

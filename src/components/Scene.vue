@@ -108,7 +108,8 @@ export default {
       // console.log(event.resultIs.pose.names);
       // console.log("handEvent" , event);
 
-      if(event.resultIs.pose.names.includes( 'thumb' ) && !event.resultWas.pose.names.includes( 'thumb' )){
+      if(event.resultIs.pose.names.includes( 'thumb' ) && 
+        !event.resultWas.pose.names.includes( 'thumb' )){
         console.log("thumb up");
 
         this.ResetCamera();

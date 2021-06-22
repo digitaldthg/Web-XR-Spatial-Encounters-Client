@@ -4,6 +4,10 @@ import {VRController} from './VRController';
 import { VRButton } from './VRButton.js';
 import { ARButton } from './ARButton.js';
 import { Vector3 } from 'three';
+import { VRHands } from './HandTracking/VRHands';
+
+import {Handy} from './HandTracking/Handy';
+
 
 class Controls{
   constructor(context){
@@ -11,6 +15,7 @@ class Controls{
     this.interactivityEnabled = true;
     this.context = context;
     this.currentControls = "Desktop";
+    
     //Binding
     this.SetupMouse = this.SetupMouse.bind(this);
     this.getClientBox = this.getClientBox.bind(this);
@@ -69,21 +74,27 @@ class Controls{
     this.GetARButton = this.GetARButton.bind(this);
     this.GetVRButton = this.GetVRButton.bind(this);
 
+    this.cameraHelper = new THREE.Group();
+    this.cameraHelper.name = "cameraHelper";
+    this.cameraHelper.position.set(0,0,0);
+
+
     /**VR Controls */
-    this.vr_controller = new VRController( this.context );
+    //this.vr_controller = new VRController( this.context );
+    this.vr_hands = new VRHands(this.context);
 
-    this.context.Scene.add( this.vr_controller.controllerGrips[ 0 ], this.vr_controller.controllers[ 0 ] );
+    // this.context.Scene.add( this.vr_controller.controllerGrips[ 0 ], this.vr_controller.controllers[ 0 ] );
 
-    this.vr_controller.controllers[ 0 ].addEventListener( 'selectstart', ()=> { 
-      this.selectState = true;
+    // this.vr_controller.controllers[ 0 ].addEventListener( 'selectstart', ()=> { 
+    //   this.selectState = true;
       
-      this.context.Events.dispatchEvent("mouse-down",{});
+    //   this.context.Events.dispatchEvent("mouse-down",{});
     
-    });
-    this.vr_controller.controllers[ 0 ].addEventListener( 'selectend', ()=> { 
-      this.selectState = false;
-      this.context.Events.dispatchEvent("mouse-up",{});
-    });
+    // });
+    // this.vr_controller.controllers[ 0 ].addEventListener( 'selectend', ()=> { 
+    //   this.selectState = false;
+    //   this.context.Events.dispatchEvent("mouse-up",{});
+    // });
 
     this.context.Events.addEventListener("OnAnimationLoop", this.Update );
 
@@ -167,28 +178,28 @@ class Controls{
   SetupVR(settings){
 
 
-    if(typeof(this.cameraHelper) == "undefined"){
-      this.cameraHelper = new THREE.Group();
-      this.cameraHelper.name = "cameraHelper";
-      this.cameraHelper.position.set(0,0,0);
+    // if(typeof(this.cameraHelper) == "undefined"){
+    //   this.cameraHelper = new THREE.Group();
+    //   this.cameraHelper.name = "cameraHelper";
+    //   this.cameraHelper.position.set(0,0,0);
 
-    }
+    // }
     
     var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
     this.cameraHelper.add(this.context.Camera.instance);
     var _position = vrCamera.position.clone();
-    vrCamera.position.set(0,1.7,0);
+    //vrCamera.position.set(0,1.7,0);
     this.cameraHelper.position.set(_position.x,_position.y,_position.z);
 
     this.context.Renderer.instance.autoClear = true;
     this.context.Renderer.instance.setClearColor(0xffffff,1);
-  
-    this.vr_controller.controllerGrips.forEach((controller)=>{
-      controller.parent = this.cameraHelper;      
-    });
-    this.vr_controller.controllers.forEach((controller)=>{
-      controller.parent = this.cameraHelper;
-    });
+
+    // this.vr_controller.controllerGrips.forEach((controller)=>{
+      // controller.parent = this.cameraHelper;      
+    // });
+    // this.vr_controller.controllers.forEach((controller)=>{
+      // controller.parent = this.cameraHelper;
+    // });
 
 
 
@@ -206,12 +217,12 @@ class Controls{
     this.cameraHelper.position.set(_position.x,_position.y,_position.z);
     this.context.Renderer.instance.setClearColor(0xffffff,0);
 
-    this.vr_controller.controllerGrips.forEach((controller)=>{
-      controller.parent = this.cameraHelper;      
-    });
-    this.vr_controller.controllers.forEach((controller)=>{
-      controller.parent = this.cameraHelper;
-    });
+    // this.vr_controller.controllerGrips.forEach((controller)=>{
+      // controller.parent = this.cameraHelper;      
+    // });
+    // this.vr_controller.controllers.forEach((controller)=>{
+      // controller.parent = this.cameraHelper;
+    // });
   }
 
   GetVRButton(){
@@ -228,7 +239,10 @@ class Controls{
     }
     if(this.currentControls == "VR"){
       //this.vr_controller.Update();
+
+      Handy.update();
     }
+
 
     if(this.currentControls == "Desktop"){
       this[this.currentControls].instance.enabled = this.enabled;
@@ -246,7 +260,25 @@ class Controls{
         this.context.Camera.instance.position.set(x,y,z);
       break;
       case "VR":
-        this.cameraHelper.position.set(x,y,z);
+        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+        
+        var transformedVec = new Vector3();
+        //copy Camera position
+        var origin = this.cameraHelper.position.clone();
+        var vec3 = vrCamera.position.clone();
+            vec3.y = 0;
+
+        //calculate Difference between camera and CameraGroupParent 
+        var targetOffset = transformedVec.subVectors(origin, vec3);
+        var targetPosition = new Vector3(x,y,z);
+
+            //calculate the target Position in combination with the offset
+            targetPosition.add(targetOffset);
+
+        //sets the position of the camera helper
+        this.cameraHelper.position.set(targetPosition.x,0,targetPosition.z);
+
+        console.log("new Position after reset" , targetPosition);
       break;
     
       default:
@@ -257,10 +289,21 @@ class Controls{
     
      switch (this.currentControls) {
       case "VR":
-        this.cameraHelper.lookAt(new THREE.Vector3(x,y,z));
-        this.cameraHelper.rotation.x = 0;
-        this.cameraHelper.rotation.z = 0;
-      break;
+        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+        var targetPosition = new THREE.Vector3(x,y,z);
+        var vector = new THREE.Vector3( 0, 0, - 1 );
+            vector.applyQuaternion( vrCamera.quaternion );
+
+        var angle = vector.angleTo( targetPosition );
+
+
+        //this.cameraHelper.lookAt(new THREE.Vector3(x,y,z));
+        //this.cameraHelper.rotation.y -= angle * Math.PI / 180;
+        
+        // this.cameraHelper.rotation.x = 0;
+        // this.cameraHelper.rotation.z = 0;
+      
+        break;
       default:
         this[this.currentControls].SetTarget(x,y,z);
       break;

@@ -30,7 +30,7 @@ class Renderer {
     this.context = context;
     this.clock = new THREE.Clock();
     this.postprocessing = {
-      enabled : true,
+      enabled : false,
       initialized : false
     };
     this.context.Events.registerEvent('OnAnimationLoop');
@@ -222,7 +222,7 @@ class Renderer {
     this.context.Camera.instance.updateProjectionMatrix();
     if(this.postprocessing.enabled){
       this.renderTarget.setSize(this.size.x,this.size.y);
-      this.motionBlurRenderTarget.setSize(this.size.x,this.size.y);
+      //this.motionBlurRenderTarget.setSize(this.size.x,this.size.y);
     }
 
   }

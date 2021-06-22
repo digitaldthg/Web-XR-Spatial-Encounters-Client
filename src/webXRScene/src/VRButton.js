@@ -46,7 +46,7 @@ var VRButton = {
 					// be requested separately.)
 
 					var sessionInit = { 
-						optionalFeatures: [ 'local-floor',"local" ]
+						optionalFeatures: [ 'local-floor',"local" ,"hand-tracking"]
 					};
 					navigator.xr.requestSession( 'immersive-vr', sessionInit ).then( onSessionStarted );
 
