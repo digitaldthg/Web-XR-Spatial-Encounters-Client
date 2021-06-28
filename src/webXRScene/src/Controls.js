@@ -21,6 +21,7 @@ class Controls{
 
     this.target = new Vector3(0,0,10);
     this.cameraForwardVector = new Vector3(0,0,0);
+    this.cameraPosition = new Vector3(0,0,0);
     
     //Binding
     this.SetupMouse = this.SetupMouse.bind(this);
@@ -55,10 +56,16 @@ class Controls{
 
     this.cameraHelper = new THREE.Group();
     this.cameraHelper.name = "cameraHelper";
-
     this.context.Scene.add(this.cameraHelper);
+    
+    this.pivot = new THREE.Group();
+    this.pivot.name = "pivot";
+    this.context.Scene.add(this.pivot);
 
-    this.boxHelper = new THREE.Mesh(new THREE.BoxGeometry(.5,.5),new THREE.MeshNormalMaterial());
+
+    this.boxHelper = new THREE.Mesh(new THREE.BoxGeometry(.5,.5),new THREE.MeshBasicMaterial({
+      color : 0xf0f000
+    }));
     this.cameraHelper.add(this.boxHelper);
 
 
@@ -193,11 +200,14 @@ class Controls{
 
   SetupVR(settings){
     
+    
     var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+
     var _position = vrCamera.position.clone();
     //this.cameraHelper.position.set(_position.x,_position.y,_position.z);
     this.cameraHelper.attach(this.context.Camera.instance);
-
+    this.cameraHelper.onBeforeRender = () =>{ console.log("onBeforeRender"); }
+    
     this.context.Renderer.instance.autoClear = true;
     this.context.Renderer.instance.setClearColor(0xffffff,1);
 
@@ -251,18 +261,16 @@ class Controls{
       Handy.update();
 
       var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+      
+      var directionVector = new Vector3();
+      vrCamera.getWorldDirection( directionVector );
+      directionVector.y = 0;
+      
       this.arrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
-      this.targetArrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
-  
-        var directionVector = new Vector3();
-          
-            vrCamera.getWorldDirection( directionVector );
-            directionVector.y = 0;
-            
-
-        this.arrowHelper.setDirection(directionVector);
+      this.arrowHelper.setDirection(directionVector);
 
       this.cameraForwardVector = directionVector.clone();
+      this.cameraPosition.setFromMatrixPosition( vrCamera.matrixWorld );
 
     }
 
@@ -277,32 +285,13 @@ class Controls{
   }
 
   SetPosition (x,y,z){
-
+    console.log("B. Set Position()");
     switch (this.currentControls) {
       case "Desktop":
         this.context.Camera.instance.position.set(x,y,z);
       break;
       case "VR":
-        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
-        var camPos = vrCamera.position.clone();
-            camPos.y = 0;
-
-        console.log("SetPosition before", camPos);
-        
-        const a = camPos.clone();
-        var targetPosition = new THREE.Vector3(x,y,z);
-
-        const d = targetPosition.distanceTo( a );
-
-        if(d > 0){        
-          this.cameraHelper.worldToLocal(camPos);  
-
-          targetPosition.sub(camPos);
-          this.cameraHelper.position.set(targetPosition.x, targetPosition.y,targetPosition.z);
-        }
-        console.log("SetPosition before", camPos);
-
-
+      
       break;
     
       default:
@@ -311,73 +300,172 @@ class Controls{
   }
   SetTarget (x,y,z){
 
+    console.log("B. Set Target");
     this.target = new Vector3(x,y,z);
     
      switch (this.currentControls) {
       case "VR":
         
-        ///////////////////////// 
-        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
-        this.arrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
-        this.targetArrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
-        
-        console.log("SetTarget" , vrCamera.position);
-        // var directionVector = new Vector3();
-          
-        //     vrCamera.getWorldDirection( directionVector );
-        //     directionVector.y = 0;
-            
-
-        // this.arrowHelper.setDirection(directionVector);
-
-          var camPos = new Vector3();
-              vrCamera.getWorldPosition(camPos);
-          var targetPos = this.target.clone();
-
-          var direction = targetPos.sub(camPos);
-          direction.y = 0;
-          this.targetArrowHelper.setDirection(direction);
-
-
-          direction = direction.normalize();
-          this.cameraForwardVector = this.cameraForwardVector.normalize();
-
-          var angle = direction.angleTo( this.cameraForwardVector );
-
-          var qrot = new THREE.Quaternion();
-              qrot.setFromUnitVectors(this.cameraForwardVector, direction);
-         
-
-          // Transform und rotation
-              let moveDir = new THREE.Vector3(
-                vrCamera.position.x - this.cameraHelper.position.x ,
-                vrCamera.position.y - this.cameraHelper.position.y ,
-                vrCamera.position.z - this.cameraHelper.position.z 
-              );
-              moveDir.normalize();
-              let moveDist = this.cameraHelper.position.distanceTo(vrCamera.position);
-              /// step 2: move camera to anchor point
-              this.cameraHelper.translateOnAxis(moveDir, moveDist);
-              /// step 3: rotate camera
-
-              //this.cameraHelper.rotation.y = angle_in_radians ;
-
-              this.cameraHelper.quaternion.multiply(qrot)
-              
-              console.log("cameraHelperRotation" , this.cameraHelper.rotation);
-            
-              /// step4: move camera along the opposite direction
-              moveDir.multiplyScalar(-1);
-              this.cameraHelper.translateOnAxis(moveDir, moveDist);
-
-
-
-              console.log("SetTarget" , vrCamera.position);
         break;
       default:
         this[this.currentControls].SetTarget(x,y,z);
       break;
     }
+  }
+
+  SetPositionAndRotation = (pos, targetPosition) => {
+    
+    //Camera Reference
+   
+
+    // Originale CameraPosition
+    const originalCameraPosition = this.cameraPosition.clone();
+    originalCameraPosition.y = 0;
+    
+    // Target und CameraPosition
+    var finalCameraHelperPosition = new THREE.Vector3(pos.x,pos.y,pos.z);
+    var finalCameraPosition = new THREE.Vector3(pos.x,pos.y,pos.z);
+
+        const d = finalCameraHelperPosition.distanceTo( originalCameraPosition );
+
+        if(d > 0){        
+          this.cameraHelper.worldToLocal(originalCameraPosition);  
+
+          finalCameraHelperPosition.sub(originalCameraPosition);
+          this.cameraHelper.position.set(finalCameraHelperPosition.x, finalCameraHelperPosition.y,finalCameraHelperPosition.z);
+        }
+        
+        this.arrowHelper.position.set(this.cameraHelper.position.x,this.cameraHelper.position.y - .25,this.cameraHelper.position.z);
+        this.targetArrowHelper.position.set(this.cameraHelper.position.x,this.cameraHelper.position.y - .25,this.cameraHelper.position.z);
+        
+        // Camera ist jetzt richtig posioniert und sitzt in World Position 
+
+        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+
+        var currentVRCameraRot = {...this.context.Camera.instance.rotation};
+
+       console.log(this.cameraHelper);
+
+       this.cameraHelper.rotation = new Euler();
+
+       var v_pos = new Vector3();
+       var v_quat = new Quaternion();
+       var v_scale = new Vector3();
+       console.log(vrCamera.matrixWorld.decompose(v_pos,v_quat,v_scale));
+
+        console.log("v_pos" , v_pos.add(this.cameraHelper.position));
+
+        var cameraWorldPosition = v_pos.add(this.cameraHelper.position);
+            cameraWorldPosition.y = 0;
+        var cameraWorldDistToTarget = cameraWorldPosition.distanceTo(targetPosition);
+
+        var dir = new Vector3(
+          cameraWorldPosition.x - targetPosition.x,
+          cameraWorldPosition.y - targetPosition.y,
+          cameraWorldPosition.z - targetPosition.z,
+        ); 
+
+        dir.normalize();
+
+        console.log("cameraWorldPosToTarget" , cameraWorldDistToTarget, targetPosition);
+        console.log("position" , {...this.cameraHelper.position}, this.cameraHelper.worldToLocal(vrCamera.position) );
+        console.log(vrCamera.rotation,currentVRCameraRot,{...this.context.Camera.instance.rotation});
+ 
+        this.cameraHelper.translateOnAxis(dir, cameraWorldDistToTarget);
+
+      
+        var v_pos = new Vector3();
+        var v_quat = new Quaternion();
+        var v_scale = new Vector3();
+        vrCamera.matrixWorld.decompose(v_pos,v_quat,v_scale);
+
+        var v_rot = new Euler().setFromQuaternion(v_quat, "XYZ");
+
+        var qrot = new THREE.Quaternion();
+            qrot.setFromUnitVectors(v_rot.toVector3(),new Vector3(0,0,1)); // (unit vectors)
+
+
+       
+        this.cameraHelper.quaternion = qrot;
+
+        dir.multiplyScalar(-1);
+        this.cameraHelper.translateOnAxis(dir, cameraWorldDistToTarget);
+
+
+
+/*
+        //!!!! Gibt Falsche Koordinate aus!!!!
+        // var worldCameraVector = new Vector3(); 
+        // vrCamera.getWorldPosition(worldCameraVector);
+
+
+       // console.log("Camera World Position => getWorldPosition() " , worldCameraVector );
+
+        console.log("Camera World Position => vrCamera.position " , vrCamera.position );
+        console.log("Camera Helper Position => vrCamera.position " , vrCamera.position );
+
+
+
+        
+        var targetPos =  new Vector3(targetPosition.x,targetPosition.y,targetPosition.z);
+        var currentCameraPos = finalCameraPosition.clone();
+            currentCameraPos.y = 0;
+        var direction = targetPos.sub(currentCameraPos);
+            direction.y = 0;
+        
+        
+        this.targetArrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
+        this.targetArrowHelper.setDirection(direction);
+
+        direction = direction.normalize();
+
+        this.cameraForwardVector = this.cameraForwardVector.normalize();
+
+        var qrot = new THREE.Quaternion();
+            qrot.setFromUnitVectors(this.cameraForwardVector, direction);
+
+        
+        var worldCameraPos = this.cameraHelper.worldToLocal(currentCameraPos);  
+        var target = targetPosition.clone();
+
+        var diff = finalCameraPosition.distanceTo(target); 
+
+            console.log("Before Translate" , this.cameraHelper.position);
+
+          // Transform und rotation
+              let moveDir = new THREE.Vector3(
+                vrCamera.position.x - this.cameraHelper.position.x ,
+                0,
+                vrCamera.position.z - this.cameraHelper.position.z 
+              );
+              moveDir.normalize();
+              let moveDist = this.cameraHelper.position.distanceTo(finalCameraPosition);
+              /// step 2: move camera to anchor point
+              //this.cameraHelper.translateOnAxis(moveDir, moveDist);
+              /// step 3: rotate camera
+
+              // var meshHelper = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial());
+              // meshHelper.position.set(this.cameraHelper.position.x , this.cameraHelper.position.y, this.cameraHelper.position.z);
+              // this.context.Scene.add(meshHelper);
+
+              console.log("Während des translatens" , this.cameraHelper.position);
+              
+              
+              //this.cameraHelper.rotation.y = Math.PI;//.multiply(qrot)
+              //this.cameraHelper.quaternion = qrot;
+
+
+
+              
+              this.cameraHelper.translateOnAxis(moveDir, moveDist);
+            
+
+
+              //console.log("worldCameraPos" , worldCameraPos);
+
+              */
+
+
   }
 
   GetTarget(){

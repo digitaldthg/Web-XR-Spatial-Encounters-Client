@@ -1,7 +1,7 @@
 <template></template>
 <script>
 
-import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color} from 'three';
+import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color, Vector3, Quaternion} from 'three';
 import UserData from '../class/UserData';
 
 
@@ -16,6 +16,12 @@ export default {
       keyArray : ["w","a","s","d"],
       speed : .1,
       data : Object.assign({}, UserData),
+      transform: {
+        position : new Vector3(),
+        rotation : new Quaternion(),
+        scale : new Vector3()
+      },
+      inVR : false,
       key: {
         w : 0,
         a : 0,
@@ -30,7 +36,9 @@ export default {
      console.log("state player" , state);
       this.ready = true;
 
+
       this.InitPlayer();
+
     }
   },
 
@@ -39,6 +47,8 @@ export default {
   },
   methods:{
     InitPlayer(){
+
+      this.$store.state.xr.Events.addEventListener("OnChangeXRView", this.ConvertPlayerToVR);
 
       this.player = new Mesh(new BoxGeometry(0.5,0.5,0.5), new MeshBasicMaterial({
         color : new Color(this.data.color.r,this.data.color.g,this.data.color.b,this.data.color.a)
@@ -52,6 +62,9 @@ export default {
 
       this.InitEvents();
 
+    },
+    ConvertPlayerToVR(){
+      this.inVR = true;
     },
     InitEvents(){
 
@@ -141,8 +154,17 @@ export default {
     Animate(t){
 
       if(!this.ready){ return; }
-      this.KeyBoardMovement();
 
+      if(!this.inVR){
+        this.KeyBoardMovement();
+      }else{
+        var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera(this.$store.state.xr.Camera.instance);
+
+        vrCamera.matrixWorld.decompose(this.transform.position,this.transform.rotation,this.transform.scale);
+        this.player.position.set(this.transform.position.x,this.transform.position.y,this.transform.position.z);
+        this.player.quaternion = this.transform.rotation.clone();
+
+      }
 
       this.delta += t.getDelta();
 

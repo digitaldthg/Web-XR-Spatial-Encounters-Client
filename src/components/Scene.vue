@@ -13,7 +13,7 @@ import Environment from "./Environment.vue";
 import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Umgebung from '../Model/playarea.glb';
-import {AmbientLight, Color, Fog, Clock} from "three";
+import {AmbientLight, Color, Fog, Clock, Vector3} from "three";
 
 import {
   BloomEffect,
@@ -124,11 +124,12 @@ export default {
 
     ResetCamera(){
 
-      console.log("ResetCamera");
-      var yPos = this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
+      var yPos = 1.5;//this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
 
-      this.$store.state.xr.Controls.SetTarget(0,yPos,10);
-      this.$store.state.xr.Controls.SetPosition(0,yPos,8);
+
+        console.log("ResetCamera");
+        this.$store.state.xr.Controls.SetPositionAndRotation( new Vector3(0,0,7), new Vector3(0,0,10));
+    
       
     }
   },
