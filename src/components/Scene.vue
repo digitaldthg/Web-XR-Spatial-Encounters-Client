@@ -93,8 +93,13 @@ export default {
       this.$store.state.xr.Events.addEventListener("HandPoseChanged", this.HandleHandPoses);
       this.$store.state.xr.Events.addEventListener("OnChangeXRView", this.HandleXRView);
 
-      window.addEventListener("keydown", e => {console.log("e" , e.code);if(e.code == "KeyF"){this.ResetCamera()}})
 
+      if(!this.$store.state.keysInit){
+        console.log("apply Listener");
+        window.addEventListener("keyup", e => {if(e.code == "KeyF"){this.ResetCamera()}})
+
+        this.$store.commit("initKeyEvents", true);
+      }
     },
     RenderLoop() {
       //this.composer.render(this.clock.getDelta());
@@ -119,10 +124,11 @@ export default {
 
     ResetCamera(){
 
+      console.log("ResetCamera");
       var yPos = this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
 
+      this.$store.state.xr.Controls.SetTarget(0,yPos,10);
       this.$store.state.xr.Controls.SetPosition(0,yPos,8);
-      this.$store.state.xr.Controls.SetTarget(0,yPos,6);
       
     }
   },

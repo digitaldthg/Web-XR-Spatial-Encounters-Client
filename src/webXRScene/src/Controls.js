@@ -3,7 +3,7 @@ import {DesktopControls} from './DesktopControls';
 import {VRController} from './VRController';
 import { VRButton } from './VRButton.js';
 import { ARButton } from './ARButton.js';
-import { Euler, Object3D, Quaternion, Vector3 } from 'three';
+import { Euler, Object3D, Quaternion, Vector3,ArrowHelper } from 'three';
 import { VRHands } from './HandTracking/VRHands';
 
 import {Handy} from './HandTracking/Handy';
@@ -18,6 +18,9 @@ class Controls{
     this.interactivityEnabled = true;
     this.context = context;
     this.currentControls = "Desktop";
+
+    this.target = new Vector3(0,0,10);
+    this.cameraForwardVector = new Vector3(0,0,0);
     
     //Binding
     this.SetupMouse = this.SetupMouse.bind(this);
@@ -54,7 +57,7 @@ class Controls{
     this.cameraHelper.name = "cameraHelper";
 
     this.context.Scene.add(this.cameraHelper);
-    
+
     this.boxHelper = new THREE.Mesh(new THREE.BoxGeometry(.5,.5),new THREE.MeshNormalMaterial());
     this.cameraHelper.add(this.boxHelper);
 
@@ -86,8 +89,11 @@ class Controls{
     this.GetARButton = this.GetARButton.bind(this);
     this.GetVRButton = this.GetVRButton.bind(this);
 
-   
+    this.arrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
+    this.targetArrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
 
+    this.context.Scene.add(this.arrowHelper);
+    this.context.Scene.add(this.targetArrowHelper);
 
     /**VR Controls */
     //this.vr_controller = new VRController( this.context );
@@ -233,6 +239,7 @@ class Controls{
   GetARButton(){
     return this.arButton;
   }
+
   Update(t){
 
     if(this.ActiveObjects.length > 0 && this.interactivityEnabled){
@@ -242,7 +249,21 @@ class Controls{
       //this.vr_controller.Update();
 
       Handy.update();
-      
+
+      var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+      this.arrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
+      this.targetArrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
+  
+        var directionVector = new Vector3();
+          
+            vrCamera.getWorldDirection( directionVector );
+            directionVector.y = 0;
+            
+
+        this.arrowHelper.setDirection(directionVector);
+
+      this.cameraForwardVector = directionVector.clone();
+
     }
 
 
@@ -266,6 +287,8 @@ class Controls{
         var camPos = vrCamera.position.clone();
             camPos.y = 0;
 
+        console.log("SetPosition before", camPos);
+        
         const a = camPos.clone();
         var targetPosition = new THREE.Vector3(x,y,z);
 
@@ -277,6 +300,8 @@ class Controls{
           targetPosition.sub(camPos);
           this.cameraHelper.position.set(targetPosition.x, targetPosition.y,targetPosition.z);
         }
+        console.log("SetPosition before", camPos);
+
 
       break;
     
@@ -285,58 +310,69 @@ class Controls{
     }
   }
   SetTarget (x,y,z){
+
+    this.target = new Vector3(x,y,z);
     
      switch (this.currentControls) {
       case "VR":
         
+        ///////////////////////// 
         var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
-        var vrCamRot = vrCamera.quaternion.clone();
-
-        var vector = new THREE.Vector3( 0, 0, - 1 );
-            vector.applyQuaternion( vrCamRot );
+        this.arrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
+        this.targetArrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
         
-        var angle = vector.angleTo( new THREE.Vector3(x,y,z) );
+        console.log("SetTarget" , vrCamera.position);
+        // var directionVector = new Vector3();
+          
+        //     vrCamera.getWorldDirection( directionVector );
+        //     directionVector.y = 0;
+            
 
-        var target = new THREE.Vector3(); // create once an reuse it
+        // this.arrowHelper.setDirection(directionVector);
 
-        vrCamera.getWorldPosition( target );
+          var camPos = new Vector3();
+              vrCamera.getWorldPosition(camPos);
+          var targetPos = this.target.clone();
 
-        var directionVector = new Vector3();
-        vrCamera.getWorldDirection( directionVector );
+          var direction = targetPos.sub(camPos);
+          direction.y = 0;
+          this.targetArrowHelper.setDirection(direction);
 
-        var a = new Vector3(x,y,z);
-        var b = directionVector.clone();
 
-        a.normalize();
-        b.normalize();
+          direction = direction.normalize();
+          this.cameraForwardVector = this.cameraForwardVector.normalize();
 
-        var cosAB = a.dot( b );
-        var angle_in_radians = Math.acos( cosAB );
+          var angle = direction.angleTo( this.cameraForwardVector );
 
-        console.log("rotationQuaternion" , angle_in_radians,  directionVector);
+          var qrot = new THREE.Quaternion();
+              qrot.setFromUnitVectors(this.cameraForwardVector, direction);
+         
 
-        /// step 1: calculate move direction and move distance:
-       let moveDir = new THREE.Vector3(
-          vrCamera.position.x - this.cameraHelper.position.x ,
-          vrCamera.position.y - this.cameraHelper.position.y ,
-          vrCamera.position.z - this.cameraHelper.position.z 
-        );
-        moveDir.normalize();
-        let moveDist = this.cameraHelper.position.distanceTo(vrCamera.position);
-        /// step 2: move camera to anchor point
-        this.cameraHelper.translateOnAxis(moveDir, moveDist);
-        /// step 3: rotate camera
+          // Transform und rotation
+              let moveDir = new THREE.Vector3(
+                vrCamera.position.x - this.cameraHelper.position.x ,
+                vrCamera.position.y - this.cameraHelper.position.y ,
+                vrCamera.position.z - this.cameraHelper.position.z 
+              );
+              moveDir.normalize();
+              let moveDist = this.cameraHelper.position.distanceTo(vrCamera.position);
+              /// step 2: move camera to anchor point
+              this.cameraHelper.translateOnAxis(moveDir, moveDist);
+              /// step 3: rotate camera
 
-        //this.cameraHelper.rotation.y = angle_in_radians ;
-        
-        console.log("cameraHelperRotation" , this.cameraHelper.rotation);
-       
-        /// step4: move camera along the opposite direction
-        moveDir.multiplyScalar(-1);
-        this.cameraHelper.translateOnAxis(moveDir, moveDist);
+              //this.cameraHelper.rotation.y = angle_in_radians ;
 
-        //this.cameraHelper.rotation.y = angle * Math.PI / 180;
+              this.cameraHelper.quaternion.multiply(qrot)
+              
+              console.log("cameraHelperRotation" , this.cameraHelper.rotation);
+            
+              /// step4: move camera along the opposite direction
+              moveDir.multiplyScalar(-1);
+              this.cameraHelper.translateOnAxis(moveDir, moveDist);
 
+
+
+              console.log("SetTarget" , vrCamera.position);
         break;
       default:
         this[this.currentControls].SetTarget(x,y,z);
