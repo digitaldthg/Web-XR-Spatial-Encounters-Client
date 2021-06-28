@@ -93,7 +93,7 @@ export default {
       this.$store.state.xr.Events.addEventListener("HandPoseChanged", this.HandleHandPoses);
       this.$store.state.xr.Events.addEventListener("OnChangeXRView", this.HandleXRView);
 
-      window.addEventListener("keydown", e => {console.log("e" , e.code);if(e.code == "Space"){this.ResetCamera()}})
+      window.addEventListener("keydown", e => {console.log("e" , e.code);if(e.code == "KeyF"){this.ResetCamera()}})
 
     },
     RenderLoop() {

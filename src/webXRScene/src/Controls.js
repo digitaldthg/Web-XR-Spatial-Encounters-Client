@@ -3,7 +3,7 @@ import {DesktopControls} from './DesktopControls';
 import {VRController} from './VRController';
 import { VRButton } from './VRButton.js';
 import { ARButton } from './ARButton.js';
-import { Vector3 } from 'three';
+import { Euler, Object3D, Quaternion, Vector3 } from 'three';
 import { VRHands } from './HandTracking/VRHands';
 
 import {Handy} from './HandTracking/Handy';
@@ -11,6 +11,9 @@ import {Handy} from './HandTracking/Handy';
 
 class Controls{
   constructor(context){
+
+    window._xr = context;
+
     this.enabled = true;
     this.interactivityEnabled = true;
     this.context = context;
@@ -47,6 +50,15 @@ class Controls{
     this.context.Events.registerEvent("ui-idle");
     this.context.Events.registerEvent("OnChangeXRView");
 
+    this.cameraHelper = new THREE.Group();
+    this.cameraHelper.name = "cameraHelper";
+
+    this.context.Scene.add(this.cameraHelper);
+    
+    this.boxHelper = new THREE.Mesh(new THREE.BoxGeometry(.5,.5),new THREE.MeshNormalMaterial());
+    this.cameraHelper.add(this.boxHelper);
+
+
     /** VR AR DOM ELEMENTS - Buttons */
     this.vrButton = VRButton.createButton(this.context.Renderer.instance,this.context);
     this.arButton = ARButton.createButton(this.context.Renderer.instance,this.context);
@@ -74,14 +86,12 @@ class Controls{
     this.GetARButton = this.GetARButton.bind(this);
     this.GetVRButton = this.GetVRButton.bind(this);
 
-    this.cameraHelper = new THREE.Group();
-    this.cameraHelper.name = "cameraHelper";
-    this.cameraHelper.position.set(0,0,0);
+   
 
 
     /**VR Controls */
     //this.vr_controller = new VRController( this.context );
-    this.vr_hands = new VRHands(this.context);
+    //this.vr_hands = new VRHands(this.context);
 
     // this.context.Scene.add( this.vr_controller.controllerGrips[ 0 ], this.vr_controller.controllers[ 0 ] );
 
@@ -176,20 +186,11 @@ class Controls{
   }
 
   SetupVR(settings){
-
-
-    // if(typeof(this.cameraHelper) == "undefined"){
-    //   this.cameraHelper = new THREE.Group();
-    //   this.cameraHelper.name = "cameraHelper";
-    //   this.cameraHelper.position.set(0,0,0);
-
-    // }
     
     var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
-    this.cameraHelper.add(this.context.Camera.instance);
     var _position = vrCamera.position.clone();
-    //vrCamera.position.set(0,1.7,0);
-    this.cameraHelper.position.set(_position.x,_position.y,_position.z);
+    //this.cameraHelper.position.set(_position.x,_position.y,_position.z);
+    this.cameraHelper.attach(this.context.Camera.instance);
 
     this.context.Renderer.instance.autoClear = true;
     this.context.Renderer.instance.setClearColor(0xffffff,1);
@@ -241,6 +242,7 @@ class Controls{
       //this.vr_controller.Update();
 
       Handy.update();
+      
     }
 
 
@@ -261,24 +263,21 @@ class Controls{
       break;
       case "VR":
         var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
-        
-        var transformedVec = new Vector3();
-        //copy Camera position
-        var origin = this.cameraHelper.position.clone();
-        var vec3 = vrCamera.position.clone();
-            vec3.y = 0;
+        var camPos = vrCamera.position.clone();
+            camPos.y = 0;
 
-        //calculate Difference between camera and CameraGroupParent 
-        var targetOffset = transformedVec.subVectors(origin, vec3);
-        var targetPosition = new Vector3(x,y,z);
+        const a = camPos.clone();
+        var targetPosition = new THREE.Vector3(x,y,z);
 
-            //calculate the target Position in combination with the offset
-            targetPosition.add(targetOffset);
+        const d = targetPosition.distanceTo( a );
 
-        //sets the position of the camera helper
-        this.cameraHelper.position.set(targetPosition.x,0,targetPosition.z);
+        if(d > 0){        
+          this.cameraHelper.worldToLocal(camPos);  
 
-        console.log("new Position after reset" , targetPosition);
+          targetPosition.sub(camPos);
+          this.cameraHelper.position.set(targetPosition.x, targetPosition.y,targetPosition.z);
+        }
+
       break;
     
       default:
@@ -289,20 +288,55 @@ class Controls{
     
      switch (this.currentControls) {
       case "VR":
-        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
-        var targetPosition = new THREE.Vector3(x,y,z);
-        var vector = new THREE.Vector3( 0, 0, - 1 );
-            vector.applyQuaternion( vrCamera.quaternion );
-
-        var angle = vector.angleTo( targetPosition );
-
-
-        //this.cameraHelper.lookAt(new THREE.Vector3(x,y,z));
-        //this.cameraHelper.rotation.y -= angle * Math.PI / 180;
         
-        // this.cameraHelper.rotation.x = 0;
-        // this.cameraHelper.rotation.z = 0;
-      
+        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+        var vrCamRot = vrCamera.quaternion.clone();
+
+        var vector = new THREE.Vector3( 0, 0, - 1 );
+            vector.applyQuaternion( vrCamRot );
+        
+        var angle = vector.angleTo( new THREE.Vector3(x,y,z) );
+
+        var target = new THREE.Vector3(); // create once an reuse it
+
+        vrCamera.getWorldPosition( target );
+
+        var directionVector = new Vector3();
+        vrCamera.getWorldDirection( directionVector );
+
+        var a = new Vector3(x,y,z);
+        var b = directionVector.clone();
+
+        a.normalize();
+        b.normalize();
+
+        var cosAB = a.dot( b );
+        var angle_in_radians = Math.acos( cosAB );
+
+        console.log("rotationQuaternion" , angle_in_radians,  directionVector);
+
+        /// step 1: calculate move direction and move distance:
+       let moveDir = new THREE.Vector3(
+          vrCamera.position.x - this.cameraHelper.position.x ,
+          vrCamera.position.y - this.cameraHelper.position.y ,
+          vrCamera.position.z - this.cameraHelper.position.z 
+        );
+        moveDir.normalize();
+        let moveDist = this.cameraHelper.position.distanceTo(vrCamera.position);
+        /// step 2: move camera to anchor point
+        this.cameraHelper.translateOnAxis(moveDir, moveDist);
+        /// step 3: rotate camera
+
+        //this.cameraHelper.rotation.y = angle_in_radians ;
+        
+        console.log("cameraHelperRotation" , this.cameraHelper.rotation);
+       
+        /// step4: move camera along the opposite direction
+        moveDir.multiplyScalar(-1);
+        this.cameraHelper.translateOnAxis(moveDir, moveDist);
+
+        //this.cameraHelper.rotation.y = angle * Math.PI / 180;
+
         break;
       default:
         this[this.currentControls].SetTarget(x,y,z);
