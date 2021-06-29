@@ -29,6 +29,7 @@ export default {
   data() {
     return {
       xr: null,
+      reset : false
     };
   },
   sockets: {
@@ -113,11 +114,12 @@ export default {
       // console.log(event.resultIs.pose.names);
       // console.log("handEvent" , event);
 
-      if(event.resultIs.pose.names.includes( 'thumb' ) && 
-        !event.resultWas.pose.names.includes( 'thumb' )){
+      if(event.resultIs.pose.names.includes( 'thumb' ) ){//&& !this.reset
         console.log("thumb up");
 
         this.ResetCamera();
+
+        this.reset = true;
        
       }
     },
