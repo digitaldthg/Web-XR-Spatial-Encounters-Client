@@ -8,6 +8,8 @@ import {
   MeshBasicMaterial,
   Vector3,
   Color,
+  DoubleSide,
+  Group
 } from "three";
 import Ring from "../Model/player_cylinder.glb";
 export default {
@@ -16,12 +18,32 @@ export default {
     return {
       xr: null,
       friends: {},
-      ringMesh: null,
+      friendRings: null,
     };
   },
   mounted() {},
   watch: {
     "$store.state.xr": function (xr) {
+      this.$store.state.xr.Loader.load({
+        name: "Ring",
+        url: Ring,
+        onprogress: () => {
+          console.log("progress");
+        },
+      }).then((model) => {
+        model.scene.children[0].material = new MeshBasicMaterial({
+          color: new Color(0.5, 0.5, 0.5, 1),
+          side: DoubleSide,
+        });
+        var firstRing = model.scene.children[0].clone();
+        firstRing.scale.set(firstRing.scale.x*0.75, firstRing.scale.y , firstRing.scale.z*0.75);
+
+        this.friendRings = new Group();
+        this.friendRings.add(firstRing);
+
+        console.log("RING LOADED", model.scene);
+      });
+
       this.$store.state.xr.Events.addEventListener(
         "OnAnimationLoop",
         this.AnimateFriends
@@ -45,10 +67,13 @@ export default {
       delete serverFriends[this.$socket.id];
 
       Object.keys(serverFriends).map((f) => {
-        if (!localFriends.hasOwnProperty(f)) {
-          localFriends[f] = this.CreateFriend(serverFriends[f]);
-        } else {
-          localFriends[f] = this.UpdateFriend(f, serverFriends[f]);
+        console.log("FRIEND RINGS ",this.friendRings)
+        if (this.friendRings != null) {
+          if (!localFriends.hasOwnProperty(f)) {
+            localFriends[f] = this.CreateFriend(serverFriends[f]);
+          } else {
+            localFriends[f] = this.UpdateFriend(f, serverFriends[f]);
+          }
         }
       });
 
@@ -57,20 +82,7 @@ export default {
   },
   methods: {
     CreateFriend(serverData) {
-      this.$store.state.xr.Loader.load({
-        name: "Ring",
-        url: Ring,
-        onprogress: () => {
-          console.log("progress");
-        },
-      }).then((model) => {
-        console.log("RING LOADED",model.scene)
-        this.ringMesh = model.scene;
-        this.ringMesh.children[0].material.color = new Color(0.5,0.5,0.5);
-        //this.$store.state.xr.Scene.add(this.ringMesh)
-      });
-
-      const geometry = new ConeGeometry(0.5, 1, 12, 2, false, 0, Math.PI * 2);
+      /*const geometry = new ConeGeometry(0.5, 1, 12, 2, false, 0, Math.PI * 2);
 
       var friend = new Mesh(
         geometry,
@@ -82,7 +94,9 @@ export default {
             serverData.color.a
           ),
         })
-      );
+      );*/
+
+      var friend = this.friendRings.clone();
 
       friend.position.x = serverData.transform.position.x;
       friend.position.y = serverData.transform.position.y;
@@ -140,12 +154,12 @@ export default {
         //this.instance.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
         friend.userData.lerpAlpha++;
 
-        friend.material.color = new Color(
+        /*friend.material.color = new Color(
           friend.userData.color.r,
           friend.userData.color.g,
           friend.userData.color.b,
           friend.userData.color.a
-        );
+        );*/
 
         if (friend.userData.lerpAlpha >= 100) {
           friend.userData.lerpAlpha = 0;
