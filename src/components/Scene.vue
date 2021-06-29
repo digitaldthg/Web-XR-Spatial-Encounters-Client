@@ -131,10 +131,6 @@ export default {
       this.$refs.vrButton.appendChild(btn);
 
       this.$store.state.xr.Events.addEventListener(
-        "HandPoseChanged",
-        this.HandleHandPoses
-      );
-      this.$store.state.xr.Events.addEventListener(
         "OnChangeXRView",
         this.HandleXRView
       );
@@ -155,31 +151,7 @@ export default {
     },
     HandleXRView(xrMode) {
       console.log("session", xrMode);
-    },
-
-    HandleHandPoses(event) {
-      // console.log(event.hand.handedness);
-      // console.log(event.resultIs.pose.names);
-      // console.log("handEvent" , event);
-
-      if (event.resultIs.pose.names.includes("thumb")) {
-        //&& !this.reset
-        console.log("thumb up");
-
-        this.ResetCamera();
-
-        this.reset = true;
-      }
-    },
-
-    ResetCamera() {
-      var yPos = 1.5; //this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;
-      console.log("ResetCamera");
-      this.$store.state.xr.Controls.SetPositionAndRotation(
-        new Vector3(0, 0, 7),
-        new Vector3(0, 0, 10)
-      );
-    },
+    }
   },
 };
 </script>

@@ -89,13 +89,15 @@ export default {
       console.log(event.resultIs.pose.names);
       console.log("handEvent" , event);
 
-      if(event.resultIs.pose.names.includes( 'flare' ) || event.resultIs.pose.names.includes( 'thumb' ) ){//&& !this.reset
+      if(event.resultIs.pose.names.includes( 'flare' ) || 
+        event.resultIs.pose.names.includes( 'thumb' ) ){//&& !this.reset
         console.log("thumb up", this.timeout);
         this.ToggleHands(true, event.hand.handedness);
         this.thumb = true;
       }
 
-      if(event.resultWas.pose.names.includes( 'flare' ) || event.resultIs.pose.names.includes( 'thumb' )){
+      if(event.resultWas.pose.names.includes( 'flare' ) || 
+        event.resultIs.pose.names.includes( 'thumb' )){
         this.timeout = 0;
         this.thumb = false;
         this.ToggleHands(false, event.hand.handedness);
@@ -120,7 +122,7 @@ export default {
         var rightHand = Handy.hands.getRight();
 
         if(typeof(rightHand) === "undefined"){ return; }
-        
+
         rightHand.traverse((child)=>{
           if(child.hasOwnProperty("visible")){
             child.visible = boolean;
