@@ -106,6 +106,9 @@ export default {
       
       if(side == "left"){
         var leftHand = Handy.hands.getLeft();
+
+        if(typeof(leftHand) === "undefined"){ return; }
+
         leftHand.traverse((child)=>{
           if(child.hasOwnProperty("visible")){
             child.visible = boolean;
@@ -115,6 +118,9 @@ export default {
 
       if(side == "right"){
         var rightHand = Handy.hands.getRight();
+
+        if(typeof(rightHand) === "undefined"){ return; }
+        
         rightHand.traverse((child)=>{
           if(child.hasOwnProperty("visible")){
             child.visible = boolean;
