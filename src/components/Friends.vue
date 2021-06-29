@@ -35,21 +35,11 @@ export default {
           color: new Color(0.5, 0.5, 0.5, 1),
           side: DoubleSide,
         });
+        var firstRing = model.scene.children[0].clone();
+        firstRing.scale.set(firstRing.scale.x*0.75, firstRing.scale.y , firstRing.scale.z*0.75);
 
         this.friendRings = new Group();
-        
-        for(var i=0;i<5;i++){
-          let ring =  model.scene.children[0].clone();
-          let scale = (1 - (.05 * i));
-              ring.scale.set(ring.scale.x - scale, 1 , ring.scale.x - scale);
-              ring.position.set(0, .25 * i ,0);
-              
-              this.friendRings.add(ring);
-
-        }
-        // var firstRing = model.scene.children[0].clone();
-        //     firstRing.scale.set(firstRing.scale.x*0.75, firstRing.scale.y , firstRing.scale.z*0.75);
-
+        this.friendRings.add(firstRing);
 
         console.log("RING LOADED", model.scene);
       });
@@ -77,7 +67,7 @@ export default {
       delete serverFriends[this.$socket.id];
 
       Object.keys(serverFriends).map((f) => {
-        console.log("FRIEND RINGS ",this.friendRings)
+        //console.log("FRIEND RINGS ",this.friendRings)
         if (this.friendRings != null) {
           if (!localFriends.hasOwnProperty(f)) {
             localFriends[f] = this.CreateFriend(serverFriends[f]);
