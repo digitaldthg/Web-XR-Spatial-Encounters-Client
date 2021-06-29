@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     CreateFriend(serverData) {
-      /*const geometry = new ConeGeometry(0.5, 1, 12, 2, false, 0, Math.PI * 2);
+      const geometry = new ConeGeometry(0.5, 1, 12, 2, false, 0, Math.PI * 2);
 
       var friend = new Mesh(
         geometry,
@@ -94,9 +94,9 @@ export default {
             serverData.color.a
           ),
         })
-      );*/
+      );
 
-      var friend = this.friendRings.clone();
+      //var friend = this.friendRings.clone();
 
       friend.position.x = serverData.transform.position.x;
       friend.position.y = serverData.transform.position.y;
@@ -154,12 +154,12 @@ export default {
         //this.instance.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
         friend.userData.lerpAlpha++;
 
-        /*friend.material.color = new Color(
+        friend.material.color = new Color(
           friend.userData.color.r,
           friend.userData.color.g,
           friend.userData.color.b,
           friend.userData.color.a
-        );*/
+        );
 
         if (friend.userData.lerpAlpha >= 100) {
           friend.userData.lerpAlpha = 0;

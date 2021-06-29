@@ -20,7 +20,12 @@ export default new Vuex.Store({
       initKeyEvents(state, data){
         state.keysInit = data;
 
+      },
+      setSpeed(state, data){
+        state.speed = data
+
       }
+
     },
     actions: {
     }
