@@ -63,10 +63,10 @@ class Controls{
     this.context.Scene.add(this.pivot);
 
 
-    this.boxHelper = new THREE.Mesh(new THREE.BoxGeometry(.5,.5),new THREE.MeshBasicMaterial({
+    /*this.boxHelper = new THREE.Mesh(new THREE.BoxGeometry(.5,.5),new THREE.MeshBasicMaterial({
       color : 0xf0f000
     }));
-    this.cameraHelper.add(this.boxHelper);
+    this.cameraHelper.add(this.boxHelper);*/
 
 
     /** VR AR DOM ELEMENTS - Buttons */
@@ -96,11 +96,11 @@ class Controls{
     this.GetARButton = this.GetARButton.bind(this);
     this.GetVRButton = this.GetVRButton.bind(this);
 
-    this.arrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
-    this.targetArrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
+    //this.arrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
+    //this.targetArrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
 
-    this.context.Scene.add(this.arrowHelper);
-    this.context.Scene.add(this.targetArrowHelper);
+    //this.context.Scene.add(this.arrowHelper);
+    //this.context.Scene.add(this.targetArrowHelper);
 
     /**VR Controls */
     //this.vr_controller = new VRController( this.context );
@@ -266,8 +266,8 @@ class Controls{
       vrCamera.getWorldDirection( directionVector );
       directionVector.y = 0;
       
-      this.arrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
-      this.arrowHelper.setDirection(directionVector);
+     // this.arrowHelper.position.set(vrCamera.position.x,vrCamera.position.y - .25,vrCamera.position.z);
+      //this.arrowHelper.setDirection(directionVector);
 
       this.cameraForwardVector = directionVector.clone();
       this.cameraPosition.setFromMatrixPosition( vrCamera.matrixWorld );
@@ -335,8 +335,8 @@ class Controls{
           this.cameraHelper.position.set(finalCameraHelperPosition.x, finalCameraHelperPosition.y,finalCameraHelperPosition.z);
         }
         
-        this.arrowHelper.position.set(this.cameraHelper.position.x,this.cameraHelper.position.y - .25,this.cameraHelper.position.z);
-        this.targetArrowHelper.position.set(this.cameraHelper.position.x,this.cameraHelper.position.y - .25,this.cameraHelper.position.z);
+        //this.arrowHelper.position.set(this.cameraHelper.position.x,this.cameraHelper.position.y - .25,this.cameraHelper.position.z);
+        //this.targetArrowHelper.position.set(this.cameraHelper.position.x,this.cameraHelper.position.y - .25,this.cameraHelper.position.z);
         
         // Camera ist jetzt richtig posioniert und sitzt in World Position 
 
