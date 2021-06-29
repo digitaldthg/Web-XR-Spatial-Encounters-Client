@@ -1,12 +1,12 @@
 <template>
-  <div id="controls" >
+  <div id="controls">
     <div class="controls-inner" v-if="open">
       <div>
-        <div class="dev-info">Eigene SocketID: {{$socket.id}}</div>
-        <div class="dev-info">Raum: {{$store.state.room}}</div>
+        <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
+        <div class="dev-info">Raum: {{ $store.state.room }}</div>
       </div>
       <div>
-        <label for="frequence">Frequenz</label>
+        <label for="frequence">Sek. zwischen Dreiecken: </label>
         <input
           type="range"
           id="frequence"
@@ -17,9 +17,10 @@
           value="1"
           @change="updateSlider"
         />
+        {{ this.frequence }}
       </div>
       <div>
-        <label for="scale">Scale</label>
+        <label for="scale">Skalierung der Dreiecke: </label>
         <input
           type="range"
           id="frequence"
@@ -30,18 +31,25 @@
           value="0.5"
           @change="updateScale"
         />
+        {{ this.scale }}
       </div>
     </div>
   </div>
 </template>
 <script>
 import TriangleMesh from "../scripts/triangle.js";
+import { ColorPicker } from 'vue-color-gradient-picker';
 
 export default {
   name: "Controls",
+   components: {
+    ColorPicker
+  },
   data(){
     return{
-      open : false
+      open : true,
+      frequence: 1,
+      scale: 0.5
     }
   },
   mounted(){
@@ -55,14 +63,17 @@ export default {
         }
       })
     },
+
     updateSlider(event) {
       console.log("SLIDER VALUE ", event.target.value);
+      this.frequence = event.target.value;
       this.$socket.emit("client-change-frequency", {
         frequency: parseFloat(event.target.value),
       });
     },
     updateScale(event) {
       console.log("SCALE VALUE ", event.target.value);
+      this.scale = event.target.value;
       this.$socket.emit("client-change-scale", {
         scale: 1 - parseFloat(event.target.value),
       });
@@ -71,15 +82,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  lang="css" >
+
 #controls {
   position: relative;
+  height: 200px;
   text-align: left;
-  background:rgba(255,255,255,.6);
+  background: rgba(255, 255, 255, 0.6);
   z-index: 999;
 }
 
-.controls-inner{ 
-  padding:1rem;
+.controls-inner {
+  padding: 1rem;
 }
+
 </style>
+

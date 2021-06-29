@@ -12,15 +12,29 @@ import webXRScene from "../webXRScene/src";
 import Environment from "./Environment.vue";
 import Friends from "./Friends.vue";
 import Player from "./Player.vue";
-import Umgebung from '../Model/playarea.glb';
-import {AmbientLight, Color, Fog, Clock, Vector3} from "three";
+import Umgebung from "../Model/playarea.glb";
+import floorGrid from "../assets/grid-01.png";
+import {
+  AmbientLight,
+  Color,
+  Fog,
+  Clock,
+  Vector3,
+  TextureLoader,
+  PlaneGeometry,
+  Mesh,
+  DoubleSide,
+  MeshBasicMaterial,
+  MeshPhongMaterial,
+  BoxGeometry
+} from "three";
 
 import {
   BloomEffect,
   EffectComposer,
   EffectPass,
   RenderPass,
-  UnrealBloomPass
+  UnrealBloomPass,
 } from "postprocessing";
 
 export default {
@@ -29,8 +43,7 @@ export default {
   data() {
     return {
       xr: null,
-      reset : false,
-      timer : null
+      reset: false,
     };
   },
   sockets: {
@@ -44,17 +57,44 @@ export default {
   methods: {
     InitScene() {
       this.xr = new webXRScene("scene");
-      var fogColor = new Color(0, 0, 0);
-      this.xr.Scene.fog = new Fog(fogColor, 15, 20);
 
-      this.xr.Renderer.instance.setClearColor(fogColor);
-
-
+      //LIGHTS
       var ambient = new AmbientLight(0xeeeeee, 1);
       this.xr.Scene.add(ambient);
-      
 
-      this.xr.Loader.load({
+      //FOG
+      var fogColor = new Color(0, 0, 0);
+      this.xr.Scene.fog = new Fog(fogColor, 2, 20);
+      this.xr.Scene.background = fogColor;
+      this.xr.Renderer.instance.setClearColor(fogColor, 1);
+
+      //FLOOR
+      const loader = new TextureLoader();
+      this.floorTexuture = loader.load(floorGrid, (texture) => {
+        console.log("TEXTURE LOADED");
+        // in this example we create the material when the texture is loaded
+        const geometry = new PlaneGeometry(10, 10);
+        const material = new MeshPhongMaterial({
+          color: 0xffffff,
+          side: DoubleSide,
+          map: texture,
+          transparent: true,
+        });
+        const plane = new Mesh(geometry, material);
+        plane.rotation.set(Math.PI / 2, 0, 0);
+        this.xr.Scene.add(plane);
+      });
+
+      //DEBUG BOX
+      const geometry = new BoxGeometry(0.5,2,0.5);
+      const material = new MeshBasicMaterial({
+        color: 0xffffff
+      });
+      const box = new Mesh(geometry, material);
+      box.position.set(0,1,5.25);
+      this.xr.Scene.add(box);
+
+      /*this.xr.Loader.load({
         name : "Playarea",
         url : Umgebung,
         onprogress : ()=>{
@@ -62,8 +102,6 @@ export default {
         }
       }).then(model => this.xr.Scene.add(model.scene));
 
-
-   
       /*this.composer = new EffectComposer(this.xr.Renderer.instance);
       this.composer.addPass(new RenderPass(this.xr.Scene, this.xr.Camera.instance));
       this.composer.addPass(
@@ -88,19 +126,26 @@ export default {
         this.RenderLoop
       );
 
-
       var btn = this.$store.state.xr.Controls.GetVRButton();
 
       this.$refs.vrButton.appendChild(btn);
 
+      this.$store.state.xr.Events.addEventListener(
+        "HandPoseChanged",
+        this.HandleHandPoses
+      );
+      this.$store.state.xr.Events.addEventListener(
+        "OnChangeXRView",
+        this.HandleXRView
+      );
 
-      this.$store.state.xr.Events.addEventListener("HandPoseChanged", this.HandleHandPoses);
-      this.$store.state.xr.Events.addEventListener("OnChangeXRView", this.HandleXRView);
-
-
-      if(!this.$store.state.keysInit){
+      if (!this.$store.state.keysInit) {
         console.log("apply Listener");
-        window.addEventListener("keyup", e => {if(e.code == "KeyF"){this.ResetCamera()}})
+        window.addEventListener("keyup", (e) => {
+          if (e.code == "KeyF") {
+            this.ResetCamera();
+          }
+        });
 
         this.$store.commit("initKeyEvents", true);
       }
@@ -108,35 +153,33 @@ export default {
     RenderLoop() {
       //this.composer.render(this.clock.getDelta());
     },
-    HandleXRView (xrMode){
-      console.log("session" ,xrMode);
+    HandleXRView(xrMode) {
+      console.log("session", xrMode);
     },
 
-    HandleHandPoses(event){
+    HandleHandPoses(event) {
       // console.log(event.hand.handedness);
       // console.log(event.resultIs.pose.names);
       // console.log("handEvent" , event);
 
-      if(event.resultIs.pose.names.includes( 'thumb' ) ){//&& !this.reset
+      if (event.resultIs.pose.names.includes("thumb")) {
+        //&& !this.reset
         console.log("thumb up");
 
         this.ResetCamera();
 
         this.reset = true;
-       
       }
     },
 
-    ResetCamera(){
-
-      var yPos = 1.5;//this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
-
-
-        console.log("ResetCamera");
-        this.$store.state.xr.Controls.SetPositionAndRotation( new Vector3(0,0,7), new Vector3(0,0,10));
-    
-      
-    }
+    ResetCamera() {
+      var yPos = 1.5; //this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;
+      console.log("ResetCamera");
+      this.$store.state.xr.Controls.SetPositionAndRotation(
+        new Vector3(0, 0, 7),
+        new Vector3(0, 0, 10)
+      );
+    },
   },
 };
 </script>
@@ -150,27 +193,25 @@ export default {
   right: 0;
 }
 
-#vr-button{
+#vr-button {
   position: absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  top:0;
-  margin:auto;
-  width:200px;
-  height:50px;
-  
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: auto;
+  width: 200px;
+  height: 50px;
 }
 
-#VRButton{
-  width:100%;
-  height:100%;
-  color:#fff;
+#VRButton {
+  width: 100%;
+  height: 100%;
+  color: #fff;
   border-radius: 5px;
   font-weight: 700;
-  background:tomato;
+  background: tomato;
   position: relative;
   display: block;
 }
-
 </style>
