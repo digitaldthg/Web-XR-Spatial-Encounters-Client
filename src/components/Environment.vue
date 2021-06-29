@@ -31,6 +31,9 @@ export default {
       //sole.log(data);
       this.data = data;
     },
+    "server-speed-update":function(data){
+      this.$store.commit("setSpeed",data)
+    }
   },
   methods: {
     updateFunction() {

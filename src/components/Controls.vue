@@ -33,6 +33,20 @@
         />
         {{ this.scale }}
       </div>
+      <div>
+        <label for="speed">Geschwindigkeit der Dreiecke: </label>
+        <input
+          type="range"
+          id="frequence"
+          name="frequnence"
+          min="0.0001"
+          max="0.1"
+          step="0.0001"
+          value="0.01"
+          @change="updateSpeed"
+        />
+        {{ this.$store.state.speed}}
+      </div>
     </div>
   </div>
 </template>
@@ -49,7 +63,7 @@ export default {
     return{
       open : true,
       frequence: 1,
-      scale: 0.5
+      scale: 0.5,
     }
   },
   mounted(){
@@ -76,6 +90,12 @@ export default {
       this.scale = event.target.value;
       this.$socket.emit("client-change-scale", {
         scale: 1 - parseFloat(event.target.value),
+      });
+    },
+     updateSpeed(event) {
+      console.log("SPEED VALUE SLIDER", event.target.value);
+      this.$socket.emit("client-change-speed", {
+        speed: parseFloat(event.target.value),
       });
     },
   },

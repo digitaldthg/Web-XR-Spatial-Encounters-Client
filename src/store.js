@@ -8,8 +8,7 @@ export default new Vuex.Store({
       xr : null,
       room : null,
       speed : 0.01,
-      keysInit : false,
-      userModel : null
+      keysInit : false
     },
     mutations: {
       xr(state, data){
@@ -20,9 +19,11 @@ export default new Vuex.Store({
       },
       initKeyEvents(state, data){
         state.keysInit = data;
+
       },
-      UserModel (state, data){
-        state.userModel = data;
+      setSpeed(state, data){
+        state.speed = data
+
       }
 
     },
