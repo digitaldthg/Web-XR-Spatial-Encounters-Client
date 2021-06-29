@@ -17,7 +17,7 @@ class Timer{
     this.timerProgress.position.set(0,0,-.01);
     this.instance.add(this.timerProgress);
 
-    this.instance.position.set(0,0,-2);
+    this.instance.position.set(0,0,-1);
 
     return this;
 

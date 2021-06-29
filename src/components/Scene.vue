@@ -146,8 +146,10 @@ export default {
         this.$store.commit("initKeyEvents", true);
       }
     },
-    RenderLoop() {
-      //this.composer.render(this.clock.getDelta());
+    RenderLoop (){
+      
+
+
     },
     HandleXRView(xrMode) {
       console.log("session", xrMode);

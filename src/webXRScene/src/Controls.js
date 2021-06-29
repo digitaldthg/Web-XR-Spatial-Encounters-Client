@@ -4,9 +4,6 @@ import {VRController} from './VRController';
 import { VRButton } from './VRButton.js';
 import { ARButton } from './ARButton.js';
 import { Euler, Object3D, Quaternion, Vector3,ArrowHelper } from 'three';
-import { VRHands } from './HandTracking/VRHands';
-
-import {Handy} from './HandTracking/Handy';
 
 
 class Controls{
@@ -96,28 +93,6 @@ class Controls{
     this.GetARButton = this.GetARButton.bind(this);
     this.GetVRButton = this.GetVRButton.bind(this);
 
-    //this.arrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
-    //this.targetArrowHelper = new ArrowHelper( new Vector3(0,0,1) , new Vector3(0,0,0), 100, Math.random() * 0xffffff );
-
-    //this.context.Scene.add(this.arrowHelper);
-    //this.context.Scene.add(this.targetArrowHelper);
-
-    /**VR Controls */
-    //this.vr_controller = new VRController( this.context );
-    //this.vr_hands = new VRHands(this.context);
-
-    // this.context.Scene.add( this.vr_controller.controllerGrips[ 0 ], this.vr_controller.controllers[ 0 ] );
-
-    // this.vr_controller.controllers[ 0 ].addEventListener( 'selectstart', ()=> { 
-    //   this.selectState = true;
-      
-    //   this.context.Events.dispatchEvent("mouse-down",{});
-    
-    // });
-    // this.vr_controller.controllers[ 0 ].addEventListener( 'selectend', ()=> { 
-    //   this.selectState = false;
-    //   this.context.Events.dispatchEvent("mouse-up",{});
-    // });
 
     this.context.Events.addEventListener("OnAnimationLoop", this.Update );
 
@@ -257,9 +232,6 @@ class Controls{
     }
     if(this.currentControls == "VR"){
       //this.vr_controller.Update();
-
-      Handy.update();
-
       var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
       
       var directionVector = new Vector3();

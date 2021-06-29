@@ -1,10 +1,9 @@
 <template></template>
 <script>
 
-import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color, Vector3, Quaternion} from 'three';
+import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color, Vector3, Quaternion, Raycaster,CircleGeometry} from 'three';
 import UserData from '../class/UserData';
 import Timer from '../Timer';
-import { Handy } from '../webXRScene/src/HandTracking/Handy';
 
 
 export default {
@@ -21,6 +20,7 @@ export default {
       keyArray : ["w","a","s","d"],
       speed : .1,
       data : Object.assign({}, UserData),
+      raycaster : null,
       transform: {
         position : new Vector3(),
         rotation : new Quaternion(),
@@ -44,12 +44,7 @@ export default {
 
       this.InitPlayer();
 
-      this.$store.state.xr.Events.addEventListener("HandPoseChanged", this.HandleHandPoses);
-
       this.InitTimer();
-
-      this.ToggleHands(false, "left");
-      this.ToggleHands(false, "right");
 
     }
   },
@@ -70,10 +65,20 @@ export default {
 
       this.data.room = this.$route.params.roomID;
 
-      console.log(this.$route.params.roomID);
-
+        console.log(this.$route.params.roomID);
+        
+      this.raycaster = new Raycaster();
+      this.CreatePlayerFloor();
       this.InitEvents();
 
+    },
+    CreatePlayerFloor(){
+      const geometry = new CircleGeometry( .5, 32 );
+      const material = new MeshBasicMaterial( { color: 0xffff00 } );
+      const circle = new Mesh( geometry, material );
+      circle.rotation.x = -90* Math.PI/180;
+      this.playerFloor = circle;
+      this.$store.state.xr.Scene.add( circle );
     },
     InitTimer(){
       this.timer = new Timer({
@@ -84,51 +89,7 @@ export default {
       this.player.add(this.timer.instance);
 
     },
-     HandleHandPoses(event){
-      console.log(event.hand.handedness);
-      console.log(event.resultIs.pose.names);
-      console.log("handEvent" , event);
-
-      if(event.resultIs.pose.names.includes( 'thumb' ) ){//event.resultIs.pose.names.includes( 'flare' ) ||
-        console.log("thumb up", this.timeout);
-        this.ToggleHands(true, event.hand.handedness);
-        this.thumb = true;
-      }
-
-      if(event.resultWas.pose.names.includes( 'thumb' )){//event.resultWas.pose.names.includes( 'flare' ) || 
-        this.timeout = 0;
-        this.thumb = false;
-        this.ToggleHands(false, event.hand.handedness);
-      }
-    },
-
-    ToggleHands(boolean, side){
-      
-      if(side == "left"){
-        var leftHand = Handy.hands.getLeft();
-
-        if(typeof(leftHand) === "undefined"){ return; }
-
-        leftHand.traverse((child)=>{
-          if(child.hasOwnProperty("visible")){
-            child.visible = boolean;
-          }
-        });
-      }
-
-      if(side == "right"){
-        var rightHand = Handy.hands.getRight();
-
-        if(typeof(rightHand) === "undefined"){ return; }
-
-        rightHand.traverse((child)=>{
-          if(child.hasOwnProperty("visible")){
-            child.visible = boolean;
-          }
-        });
-      }
-
-    },
+    
     ResetCamera(){
 
       var yPos = 1.5;//this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
@@ -158,7 +119,7 @@ export default {
       
       var keyCopy = Object.assign({}, this.key);
 
-      console.log(keyName);
+     // console.log(keyName);
 
       switch(keyName){
         case "w":
@@ -231,23 +192,23 @@ export default {
 
       if(!this.ready){ return; }
 
-      if(this.thumb){
-        this.timer.SetVisible(true);
-        if(this.timeout < 100){
-          this.timeout++;
-        }else{
-          this.timeout = 0;
-          this.ResetCamera();
-          this.thumb = false;
-          this.timer.SetVisible(false);
-        }
+      // if(this.thumb){
+      //   this.timer.SetVisible(true);
+      //   if(this.timeout < 100){
+      //     this.timeout++;
+      //   }else{
+      //     this.timeout = 0;
+      //     this.ResetCamera();
+      //     this.thumb = false;
+      //     this.timer.SetVisible(false);
+      //   }
 
-        this.timer.Progress(this.timeout);
+      //   this.timer.Progress(this.timeout);
 
-        this.reset = true;
-      }else{
-        this.timer.SetVisible(false);
-      }
+      //   this.reset = true;
+      // }else{
+      //   this.timer.SetVisible(false);
+      // }
 
 
       if(!this.inVR){
@@ -257,8 +218,34 @@ export default {
 
         vrCamera.matrixWorld.decompose(this.transform.position,this.transform.rotation,this.transform.scale);
         this.player.position.set(this.transform.position.x,this.transform.position.y,this.transform.position.z);
+        this.playerFloor.position.set(this.transform.position.x,0,this.transform.position.z);
+
         this.player.quaternion = this.transform.rotation.clone();
 
+        var pos = new Vector3();
+        var dir = new Vector3();
+        vrCamera.getWorldPosition(pos);
+        vrCamera.getWorldDirection(dir);
+        this.raycaster.set(pos , dir);
+        var intersection = this.raycaster.intersectObjects( [ this.playerFloor ], true );
+
+        if(intersection.length > 0){
+            this.timer.SetVisible(true);
+          if(this.timeout < 100){
+            this.timeout++;
+          }else{
+            this.timeout = 0;
+            this.ResetCamera();
+            this.thumb = false;
+            this.timer.SetVisible(false);
+          }
+
+          this.timer.Progress(this.timeout);
+
+          this.reset = true;
+        }else{
+          this.timer.SetVisible(false);
+        }
       }
 
       this.delta += t.getDelta();

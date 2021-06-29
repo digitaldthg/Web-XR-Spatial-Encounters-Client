@@ -10,7 +10,6 @@ import { Camera } from './Camera.js';
 import { Controls } from './Controls.js';
 import {AnimationMixer} from 'three';
 import StatClass from './StatClass';
-import { VRHands } from './HandTracking/VRHands.js';
 
 class webXRScene{
   constructor(elementID){
@@ -30,8 +29,6 @@ class webXRScene{
     this.Camera = new Camera(this);
 
     this.Controls = new Controls(this);
-
-    this.VRHands = new VRHands(this);
 
     //this.Stats  = new StatClass(this);
 
