@@ -3,6 +3,8 @@
 
 import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color, Vector3, Quaternion} from 'three';
 import UserData from '../class/UserData';
+import Timer from '../Timer';
+import { Handy } from '../webXRScene/src/HandTracking/Handy';
 
 
 export default {
@@ -13,6 +15,9 @@ export default {
       fps : .25,
       player : null,
       ready : false,
+      timer : null,
+      timeout: 0,
+      thumb : false,
       keyArray : ["w","a","s","d"],
       speed : .1,
       data : Object.assign({}, UserData),
@@ -39,6 +44,13 @@ export default {
 
       this.InitPlayer();
 
+      this.$store.state.xr.Events.addEventListener("HandPoseChanged", this.HandleHandPoses);
+
+      this.InitTimer();
+
+      this.ToggleHands(false, "left");
+      this.ToggleHands(false, "right");
+
     }
   },
 
@@ -62,6 +74,64 @@ export default {
 
       this.InitEvents();
 
+    },
+    InitTimer(){
+      this.timer = new Timer({
+        store : this.$store,
+        xr : this.$store.state.xr
+      });
+
+      this.player.add(this.timer.instance);
+
+    },
+     HandleHandPoses(event){
+      console.log(event.hand.handedness);
+      console.log(event.resultIs.pose.names);
+      console.log("handEvent" , event);
+
+      if(event.resultIs.pose.names.includes( 'flare' ) || event.resultIs.pose.names.includes( 'thumb' ) ){//&& !this.reset
+        console.log("thumb up", this.timeout);
+        this.ToggleHands(true, event.hand.handedness);
+        this.thumb = true;
+      }
+
+      if(event.resultWas.pose.names.includes( 'flare' ) || event.resultIs.pose.names.includes( 'thumb' )){
+        this.timeout = 0;
+        this.thumb = false;
+        this.ToggleHands(false, event.hand.handedness);
+      }
+    },
+
+    ToggleHands(boolean, side){
+      
+      if(side == "left"){
+        var leftHand = Handy.hands.getLeft();
+        leftHand.traverse((child)=>{
+          if(child.hasOwnProperty("visible")){
+            child.visible = boolean;
+          }
+        });
+      }
+
+      if(side == "right"){
+        var rightHand = Handy.hands.getRight();
+        rightHand.traverse((child)=>{
+          if(child.hasOwnProperty("visible")){
+            child.visible = boolean;
+          }
+        });
+      }
+
+    },
+    ResetCamera(){
+
+      var yPos = 1.5;//this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
+
+
+        console.log("ResetCamera");
+        this.$store.state.xr.Controls.SetPositionAndRotation( new Vector3(0,0,7), new Vector3(0,0,10));
+    
+      
     },
     ConvertPlayerToVR(){
       this.inVR = true;
@@ -154,6 +224,25 @@ export default {
     Animate(t){
 
       if(!this.ready){ return; }
+
+      if(this.thumb){
+        this.timer.SetVisible(true);
+        if(this.timeout < 100){
+          this.timeout++;
+        }else{
+          this.timeout = 0;
+          this.ResetCamera();
+          this.thumb = false;
+          this.timer.SetVisible(false);
+        }
+
+        this.timer.Progress(this.timeout);
+
+        this.reset = true;
+      }else{
+        this.timer.SetVisible(false);
+      }
+
 
       if(!this.inVR){
         this.KeyBoardMovement();

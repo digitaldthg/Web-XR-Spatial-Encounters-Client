@@ -29,7 +29,8 @@ export default {
   data() {
     return {
       xr: null,
-      reset : false
+      reset : false,
+      timer : null
     };
   },
   sockets: {
@@ -61,6 +62,8 @@ export default {
         }
       }).then(model => this.xr.Scene.add(model.scene));
 
+
+   
       /*this.composer = new EffectComposer(this.xr.Renderer.instance);
       this.composer.addPass(new RenderPass(this.xr.Scene, this.xr.Camera.instance));
       this.composer.addPass(

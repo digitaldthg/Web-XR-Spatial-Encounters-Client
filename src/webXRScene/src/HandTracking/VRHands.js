@@ -31,12 +31,9 @@ class VRHands {
         this.context.Controls.cameraHelper.add( hand );
 
         hand.models = [
-
-          handModelFactory.createHandModel( hand, 'boxes' ),
-          handModelFactory.createHandModel( hand, 'spheres' ),
           handModelFactory.createHandModel( hand, 'mesh' )
         ]
-        hand.modelIndex = 2
+        hand.modelIndex = 0
         hand.isDefaultColor = true
 
         //  This is what makes detecting hand poses easy!
@@ -63,7 +60,7 @@ class VRHands {
 
         });
 
-        hand.displayFrame.visible = this.visible;
+        //hand.displayFrame.visible = false;//this.visible;
 
 
         return hand

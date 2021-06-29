@@ -246,31 +246,31 @@ const Handy = {
 		//  SurfaceText returns a THREE.Mesh
 		//  with additional methods like print().
 
-		obj.displayFrameAnchor = new THREE.Object3D()
-		obj.add( obj.displayFrameAnchor )
-		obj.displayFrame = new SurfaceText({
+		// obj.displayFrameAnchor = new THREE.Object3D()
+		// obj.add( obj.displayFrameAnchor )
+		// obj.displayFrame = new SurfaceText({
 
-			text: 'No data',
-			canvas: {
+		// 	text: 'No data',
+		// 	canvas: {
 
-				width:  512,
-				height: 128
-			},
-			virtual: {
+		// 		width:  512,
+		// 		height: 128
+		// 	},
+		// 	virtual: {
 
-				width:  0.20,
-				height: 0.05
-			},
-			style: {
+		// 		width:  0.20,
+		// 		height: 0.05
+		// 	},
+		// 	style: {
 
-				fontFamily: 'bold monospace',
-				fontSize:   '30px',
-				textAlign:  'center',
-				fillStyle:  '#00DDFF'
-			}
-		})
-		obj.displayFrameAnchor.add( obj.displayFrame )
-		obj.displayFrame.visible = true//false
+		// 		fontFamily: 'bold monospace',
+		// 		fontSize:   '30px',
+		// 		textAlign:  'center',
+		// 		fillStyle:  '#00DDFF'
+		// 	}
+		// })
+		// obj.displayFrameAnchor.add( obj.displayFrame )
+		// obj.displayFrame.visible = false
 
 
 		//  Glob on the methods. No classes required :)
@@ -1189,54 +1189,54 @@ Object.assign( Handy.protos, {
 		// (angle˚, distance, isExtended, isContracted)
 		//  and there is existing joint data to use...
 
-		if( hand.displayFrame.visible === true && 
-			hand.joints[ 'wrist' ] &&
-			hand.joints[ 'wrist' ].position ){
+		// if( hand.displayFrame.visible === true && 
+		// 	hand.joints[ 'wrist' ] &&
+		// 	hand.joints[ 'wrist' ].position ){
 
-			const wrist = hand.joints[ 'wrist' ]
-			hand.displayFrameAnchor.position.copy( wrist.position )
-			hand.displayFrameAnchor.quaternion.copy( wrist.quaternion )
+		// 	const wrist = hand.joints[ 'wrist' ]
+		// 	// hand.displayFrameAnchor.position.copy( wrist.position )
+		// 	// hand.displayFrameAnchor.quaternion.copy( wrist.quaternion )
 
 
-			//  TO DO:
-			//  displayFrame should actually ORBIT the wrist at a fixed radius
-			//  and always choose the orbit degree that faces the camera.
+		// 	//  TO DO:
+		// 	//  displayFrame should actually ORBIT the wrist at a fixed radius
+		// 	//  and always choose the orbit degree that faces the camera.
 			
-			let handedness = hand.handedness
-			if( handedness === 'left' || handedness === 'right' ){
+		// 	let handedness = hand.handedness
+		// 	if( handedness === 'left' || handedness === 'right' ){
 
-				handedness = handedness.toUpperCase()
-			}
-			else {
+		// 		handedness = handedness.toUpperCase()
+		// 	}
+		// 	else {
 
-				handedness = 'UNKNOWN'
-			}
-			if( handedness === 'LEFT' ){
+		// 		handedness = 'UNKNOWN'
+		// 	}
+		// 	// if( handedness === 'LEFT' ){
 
-				hand.displayFrame.position.set( 0.06, -0.05, 0.02 )
-			}
-			if( handedness === 'RIGHT' ){
+		// 	// 	hand.displayFrame.position.set( 0.06, -0.05, 0.02 )
+		// 	// }
+		// 	// if( handedness === 'RIGHT' ){
 
-				hand.displayFrame.position.set( -0.06, -0.05, 0.02 )
-			}
-			hand.displayFrame.rotation.x = Math.PI / -2
-			hand.displayFrame.rotation.y = Math.PI
+		// 	// 	hand.displayFrame.position.set( -0.06, -0.05, 0.02 )
+		// 	// }
+		// 	// hand.displayFrame.rotation.x = Math.PI / -2
+		// 	// hand.displayFrame.rotation.y = Math.PI
 
-			let displayString = handedness
-			if( hand.searchResults.length &&
-				hand.searchResults[ 0 ].pose ){
+		// 	// let displayString = handedness
+		// 	// if( hand.searchResults.length &&
+		// 	// 	hand.searchResults[ 0 ].pose ){
 
-				displayString += '\n'+ hand.searchResults[ 0 ].pose.names
-				.reduce( function( names, name, i ){
+		// 	// 	displayString += '\n'+ hand.searchResults[ 0 ].pose.names
+		// 	// 	.reduce( function( names, name, i ){
 
-					if( i ) names += ', '
-					return names += name
+		// 	// 		if( i ) names += ', '
+		// 	// 		return names += name
 
-				}, '' )
-				displayString +='\n@ '+ hand.searchResults[ 0 ].distance.toLocaleString() +'mm'
-			}
-			hand.displayFrame.print( displayString )
-		}
+		// 	// 	}, '' )
+		// 	// 	displayString +='\n@ '+ hand.searchResults[ 0 ].distance.toLocaleString() +'mm'
+		// 	// }
+		// 	// hand.displayFrame.print( displayString )
+		// }
 
 
 		//  Do you believe in magic?
