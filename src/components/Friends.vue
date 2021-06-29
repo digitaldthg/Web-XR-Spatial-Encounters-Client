@@ -35,11 +35,21 @@ export default {
           color: new Color(0.5, 0.5, 0.5, 1),
           side: DoubleSide,
         });
-        var firstRing = model.scene.children[0].clone();
-        firstRing.scale.set(firstRing.scale.x*0.75, firstRing.scale.y , firstRing.scale.z*0.75);
 
         this.friendRings = new Group();
-        this.friendRings.add(firstRing);
+        
+        for(var i=0;i<5;i++){
+          let ring =  model.scene.children[0].clone();
+          let scale = (1 - (.05 * i));
+              ring.scale.set(ring.scale.x - scale, 1 , ring.scale.x - scale);
+              ring.position.set(0, .25 * i ,0);
+              
+              this.friendRings.add(ring);
+
+        }
+        // var firstRing = model.scene.children[0].clone();
+        //     firstRing.scale.set(firstRing.scale.x*0.75, firstRing.scale.y , firstRing.scale.z*0.75);
+
 
         console.log("RING LOADED", model.scene);
       });

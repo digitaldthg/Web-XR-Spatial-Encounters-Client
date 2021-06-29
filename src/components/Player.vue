@@ -89,15 +89,13 @@ export default {
       console.log(event.resultIs.pose.names);
       console.log("handEvent" , event);
 
-      if(event.resultIs.pose.names.includes( 'flare' ) || 
-        event.resultIs.pose.names.includes( 'thumb' ) ){//&& !this.reset
+      if(event.resultIs.pose.names.includes( 'thumb' ) ){//event.resultIs.pose.names.includes( 'flare' ) ||
         console.log("thumb up", this.timeout);
         this.ToggleHands(true, event.hand.handedness);
         this.thumb = true;
       }
 
-      if(event.resultWas.pose.names.includes( 'flare' ) || 
-        event.resultIs.pose.names.includes( 'thumb' )){
+      if(event.resultWas.pose.names.includes( 'thumb' )){//event.resultWas.pose.names.includes( 'flare' ) || 
         this.timeout = 0;
         this.thumb = false;
         this.ToggleHands(false, event.hand.handedness);
