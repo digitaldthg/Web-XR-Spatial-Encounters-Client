@@ -340,56 +340,56 @@ class Controls{
         
         // Camera ist jetzt richtig posioniert und sitzt in World Position 
 
-        var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
+      //   var vrCamera = this.context.Renderer.instance.xr.getCamera(this.context.Camera.instance);
 
-        var currentVRCameraRot = {...this.context.Camera.instance.rotation};
+      //   var currentVRCameraRot = {...this.context.Camera.instance.rotation};
 
-       console.log(this.cameraHelper);
+      //  console.log(this.cameraHelper);
 
-       this.cameraHelper.rotation = new Euler();
+      //  this.cameraHelper.rotation = new Euler();
 
-       var v_pos = new Vector3();
-       var v_quat = new Quaternion();
-       var v_scale = new Vector3();
-       console.log(vrCamera.matrixWorld.decompose(v_pos,v_quat,v_scale));
+      //  var v_pos = new Vector3();
+      //  var v_quat = new Quaternion();
+      //  var v_scale = new Vector3();
+      //  console.log(vrCamera.matrixWorld.decompose(v_pos,v_quat,v_scale));
 
-        console.log("v_pos" , v_pos.add(this.cameraHelper.position));
+      //   console.log("v_pos" , v_pos.add(this.cameraHelper.position));
 
-        var cameraWorldPosition = v_pos.add(this.cameraHelper.position);
-            cameraWorldPosition.y = 0;
-        var cameraWorldDistToTarget = cameraWorldPosition.distanceTo(targetPosition);
+      //   var cameraWorldPosition = v_pos.add(this.cameraHelper.position);
+      //       cameraWorldPosition.y = 0;
+      //   var cameraWorldDistToTarget = cameraWorldPosition.distanceTo(targetPosition);
 
-        var dir = new Vector3(
-          cameraWorldPosition.x - targetPosition.x,
-          cameraWorldPosition.y - targetPosition.y,
-          cameraWorldPosition.z - targetPosition.z,
-        ); 
+      //   var dir = new Vector3(
+      //     cameraWorldPosition.x - targetPosition.x,
+      //     cameraWorldPosition.y - targetPosition.y,
+      //     cameraWorldPosition.z - targetPosition.z,
+      //   ); 
 
-        dir.normalize();
+      //   dir.normalize();
 
-        console.log("cameraWorldPosToTarget" , cameraWorldDistToTarget, targetPosition);
-        console.log("position" , {...this.cameraHelper.position}, this.cameraHelper.worldToLocal(vrCamera.position) );
-        console.log(vrCamera.rotation,currentVRCameraRot,{...this.context.Camera.instance.rotation});
+      //   console.log("cameraWorldPosToTarget" , cameraWorldDistToTarget, targetPosition);
+      //   console.log("position" , {...this.cameraHelper.position}, this.cameraHelper.worldToLocal(vrCamera.position) );
+      //   console.log(vrCamera.rotation,currentVRCameraRot,{...this.context.Camera.instance.rotation});
  
-        this.cameraHelper.translateOnAxis(dir, cameraWorldDistToTarget);
+      //   this.cameraHelper.translateOnAxis(dir, cameraWorldDistToTarget);
 
       
-        var v_pos = new Vector3();
-        var v_quat = new Quaternion();
-        var v_scale = new Vector3();
-        vrCamera.matrixWorld.decompose(v_pos,v_quat,v_scale);
+      //   var v_pos = new Vector3();
+      //   var v_quat = new Quaternion();
+      //   var v_scale = new Vector3();
+      //   vrCamera.matrixWorld.decompose(v_pos,v_quat,v_scale);
 
-        var v_rot = new Euler().setFromQuaternion(v_quat, "XYZ");
+      //   var v_rot = new Euler().setFromQuaternion(v_quat, "XYZ");
 
-        var qrot = new THREE.Quaternion();
-            qrot.setFromUnitVectors(v_rot.toVector3(),new Vector3(0,0,1)); // (unit vectors)
+      //   var qrot = new THREE.Quaternion();
+      //       qrot.setFromUnitVectors(v_rot.toVector3(),new Vector3(0,0,1)); // (unit vectors)
 
 
        
-        this.cameraHelper.quaternion = qrot;
+      //   this.cameraHelper.quaternion = qrot;
 
-        dir.multiplyScalar(-1);
-        this.cameraHelper.translateOnAxis(dir, cameraWorldDistToTarget);
+      //   dir.multiplyScalar(-1);
+      //   this.cameraHelper.translateOnAxis(dir, cameraWorldDistToTarget);
 
 
 
