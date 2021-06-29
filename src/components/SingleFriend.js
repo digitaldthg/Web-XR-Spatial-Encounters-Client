@@ -9,19 +9,7 @@ class SingleFriend{
 
     this.Init(data);
   }
-  Load(){
-    return this.xr.Loader.load({
-      name: "Ring",
-      url: Ring,
-      onprogress: () => {
-        console.log("progress");
-      },
-    }).then((model) => {
-      console.log(model);
-      this.store.commit("UserModel" , model.scene.children[0]);
-    });
-  }
-
+  
   Init(data){
     this.instance = this.Create(data);
     
@@ -165,7 +153,7 @@ class SingleFriend{
         // );
 
     if (this.instance.userData.lerpAlpha >= 100) {
-      console.log(this.instance.userData.lerpAlpha);
+      
       this.instance.userData.lerpAlpha = 0;
       this.instance.userData.targetPosition = null;
       this.instance.userData.lastPosition = newPos.clone();
