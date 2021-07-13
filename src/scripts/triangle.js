@@ -37,7 +37,7 @@ class Triangle {
         geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
         var colors = this.data.Color;
-        console.log("COLORS ", colors)
+        //console.log("COLORS ", colors)
 
         if (colors.length == 2) {
             colors[2] = colors[1];
@@ -101,7 +101,7 @@ class Triangle {
     AnimateTriangle = () => {
         if (this.mesh != null) {
             var pos = this.mesh.position;
-            this.mesh.position.set(pos.x, pos.y + this.store.state.speed, pos.z);
+            this.mesh.position.set(pos.x, pos.y + this.store.state.speed/10, pos.z);
         }
     }
 

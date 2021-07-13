@@ -17,7 +17,7 @@
           value="1"
           @change="updateSlider"
         />
-        {{ this.frequence }}
+        {{ this.$store.state.frequency }}
       </div>
       <div>
         <label for="scale">Skalierung der Dreiecke: </label>
@@ -40,9 +40,9 @@
           id="frequence"
           name="frequnence"
           min="0.0001"
-          max="0.1"
-          step="0.0001"
-          value="0.01"
+          max="1"
+          step="0.001"
+          value="0.1"
           @change="updateSpeed"
         />
         {{ this.$store.state.speed}}
@@ -62,7 +62,6 @@ export default {
   data(){
     return{
       open : true,
-      frequence: 1,
       scale: 0.5,
     }
   },
@@ -80,7 +79,7 @@ export default {
 
     updateSlider(event) {
       console.log("SLIDER VALUE ", event.target.value);
-      this.frequence = event.target.value;
+      //this.frequence = event.target.value;
       this.$socket.emit("client-change-frequency", {
         frequency: parseFloat(event.target.value),
       });
