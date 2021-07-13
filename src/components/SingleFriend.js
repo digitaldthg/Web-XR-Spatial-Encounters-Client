@@ -6,7 +6,7 @@ class SingleFriend{
     this.store = store;
     this.xr = store.state.xr;
     this.rings = [];
-
+    this.bottomColor = new Color(0xffffff);
     this.Init(data);
   }
   
@@ -45,7 +45,7 @@ class SingleFriend{
       // group.position.x = data.transform.position.x;
       // group.position.y = data.transform.position.y;
       // group.position.z = data.transform.position.z;
-
+      group.userData.headHeight = data.transform.headHeight;
       group.userData.targetPosition = new Vector3(
         data.transform.position.x,
         data.transform.position.y,
@@ -79,6 +79,7 @@ class SingleFriend{
   updateData = (data) => {
     if(typeof(data) == "undefined"){return;}
     
+    this.instance.userData.headHeight = data.transform.headHeight;
     this.instance.userData.targetPosition = new Vector3(
       data.transform.position.x,
       data.transform.position.y,
@@ -90,7 +91,11 @@ class SingleFriend{
 
     this.instance.userData.lerpAlpha = 0;
     this.instance.userData.color = Object.assign( {}, data.color );
-    this.instance.userData.targetReached = false;
+    this.instance.userData.targetReached = false; 
+
+
+    console.log("data" , data);
+
     
   }
   EaseAlpha(x){
@@ -134,17 +139,26 @@ class SingleFriend{
     this.head.position.set(0,newPos.y,0);
 
     this.head.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
-   
-
+  
+    let color = new Color(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);
+    
+    
     var target = new Vector3(lerpPos.x,lerpPos.y,lerpPos.z);
     var origin = new Vector3(0,0,0);
 
     this.rings.map((ring,index)=>{
-      var lerper = (target.clone()).lerp( origin, (1 / (this.rings.length - 1)) * index);//.lerpVectors(origin,target, 1 / 5 * i);
+      var lerpAlpha = (1 / (this.rings.length - 1)) * index;
+      var lerper = (target.clone()).lerp( origin, lerpAlpha);//.lerpVectors(origin,target, 1 / 5 * i);
       ring.position.set(0,lerper.y,0);
+
+      var colorLerp = lerper.y == 0 ? .01 : lerper.y;
+      //console.log(colorLerp / 1.75 , lerper.y);
+      ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
     });  
+    
+    this.head.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
 
-
+      //console.log()
         // friend.material.color = new Color(
         //   friend.userData.color.r,
         //   friend.userData.color.g,

@@ -90,21 +90,22 @@ export default {
 
     },
     
-    ResetCamera(){
+    ResetCamera() {
 
-      var yPos = 1.5;//this.$store.state.xr.Controls.GetCurrentXRMode() == "Desktop" ? 1.5 : 0;  
+      console.log("ResetCamera");
+      this.$store.state.xr.Controls.SetPositionAndRotation( new Vector3(0,0,7), new Vector3(0,0,10));
 
-
-        console.log("ResetCamera");
-        this.$store.state.xr.Controls.SetPositionAndRotation( new Vector3(0,0,7), new Vector3(0,0,10));
-    
+      this.data.transform.headHeight = this.data.transform.position.y;
       
     },
     ConvertPlayerToVR(){
       this.inVR = true;
     },
     InitEvents(){
+      this.keyDown = this.keyDown.bind(this);
+      this.keyUp = this.keyUp.bind(this);
 
+      this.Animate = this.Animate.bind(this);
       window.addEventListener("keydown", this.keyDown);
       window.addEventListener("keyup", this.keyUp);
 
@@ -140,8 +141,15 @@ export default {
       this.key = keyCopy;
       
     },
-    keyUp(e){ 
+    keyUp (e) { 
       const keyName = e.key;
+
+      console.log(keyName);
+
+      if(keyName == "f"){
+        this.ResetCamera();
+      }
+
       if(!this.keyArray.includes(keyName)){ return; }
 
       var keyCopy = Object.assign({}, this.key);
@@ -192,25 +200,6 @@ export default {
 
       if(!this.ready){ return; }
 
-      // if(this.thumb){
-      //   this.timer.SetVisible(true);
-      //   if(this.timeout < 100){
-      //     this.timeout++;
-      //   }else{
-      //     this.timeout = 0;
-      //     this.ResetCamera();
-      //     this.thumb = false;
-      //     this.timer.SetVisible(false);
-      //   }
-
-      //   this.timer.Progress(this.timeout);
-
-      //   this.reset = true;
-      // }else{
-      //   this.timer.SetVisible(false);
-      // }
-
-
       if(!this.inVR){
         this.KeyBoardMovement();
       }else{
@@ -256,10 +245,11 @@ export default {
         this.delta = this.delta % this.fps;
       }
       
-
       this.ApplyData();
     },
     ApplyData(){
+
+      console.log("this.data" , this.data);
       var dataCopy = Object.assign({}, this.data);
       dataCopy.transform.position.x = this.player.position.x;
       dataCopy.transform.position.y = this.player.position.y;

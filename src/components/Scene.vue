@@ -135,16 +135,16 @@ export default {
         this.HandleXRView
       );
 
-      if (!this.$store.state.keysInit) {
-        console.log("apply Listener");
-        window.addEventListener("keyup", (e) => {
-          if (e.code == "KeyF") {
-            this.ResetCamera();
-          }
-        });
+      // if (!this.$store.state.keysInit) {
+      //   console.log("apply Listener");
+      //   window.addEventListener("keyup", (e) => {
+      //     if (e.code == "KeyF") {
+      //       this.ResetCamera();
+      //     }
+      //   });
 
-        this.$store.commit("initKeyEvents", true);
-      }
+      //   this.$store.commit("initKeyEvents", true);
+      // }
     },
     RenderLoop (){
       
