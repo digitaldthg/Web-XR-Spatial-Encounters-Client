@@ -33,13 +33,16 @@ export default {
     },
     "server-speed-update":function(data){
       this.$store.commit("setSpeed",data)
+    } ,
+    "server-frequency-update":function(data){
+      this.$store.commit("setFrequency",data)
     }
   },
   methods: {
     updateFunction() {
       this.delta += this.clock.getDelta();
       if (this.data != null) {
-        if (this.delta > this.data.Triangles[0].Frequence) {
+        if (this.delta > this.$store.state.frequency) {
           this.spawnTriangles();
           this.delta = 0;
         }

@@ -7,7 +7,8 @@ export default new Vuex.Store({
     state: {
       xr : null,
       room : null,
-      speed : 0.01,
+      speed : 0.1,
+      frequency: 1,
       keysInit : false
     },
     mutations: {
@@ -21,8 +22,13 @@ export default new Vuex.Store({
         state.keysInit = data;
       },
       setSpeed(state, data){
+        console.log("Set Speed ",data)
         state.speed = data
       },
+      setFrequency(state,frequ){
+        console.log("Set Frequ ",frequ)
+        state.frequency = frequ
+      }
 
     },
     actions: {
