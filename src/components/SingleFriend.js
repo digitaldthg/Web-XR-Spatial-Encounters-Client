@@ -150,21 +150,15 @@ class SingleFriend{
       var lerpAlpha = (1 / (this.rings.length - 1)) * index;
       var lerper = (target.clone()).lerp( origin, lerpAlpha);//.lerpVectors(origin,target, 1 / 5 * i);
       ring.position.set(0,lerper.y,0);
-
-      var colorLerp = lerper.y == 0 ? .01 : lerper.y;
-      //console.log(colorLerp / 1.75 , lerper.y);
+      
+      //Ringfarbe lerpen
       ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
     });  
     
+    //Headfarbe lerpen
     this.head.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
 
-      //console.log()
-        // friend.material.color = new Color(
-        //   friend.userData.color.r,
-        //   friend.userData.color.g,
-        //   friend.userData.color.b,
-        //   friend.userData.color.a
-        // );
+   
 
     if (this.instance.userData.lerpAlpha >= 100) {
       

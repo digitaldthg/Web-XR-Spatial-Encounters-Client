@@ -13,10 +13,10 @@ const UserData = {
     scale : { x : 1,y : 1, z: 1},
   },
   color : {
-      r : Math.random(),
-      g : Math.random(),
-      b : Math.random(),
-      a : Math.random(),
+      r : Math.random(),// 1,
+      g : Math.random(),// 0,
+      b : Math.random(),// 0,
+      a : 1,
   },
 }
 export default UserData;

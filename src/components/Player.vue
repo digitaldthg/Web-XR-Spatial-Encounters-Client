@@ -1,7 +1,7 @@
 <template></template>
 <script>
 
-import {Mesh, BoxGeometry,MeshNormalMaterial, MeshBasicMaterial, Color, Vector3, Quaternion, Raycaster,CircleGeometry} from 'three';
+import {Mesh,CylinderGeometry, DoubleSide, BoxGeometry,Group,MeshNormalMaterial, MeshBasicMaterial, Color, Vector3, Quaternion, Raycaster,CircleGeometry} from 'three';
 import UserData from '../class/UserData';
 import Timer from '../Timer';
 
@@ -17,6 +17,8 @@ export default {
       timer : null,
       timeout: 0,
       thumb : false,
+      rings : [],
+      bottomColor: new Color(0xffffff),
       keyArray : ["w","a","s","d"],
       speed : .1,
       data : Object.assign({}, UserData),
@@ -57,11 +59,27 @@ export default {
 
       this.$store.state.xr.Events.addEventListener("OnChangeXRView", this.ConvertPlayerToVR);
 
-      this.player = new Mesh(new BoxGeometry(0.5,0.5,0.5), new MeshBasicMaterial({
-        color : new Color(this.data.color.r,this.data.color.g,this.data.color.b,this.data.color.a)
+      this.playerGroup = new Group();
+      var color = new Color(this.data.color.r,this.data.color.g,this.data.color.b,this.data.color.a);
+      var target = new Vector3(this.data.transform.position.x,this.data.transform.position.y,this.data.transform.position.z);
+      var origin = new Vector3(0,0,0);
+
+      for(var i=0;i<=5;i++){
+        let scale = .2 * i ;
+        const geometry = new CylinderGeometry( scale,scale, .06, 64, 2,true );
+        const material = new MeshBasicMaterial({side : DoubleSide, color: color} );
+        const ring = new Mesh( geometry, material );
+        
+        this.playerGroup.add(ring);
+        this.rings.push(ring);
+      }
+
+      this.player = new Mesh(new BoxGeometry(0.05,0.05,0.05), new MeshBasicMaterial({
+        color : color
       }));
 
       this.$store.state.xr.Scene.add(this.player);
+      this.$store.state.xr.Scene.add(this.playerGroup);
 
       this.data.room = this.$route.params.roomID;
 
@@ -74,7 +92,7 @@ export default {
     },
     CreatePlayerFloor(){
       const geometry = new CircleGeometry( .5, 32 );
-      const material = new MeshBasicMaterial( { color: 0xffff00 } );
+      const material = new MeshBasicMaterial( { color: 0xffff00, transparent: true, opacity :0 } );
       const circle = new Mesh( geometry, material );
       circle.rotation.x = -90* Math.PI/180;
       this.playerFloor = circle;
@@ -194,6 +212,9 @@ export default {
 
       this.player.position.x += dir.x * this.speed;
       this.player.position.z += dir.z * this.speed;
+      
+      this.playerGroup.position.x += dir.x * this.speed;
+      this.playerGroup.position.z += dir.z * this.speed;
 
     },
     Animate(t){
@@ -207,6 +228,25 @@ export default {
 
         vrCamera.matrixWorld.decompose(this.transform.position,this.transform.rotation,this.transform.scale);
         this.player.position.set(this.transform.position.x,this.transform.position.y,this.transform.position.z);
+        this.playerGroup.position.set(this.transform.position.x,0,this.transform.position.z);
+        
+        var target = this.player.position.clone();
+        var origin = new Vector3(0,0,0);
+        let color = new Color(this.data.color.r,this.data.color.g,this.data.color.b);
+    
+        this.rings.map((ring,index)=>{
+          var lerpAlpha = (1 / (this.rings.length - 1)) * index;
+          var lerper = (target.clone()).lerp( origin, lerpAlpha);//.lerpVectors(origin,target, 1 / 5 * i);
+          ring.position.set(0,lerper.y,0);
+          
+          //Ringfarbe lerpen
+          var currentY = target.y == 0 ? .01 : target.y;
+          ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, currentY / this.data.transform.headHeight )  )  );
+
+        });  
+        
+
+
         this.playerFloor.position.set(this.transform.position.x,0,this.transform.position.z);
 
         this.player.quaternion = this.transform.rotation.clone();
