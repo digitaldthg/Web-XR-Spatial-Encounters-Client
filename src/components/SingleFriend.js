@@ -92,10 +92,6 @@ class SingleFriend{
     this.instance.userData.lerpAlpha = 0;
     this.instance.userData.color = Object.assign( {}, data.color );
     this.instance.userData.targetReached = false; 
-
-
-    console.log("data" , data);
-
     
   }
   EaseAlpha(x){
@@ -141,7 +137,6 @@ class SingleFriend{
     this.head.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
   
     let color = new Color(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);
-    
     
     var target = new Vector3(lerpPos.x,lerpPos.y,lerpPos.z);
     var origin = new Vector3(0,0,0);

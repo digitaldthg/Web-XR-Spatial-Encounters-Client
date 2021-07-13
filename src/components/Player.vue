@@ -18,6 +18,7 @@ export default {
       timeout: 0,
       thumb : false,
       rings : [],
+      ringOffset : 0.15,
       bottomColor: new Color(0xffffff),
       keyArray : ["w","a","s","d"],
       speed : .1,
@@ -65,7 +66,7 @@ export default {
       var origin = new Vector3(0,0,0);
 
       for(var i=0;i<=5;i++){
-        let scale = .2 * i ;
+        let scale = .03 * i * i;
         const geometry = new CylinderGeometry( scale,scale, .06, 64, 2,true );
         const material = new MeshBasicMaterial({side : DoubleSide, color: color} );
         const ring = new Mesh( geometry, material );
@@ -74,9 +75,10 @@ export default {
         this.rings.push(ring);
       }
 
-      this.player = new Mesh(new BoxGeometry(0.05,0.05,0.05), new MeshBasicMaterial({
-        color : color
-      }));
+      this.player = new Group();
+      // new Mesh(new BoxGeometry(0.05,0.05,0.05), new MeshBasicMaterial({
+      //   color : color
+      // }));
 
       this.$store.state.xr.Scene.add(this.player);
       this.$store.state.xr.Scene.add(this.playerGroup);
@@ -95,6 +97,7 @@ export default {
       const material = new MeshBasicMaterial( { color: 0xffff00, transparent: true, opacity :0 } );
       const circle = new Mesh( geometry, material );
       circle.rotation.x = -90* Math.PI/180;
+      circle.position.y += .01;
       this.playerFloor = circle;
       this.$store.state.xr.Scene.add( circle );
     },
@@ -230,21 +233,22 @@ export default {
         this.player.position.set(this.transform.position.x,this.transform.position.y,this.transform.position.z);
         this.playerGroup.position.set(this.transform.position.x,0,this.transform.position.z);
         
-        var target = this.player.position.clone();
+        var target = this.transform.position.clone();
         var origin = new Vector3(0,0,0);
         let color = new Color(this.data.color.r,this.data.color.g,this.data.color.b);
     
         this.rings.map((ring,index)=>{
+
           var lerpAlpha = (1 / (this.rings.length - 1)) * index;
-          var lerper = (target.clone()).lerp( origin, lerpAlpha);//.lerpVectors(origin,target, 1 / 5 * i);
-          ring.position.set(0,lerper.y,0);
-          
+          var lerper = (target.clone()).lerp( origin, lerpAlpha);
+              //ring.position.set(0,lerper.y, );
+              ring.position.y = lerper.y;
+
           //Ringfarbe lerpen
           var currentY = target.y == 0 ? .01 : target.y;
           ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, currentY / this.data.transform.headHeight )  )  );
 
         });  
-        
 
 
         this.playerFloor.position.set(this.transform.position.x,0,this.transform.position.z);
@@ -289,7 +293,6 @@ export default {
     },
     ApplyData(){
 
-      console.log("this.data" , this.data);
       var dataCopy = Object.assign({}, this.data);
       dataCopy.transform.position.x = this.player.position.x;
       dataCopy.transform.position.y = this.player.position.y;
