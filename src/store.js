@@ -9,7 +9,8 @@ export default new Vuex.Store({
       room : null,
       speed : 0.1,
       frequency: 1,
-      keysInit : false
+      keysInit : false,
+      themeLerp: 0,
     },
     mutations: {
       xr(state, data){
@@ -28,6 +29,10 @@ export default new Vuex.Store({
       setFrequency(state,frequ){
         console.log("Set Frequ ",frequ)
         state.frequency = frequ
+      },
+      setThemeLerp(state,alpha){
+        console.log("Set Theme Lerp",alpha)
+        state.themeLerp = alpha
       }
 
     },
