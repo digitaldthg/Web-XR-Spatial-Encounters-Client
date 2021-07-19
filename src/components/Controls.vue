@@ -1,5 +1,5 @@
 <template>
-  <div id="controls">
+  <div id="controls" :class="{hidden : !config.showDevTools}">
     <div class="controls-inner" v-if="open">
       <div>
         <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
@@ -54,6 +54,9 @@
 import TriangleMesh from "../scripts/triangle.js";
 import { ColorPicker } from 'vue-color-gradient-picker';
 
+import config from '../../main.config';
+
+
 export default {
   name: "Controls",
    components: {
@@ -63,6 +66,7 @@ export default {
     return{
       open : true,
       scale: 0.5,
+      config : config
     }
   },
   mounted(){
@@ -113,6 +117,10 @@ export default {
 
 .controls-inner {
   padding: 1rem;
+}
+
+.hidden{
+  display:none;
 }
 
 </style>

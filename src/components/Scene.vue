@@ -29,6 +29,8 @@ import {
   BoxGeometry
 } from "three";
 
+import envModel from '../Model/environment/environment.glb';
+
 import {
   BloomEffect,
   EffectComposer,
@@ -36,6 +38,7 @@ import {
   RenderPass,
   UnrealBloomPass,
 } from "postprocessing";
+import MaterialController from './MaterialController';
 
 export default {
   components: { Player, Friends, Environment },
@@ -44,6 +47,8 @@ export default {
     return {
       xr: null,
       reset: false,
+      envModel : null,
+      materialController : null
     };
   },
   sockets: {
@@ -58,41 +63,64 @@ export default {
     InitScene() {
       this.xr = new webXRScene("scene");
 
+      this.materialController = new MaterialController(this.xr);
+
+      this.xr.Camera.instance.near = 0.01;
+      this.xr.Camera.instance.far = 1000;
+      this.xr.Camera.instance.updateProjectionMatrix();
+
+      this.xr.Loader.load({
+          name : "EnvironmentModel",
+          onprogress: ()=>{},
+          url : envModel
+        }).then((model)=>{
+        
+        console.log("loaded" , model);
+        this.envModel = model.scene;
+        this.xr.Scene.add( this.envModel );
+
+
+        this.SetEnvironmentModel();
+
+      });
+
+
+
       //LIGHTS
-      var ambient = new AmbientLight(0xeeeeee, 1);
-      this.xr.Scene.add(ambient);
+      // var ambient = new AmbientLight(0xeeeeee, 1);
+      // this.xr.Scene.add(ambient);
 
       //FOG
-      var fogColor = new Color(0, 0, 0);
-      this.xr.Scene.fog = new Fog(fogColor, 2, 20);
-      this.xr.Scene.background = fogColor;
-      this.xr.Renderer.instance.setClearColor(fogColor, 1);
+      // var fogColor = new Color(0, 0, 0);
+      // this.xr.Scene.fog = new Fog(fogColor, 2, 20);
+      // this.xr.Scene.background = fogColor;
+      // this.xr.Renderer.instance.setClearColor(fogColor, 1);
 
       //FLOOR
-      const loader = new TextureLoader();
-      this.floorTexuture = loader.load(floorGrid, (texture) => {
-        console.log("TEXTURE LOADED");
-        // in this example we create the material when the texture is loaded
-        const geometry = new PlaneGeometry(10, 10);
-        const material = new MeshPhongMaterial({
-          color: 0xffffff,
-          side: DoubleSide,
-          map: texture,
-          transparent: true,
-        });
-        const plane = new Mesh(geometry, material);
-        plane.rotation.set(Math.PI / 2, 0, 0);
-        this.xr.Scene.add(plane);
-      });
+      //const loader = new TextureLoader();
+      // this.floorTexuture = loader.load(floorGrid, (texture) => {
+        // console.log("TEXTURE LOADED");
+        //in this example we create the material when the texture is loaded
+        // const geometry = new PlaneGeometry(10, 10);
+        // const material = new MeshPhongMaterial({
+          // color: 0xffffff,
+          // side: DoubleSide,
+          // map: texture,
+          // transparent: true,
+        // });
+        // const plane = new Mesh(geometry, material);
+        // plane.rotation.set(Math.PI / 2, 0, 0);
+        // this.xr.Scene.add(plane);
+      // });
 
       //DEBUG BOX
-      const geometry = new BoxGeometry(0.5,2,0.5);
-      const material = new MeshBasicMaterial({
-        color: 0xffffff
-      });
-      const box = new Mesh(geometry, material);
-      box.position.set(0,1,5.25);
-      this.xr.Scene.add(box);
+      // const geometry = new BoxGeometry(0.5,2,0.5);
+      // const material = new MeshBasicMaterial({
+      //   color: 0xffffff
+      // });
+      // const box = new Mesh(geometry, material);
+      // box.position.set(0,1,5.25);
+      // this.xr.Scene.add(box);
 
       /*this.xr.Loader.load({
         name : "Playarea",
@@ -140,7 +168,36 @@ export default {
     },
     HandleXRView(xrMode) {
       console.log("session", xrMode);
+    },
+
+    SetEnvironmentModel(){
+
+      this.envModel.traverse(child => {
+        child.material = this.materialController.GetMaterial(child.name);
+
+
+        // switch(child.name){
+        //   case "base_floor":
+        //     break;
+        //   case "bg_back":
+        //     break;
+        //   case "bg_front":
+        //     break;
+        //   case "fog_floor":
+        //     break;
+        //   case "skybox_gradient":
+        //     break;
+        //   case "skybox_texture":
+        //     break;
+          
+        // }
+
+      })
+
+
     }
+
+
   },
 };
 </script>

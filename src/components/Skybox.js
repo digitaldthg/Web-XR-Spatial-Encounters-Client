@@ -1,0 +1,28 @@
+import Gradient from "./Gradient";
+
+class Skybox extends Gradient{
+  constructor(props){
+    super(props);
+
+
+    this.SetGradient([
+      {
+        stop : 0,
+        value : [250,100,50]
+      },
+      {
+        stop : 1,
+        value : [0,100,50]
+      }
+    ]);
+
+
+    console.log(this.SetGradient);
+  }
+
+
+
+
+}
+
+export default Skybox;

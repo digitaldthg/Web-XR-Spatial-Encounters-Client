@@ -50,4 +50,11 @@ body{
   color: #2c3e50;
 }
 
+
+canvas{
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid #f00;
+}
 </style>
