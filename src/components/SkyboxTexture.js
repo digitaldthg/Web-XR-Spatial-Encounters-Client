@@ -1,5 +1,5 @@
 import TextureBackground from "./TextureBackground";
-import Mountains from '../Model/environment/texture/QC_Mountain.png';
+import SkyBG from '../Model/environment/texture/bg_texture.png';
 
 class SkyboxTexture extends TextureBackground{
 
@@ -8,8 +8,10 @@ class SkyboxTexture extends TextureBackground{
 
     console.log(this);
 
-    this.Load("Mountains", Mountains).then((texture)=>{
+    this.Load("BG", SkyBG).then((texture)=>{
       console.log("SkyboxTexture" , texture);
+
+      texture.repeat.set(10,10);
       
     });
   }

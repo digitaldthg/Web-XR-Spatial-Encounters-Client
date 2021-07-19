@@ -15,7 +15,7 @@ class FogFloorAlpha extends Gradient{
         value : [0,100,100]
       },
       {
-        stop : 1,
+        stop : .8,
         value : [0,0,0]
       }
     ]);
