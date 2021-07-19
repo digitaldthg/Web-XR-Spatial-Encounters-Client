@@ -1,6 +1,7 @@
 <template></template>
 <script>
 import TriangleMesh from "../scripts/triangle.js";
+import ConstantTriangle from "../scripts/constantTriangle.js";
 import * as THREE from "three";
 
 export default {
@@ -12,6 +13,7 @@ export default {
       data: null,
       clock: null,
       delta: 0,
+      constantTris: [],
     };
   },
   watch: {
@@ -28,25 +30,47 @@ export default {
   },
   sockets: {
     "server-environment-update": function (data) {
-      //sole.log(data);
       this.data = data;
     },
-    "server-speed-update":function(data){
-      this.$store.commit("setSpeed",data)
-    } ,
-    "server-frequency-update":function(data){
-      this.$store.commit("setFrequency",data)
-    }
+    "server-single-triangle-update": function (data) {
+      this.data = data;
+      this.spawnTriangles();
+    },
+    "server-speed-update": function (data) {
+      this.$store.commit("setSpeed", data);
+    },
+    "server-frequency-update": function (data) {
+      this.$store.commit("setFrequency", data);
+    },
   },
   methods: {
     updateFunction() {
       this.delta += this.clock.getDelta();
-      if (this.data != null) {
-        if (this.delta > this.$store.state.frequency) {
-          this.spawnTriangles();
-          this.delta = 0;
-        }
+      if (this.data == null) return;
+
+      //Frequent Triangles
+      if (
+        this.delta > this.$store.state.frequency &&
+        this.$store.state.frequency != 3
+      ) {
+        this.spawnTriangles();
+        this.delta = 0;
       }
+
+      //Constant Tringle
+      if (this.data.Triangles.length > this.constantTris) {
+        const tri = new ConstantTriangle({
+          xr: this.$store.state.xr,
+          store: this.$store,
+        });
+        this.constantTris.push(tri);
+      } else if (this.data.Triangles.length < this.constantTris) {
+        this.constantTris.remove(this.constantTris[0]);
+      }
+
+      this.data.Triangles.forEach((triData, idx) => {
+        this.constantTris[idx].UpdateTriangle(triData);
+      });
     },
     spawnTriangles() {
       if (this.data != null) {
