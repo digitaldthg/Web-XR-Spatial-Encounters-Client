@@ -62,11 +62,12 @@ class MaterialController{
       skybox_gradient:new MeshBasicMaterial({
         map : this.gradient_skybox.GetTexture()
       }),
-      skybox_texture: new MeshBasicMaterial({
-        color : 0x000000,
-        transparent : true,
+      skybox_texture: new LerpMaterial()
+      //  new MeshBasicMaterial({
+      //   color : 0x000000,
+      //   transparent : true,
         
-      })          
+      // })          
     }
     this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);

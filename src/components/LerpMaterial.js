@@ -1,7 +1,10 @@
 import * as THREE from 'three';
 
 class LerpMaterial {
-  constructor(){
+  constructor(opts){
+
+    console.log("LerpMaterial" , opts),
+
     this.lerp_shader = {
       uniforms: {
           "alpha":  { 
@@ -18,25 +21,28 @@ class LerpMaterial {
           }
       },
       vertex_shader: [
-        "varying vec2 vUv;",
-          "void main() {",
-          "vUv = uv;",
-          "vec4 pos = modelViewMatrix * vec4( position , 1.0 );",
-          "gl_Position = projectionMatrix * pos;",  
-        "}"
+
+          "varying vec2 vUv;",
+            "void main() {",
+            "vUv = uv;",
+            "vec4 pos = modelViewMatrix * vec4( position , 1.0 );",
+            "gl_Position = projectionMatrix * pos;",  
+          "}"
+
         ].join("\n"),
         fragment_shader: [
-          "uniform vec3 color;",
+
           "varying vec2 vUv;",
           
-          "uniform sampler2D texture_1",
-          "uniform sampler2D texture_2",
-
+          "uniform sampler2D texture_1;",
+          "uniform sampler2D texture_2;",
+          "uniform float alpha;",
+          
           "void main() {",
-              "vec4 tex_1 = texture2D(texture1, vUv);",
-              "vec4 tex_2 = texture2D(texture2, vUv);",
+              "vec4 tex_1 = texture2D(texture_1, vUv);",
+              "vec4 tex_2 = texture2D(texture_2, vUv);",
 
-              "vec4 finalCol = mix( tex_1 , tex_2 )",
+              "vec4 finalCol = mix( tex_1 , tex_2 , alpha);",
 
               "gl_FragColor = vec4( finalCol.rgb , 1.0 );",
           "}"

@@ -15,8 +15,6 @@ class TextureBackground {
       this.textures[name] = texture;
       this.textures[name].wrapS = RepeatWrapping;
       this.textures[name].wrapT = RepeatWrapping;
-      
-
 
       if(Object.keys(this.queue).length > 0){
         this.WorkOnQueue(name);
@@ -51,11 +49,11 @@ class TextureBackground {
   }
 
   LerpMaterial(texName1, texName2, alpha ){
-    this.material.uniforms.tex1.value = this.textures[texName1];
-    this.material.uniforms.tex2.value = this.textures[texName2];
-    this.material.uniforms.alpha.value = alpha;
-
-    this.material.uniformsNeedsUpdate = true;
+    // this.material.uniforms.texture_1.value = this.textures[texName1];
+    // this.material.uniforms.texture_2.value = this.textures[texName2];
+    // this.material.uniforms.alpha.value = alpha;
+// 
+    // this.material.uniformsNeedsUpdate = true;
   }
 
   GetTexture(name){

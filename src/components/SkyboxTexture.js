@@ -1,7 +1,7 @@
-import TextureBackground from "./TextureBackground";
+import TextureLerpBackground from "./TextureLerpBackground";
 import SkyBG from '../Model/environment/texture/bg_texture.png';
 
-class SkyboxTexture extends TextureBackground{
+class SkyboxTexture extends TextureLerpBackground{
 
   constructor(props){
     super(props);
