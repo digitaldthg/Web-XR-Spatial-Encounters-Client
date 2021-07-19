@@ -41,6 +41,7 @@ class Gradient{
 
   SetGradient(gradientArray){    
 
+
     // Create gradient
     this.gradient = this.c.createLinearGradient(0,0,0,this.size.y * this.dpr);
     
@@ -55,6 +56,7 @@ class Gradient{
     this.c.fillStyle = this.gradient;
     
     this.Update();
+
 
   }
 
@@ -73,6 +75,7 @@ class Gradient{
 
   Update(){
     this.c.fillRect(0,0,this.size.x * this.dpr,this.size.y * this.dpr);
+    this.texture.needsUpdate = true;
   }
 
 }

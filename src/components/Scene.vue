@@ -63,7 +63,7 @@ export default {
     InitScene() {
       this.xr = new webXRScene("scene");
 
-      this.materialController = new MaterialController(this.xr);
+      this.materialController = new MaterialController(this.xr, this.$store);
 
       this.xr.Camera.instance.near = 0.01;
       this.xr.Camera.instance.far = 1000;

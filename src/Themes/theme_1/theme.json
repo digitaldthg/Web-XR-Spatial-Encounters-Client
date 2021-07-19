@@ -1,26 +1,27 @@
 {
+  "name":"Theme 1",
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [250,100,50]
+      "value" : [100,200,50]
     },
     {
       "stop" : 1,
-      "value" : [0,100,50]
+      "value" : [100,100,50]
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : [0,100,100]
+      "value" : [110,100,100]
     },
     {
       "stop" : 0.5,
-      "value" : [0,100,100]
+      "value" : [100,200,100]
     },
     {
       "stop" : 1,
-      "value" : [0,100,100]
+      "value" : [200,0,100]
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -30,7 +31,7 @@
     },
     {
       "stop" : 0.5,
-      "value" : [0,100,100]
+      "value" : [0,200,100]
     },
     {
       "stop" : 0.8,

@@ -43,6 +43,7 @@ export default {
       this.$store.commit("setFrequency", data);
     },
     "server-theme-lerp-update": function (data) {
+      console.log("From Server ",data)
       this.$store.commit("setThemeLerp", data);
     },
   },
