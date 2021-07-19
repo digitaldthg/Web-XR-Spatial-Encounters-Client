@@ -1,6 +1,7 @@
 import TextureBackground from "./TextureBackground";
 import Mountains from '../Model/environment/texture/QC_Mountain.png';
 
+
 class BGBackTexture extends TextureBackground{
 
   constructor(props){

@@ -176,21 +176,27 @@ export default {
         child.material = this.materialController.GetMaterial(child.name);
 
 
-        // switch(child.name){
-        //   case "base_floor":
-        //     break;
-        //   case "bg_back":
-        //     break;
-        //   case "bg_front":
-        //     break;
-        //   case "fog_floor":
-        //     break;
-        //   case "skybox_gradient":
-        //     break;
-        //   case "skybox_texture":
-        //     break;
+        switch(child.name){
+          case "base_floor":
+            child.renderOrder = 7;
+          break;
+          case "bg_back":
+            child.renderOrder = 8;
+          break;
+          case "bg_front":
+            child.renderOrder = 9;
+          break;
+          case "fog_floor":
+            child.renderOrder = 10;
+          break;
+          case "skybox_gradient":
+            child.renderOrder = 2;
+          break;
+          case "skybox_texture":
+            child.renderOrder = 3;
+          break;
           
-        // }
+        }
 
       })
 
