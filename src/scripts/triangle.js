@@ -8,8 +8,6 @@ class Triangle {
         this.store = props.store;
         this.data = props.data;
         this.mesh = null;
-        this.delta = 0;
-        this.clock = null;
         this.height = 0.1
         this.Init();
     }
