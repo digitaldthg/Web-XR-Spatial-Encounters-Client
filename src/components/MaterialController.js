@@ -29,7 +29,6 @@ class MaterialController{
 
     console.log("lerpMaterial" , lerpMaterial);
 
-
     this.materials = {
       base_floor : new MeshBasicMaterial({
         color : 0x000000,

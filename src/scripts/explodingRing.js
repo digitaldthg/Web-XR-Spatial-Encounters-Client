@@ -40,10 +40,11 @@ class explodingRing {
     Update = (clock) => {
         this.time += clock.getDelta()
 
-        var scale = this.mesh.scale.x += clock.getDelta()*100000
+        var scale = this.mesh.scale.x += clock.getDelta()*200000
         this.mesh.scale = new Vector3(scale, this.mesh.scale.y, scale);
 
-        if(this.time > 3){
+        if(this.time > 0.02){
+            console.log("DESTROY")
             this.xr.Scene.remove(this.mesh);
             this.xr.Events.removeEventListener("OnAnimationLoop", this.Update);
         }
