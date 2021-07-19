@@ -15,9 +15,6 @@ class Skybox extends Gradient{
         value : [0,100,50]
       }
     ]);
-
-
-    console.log(this.SetGradient);
   }
 
 

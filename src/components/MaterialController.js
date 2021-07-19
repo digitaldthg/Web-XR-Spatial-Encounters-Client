@@ -25,7 +25,9 @@ class MaterialController{
     this.gradient_fogFloor = new FogFloorDiffuse();
     this.gradient_fogFloorAlpha = new FogFloorAlpha();
 
-    
+    var lerpMaterial = new LerpMaterial();
+
+    console.log("lerpMaterial" , lerpMaterial);
 
 
     this.materials = {
@@ -91,31 +93,37 @@ class MaterialController{
   }
 
   lerpColor(arr1, arr2 ,alpha){
-
+    console.log("lerpColor" , arr1, arr2);
+    
   }
 
   LerpThemes(themeA,themeB, alpha){
     var final = ThemeFactory.Get();
-    if(themeA == null || themeB == null){
-    if(themeA == null){ final = themeA; }
-    if(themeB == null){ final = themeB; }
-    
-    }else if(themeA == null && themeB == null){
-      console.warn("Beide Themes sind null");
 
+    console.log("final" , final);
+
+
+    if(themeA == null || themeB == null){
+      if(themeA == null){ final = ThemeFactory.Get(); }
+      if(themeB == null){ final = ThemeFactory.Get(); }  
+    }
+    
+    if(themeA == null && themeB == null){
+      console.warn("Beide Themes sind null");
       return ;
     }
-    else{
+   
 
-      Object.keys(themeA).map((keyName)=>{
+      Object.keys(final).map((keyName)=>{
+
         //if(!final.hasOwnProperty(keyName)){
           if(Array.isArray(themeA[keyName])){
-            final[keyName] = lerpColor(themeA[keyName], themeB[keyName], alpha);
+            final[keyName] = this.lerpColor(themeA[keyName], themeB[keyName], alpha);
           }
         //}
       })
 
-    }
+    
 
 
     this.gradient_skybox.SetGradient(final.skybox_gradient);

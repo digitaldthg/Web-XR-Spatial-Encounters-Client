@@ -2,41 +2,51 @@ import * as THREE from 'three';
 
 class LerpMaterial {
   constructor(){
-    this.outline_shader = {
+    this.lerp_shader = {
       uniforms: {
-          "linewidth":  { 
+          "alpha":  { 
             type: "f", 
-            value: 0.004
+            value: 0
           },
-          "color" : {
-            type : "vec3",
-            value : new THREE.Color(0xF9C697)
+          "texture_1" : {
+            type : "sampler2D",
+            value : null
           },
-          "time" : {
-            type : "f",
-            value : 1
+          "texture_2" : {
+            type : "sampler2D",
+            value : null
           }
       },
       vertex_shader: [
-          "uniform float linewidth;",
-          "uniform float time;",
+        "varying vec2 vUv;",
           "void main() {",
-          "vec4 pos = modelViewMatrix * vec4( position + normal * linewidth, 1.0 );",
+          "vUv = uv;",
+          "vec4 pos = modelViewMatrix * vec4( position , 1.0 );",
           "gl_Position = projectionMatrix * pos;",  
         "}"
         ].join("\n"),
         fragment_shader: [
           "uniform vec3 color;",
+          "varying vec2 vUv;",
+          
+          "uniform sampler2D texture_1",
+          "uniform sampler2D texture_2",
+
           "void main() {",
-              "gl_FragColor = vec4( color , 1.0 );",
+              "vec4 tex_1 = texture2D(texture1, vUv);",
+              "vec4 tex_2 = texture2D(texture2, vUv);",
+
+              "vec4 finalCol = mix( tex_1 , tex_2 )",
+
+              "gl_FragColor = vec4( finalCol.rgb , 1.0 );",
           "}"
       ].join("\n")
     };
 
     var outline_material = new THREE.ShaderMaterial({
-        uniforms: THREE.UniformsUtils.clone(this.outline_shader.uniforms),
-        vertexShader: this.outline_shader.vertex_shader,
-        fragmentShader: this.outline_shader.fragment_shader
+        uniforms: THREE.UniformsUtils.clone(this.lerp_shader.uniforms),
+        vertexShader: this.lerp_shader.vertex_shader,
+        fragmentShader: this.lerp_shader.fragment_shader
     });
 
     outline_material.side = THREE.BackSide;

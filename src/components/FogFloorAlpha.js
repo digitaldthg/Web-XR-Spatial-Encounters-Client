@@ -20,8 +20,6 @@ class FogFloorAlpha extends Gradient{
       }
     ]);
 
-
-    console.log(this.SetGradient);
   }
 
 

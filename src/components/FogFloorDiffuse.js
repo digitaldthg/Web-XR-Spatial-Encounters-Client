@@ -20,8 +20,6 @@ class FogFloorDiffuse extends Gradient{
       }
     ]);
 
-
-    console.log(this.SetGradient);
   }
 
 

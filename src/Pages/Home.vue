@@ -98,7 +98,6 @@ export default {
 
       this.room[roomNumber] = number;
 
-      console.log("before" , this.currentNumber);
       if(roomNumber < 3){
         this.currentNumber++;
         this.$refs["no" + this.currentNumber].focus();
@@ -106,7 +105,6 @@ export default {
         this.$refs.submit.focus();  
       }
 
-        console.log("before" , this.currentNumber);
       
       var checker = Object.values(this.room).filter(o => o == null).length;
       console.log(checker);
