@@ -81,7 +81,7 @@ class MaterialController{
 
     this.tex_bg_back.SetTexture("Mountains",this.materials.bg_back, "alphaMap");
 
-    this.LerpThemes(this.currentTheme, null, 0);
+    this.LerpThemes(this.currentTheme, this.nextTheme, 0);
 
     //gelerpt
     //this.LerpThemes(this.currentTheme, this.nextTheme, .5);
@@ -93,7 +93,30 @@ class MaterialController{
   }
 
   lerpColor(arr1, arr2 ,alpha){
-    console.log("lerpColor" , arr1, arr2);
+    var finalArr = [];
+
+    if(arr1.length != arr2.length){
+      console.log("lerpColor: themes haben verschiedene color themes ");
+
+      return;
+    }
+
+    for(var i=0;i<arr1.length;i++){
+
+      finalArr.push({
+        stop : this.lerp(arr1[i].stop, arr1[i].stop, alpha),
+        value : [
+          this.lerp(arr1[i].value[0], arr1[i].value[0], alpha),
+          this.lerp(arr1[i].value[1], arr1[i].value[1], alpha),
+          this.lerp(arr1[i].value[2], arr1[i].value[2], alpha),
+        ]
+      })
+
+    }
+
+
+    console.log("lerpColor" , arr1, arr2, finalArr);
+    return finalArr;
     
   }
 
@@ -109,11 +132,6 @@ class MaterialController{
     }
     
 
-    console.log("themeA und B" , themeA, themeB);
-
-   
-   
-
       Object.keys(final).map((keyName)=>{
 
         //if(!final.hasOwnProperty(keyName)){
@@ -124,9 +142,10 @@ class MaterialController{
       })
 
     
+      console.log("final" , final);
 
 
-    this.gradient_skybox.SetGradient(final.skybox_gradient);
+    this.gradient_skybox.SetGradient(final.gradient_skybox);
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
 
