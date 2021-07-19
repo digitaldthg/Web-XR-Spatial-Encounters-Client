@@ -10,6 +10,7 @@ import BGFrontTexture from "./BGFrontTexture";
 import BGBackTexture from "./BGBackTexture";
 import ThemeFactory from "./ThemeFactory";
 import theme1 from '../Themes/theme_1/theme.json';
+import theme2 from '../Themes/theme_2/theme.json';
 
 import LerpMaterial from './LerpMaterial';
 
@@ -17,7 +18,7 @@ class MaterialController{
   constructor(xr){
     this.xr = xr;
     this.currentTheme = theme1;
-    this.nextTheme = null;
+    this.nextTheme = theme2;
 
 
     this.gradient_skybox = new Skybox();
@@ -103,14 +104,14 @@ class MaterialController{
 
 
     if(themeA == null || themeB == null){
-      if(themeA == null){ final = ThemeFactory.Get(); }
-      if(themeB == null){ final = ThemeFactory.Get(); }  
+      if(themeA == null){ themeA = ThemeFactory.Get(); }
+      if(themeB == null){ themeB = ThemeFactory.Get(); }  
     }
     
-    if(themeA == null && themeB == null){
-      console.warn("Beide Themes sind null");
-      return ;
-    }
+
+    console.log("themeA und B" , themeA, themeB);
+
+   
    
 
       Object.keys(final).map((keyName)=>{
