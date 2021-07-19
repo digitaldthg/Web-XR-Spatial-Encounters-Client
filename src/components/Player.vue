@@ -258,8 +258,8 @@ export default {
       this.$socket.emit("client-player-explode");
     },
     Animate(t) {
-      console.log("-----Animate")
-      
+      //console.log("-----Animate")
+
       if (!this.ready) {
         return;
       }

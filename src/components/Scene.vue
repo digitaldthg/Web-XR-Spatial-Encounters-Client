@@ -175,7 +175,6 @@ export default {
       this.envModel.traverse(child => {
         child.material = this.materialController.GetMaterial(child.name);
 
-
         // switch(child.name){
         //   case "base_floor":
         //     break;

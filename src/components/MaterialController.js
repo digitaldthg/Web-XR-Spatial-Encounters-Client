@@ -23,7 +23,6 @@ class MaterialController{
     this.bg_frontTexture = new BGFrontTexture(this.xr);
     this.bg_backTexture = new BGBackTexture(this.xr);
 
-
     this.materials = {
       
       base_floor : new MeshBasicMaterial({
