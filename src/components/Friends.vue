@@ -26,31 +26,6 @@ export default {
   mounted() {},
   watch: {
     "$store.state.xr": function (xr) {
-      // this.$store.state.xr.Loader.load({
-      //   name: "Ring",
-      //   url: Ring,
-      //   onprogress: () => {
-      //     console.log("progress");
-      //   },
-      // }).then((model) => {
-      //   model.scene.children[0].material = new MeshBasicMaterial({
-      //     color: new Color(0.5, 0.5, 0.5, 1),
-      //     side: DoubleSide,
-      //   });
-
-      //   this.friendRings = new Group();
-        
-      //   for(var i=0;i<5;i++){
-      //     let ring = model.scene.clone();
-      //     ring.position.set(0,.25 * i,0);
-      //     ring.scale.set(1 - (.15 * i),1,1 - (.15 * i));
-
-      //     this.friendRings.add(ring);
-      //   }
-
-      //   console.log("RING LOADED", model.scene);
-      // });
-
       this.$store.state.xr.Events.addEventListener(
         "OnAnimationLoop",
         this.AnimateFriends

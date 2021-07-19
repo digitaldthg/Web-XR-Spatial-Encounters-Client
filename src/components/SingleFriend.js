@@ -22,7 +22,7 @@ class SingleFriend{
         group.name = "Friend";
     this.xr.Scene.add(group);
 
-    this.head = new Mesh(new SphereGeometry(.1,32,32), new MeshBasicMaterial());
+    this.head = new Group();
     group.add(this.head);
 
     var target = new Vector3(data.transform.position.x,data.transform.position.y,data.transform.position.z);
@@ -40,11 +40,6 @@ class SingleFriend{
       this.rings.push(ring);
     }
 
-    
-
-      // group.position.x = data.transform.position.x;
-      // group.position.y = data.transform.position.y;
-      // group.position.z = data.transform.position.z;
       group.userData.headHeight = data.transform.headHeight;
       group.userData.targetPosition = new Vector3(
         data.transform.position.x,
@@ -151,7 +146,7 @@ class SingleFriend{
     });  
     
     //Headfarbe lerpen
-    this.head.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
+    //this.head.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
 
    
 

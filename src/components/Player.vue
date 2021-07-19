@@ -18,6 +18,7 @@ export default {
       timeout: 0,
       thumb : false,
       rings : [],
+      explosition : false,
       ringOffset : 0.15,
       bottomColor: new Color(0xffffff),
       keyArray : ["w","a","s","d"],
@@ -76,9 +77,7 @@ export default {
       }
 
       this.player = new Group();
-      // new Mesh(new BoxGeometry(0.05,0.05,0.05), new MeshBasicMaterial({
-      //   color : color
-      // }));
+      
 
       this.$store.state.xr.Scene.add(this.player);
       this.$store.state.xr.Scene.add(this.playerGroup);
@@ -113,7 +112,6 @@ export default {
     
     ResetCamera() {
 
-      console.log("ResetCamera");
       this.$store.state.xr.Controls.SetPositionAndRotation( new Vector3(0,0,7), new Vector3(0,0,10));
 
       this.data.transform.headHeight = this.data.transform.position.y;
@@ -220,6 +218,18 @@ export default {
       this.playerGroup.position.z += dir.z * this.speed;
 
     },
+    Explode(){
+      if(this.explosition){return;}
+      this.explosition = true;
+
+      setTimeout(()=>{
+        this.explosition = false;
+      },1500);
+
+
+      this.$socket.emit("client-player-explode");
+      console.log("explode");
+    },
     Animate(t){
 
       if(!this.ready){ return; }
@@ -255,6 +265,11 @@ export default {
 
         this.player.quaternion = this.transform.rotation.clone();
 
+        if(this.player.position.y < this.transform.headHeight * .6){
+          this.Explode();
+        }
+
+        //RESET INTERSECTION CHECK
         var pos = new Vector3();
         var dir = new Vector3();
         vrCamera.getWorldPosition(pos);
