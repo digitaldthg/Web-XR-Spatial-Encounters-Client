@@ -6,6 +6,7 @@ class TextureBackground {
     this.xr = xr;
     this.textures = {};
     this.queue = {};
+    this.material = null;
   }
 
   Load(name, url){
@@ -35,6 +36,8 @@ class TextureBackground {
 
   SetTexture(name, material, mapType){
 
+    this.material = material;
+    
     if(this.textures.hasOwnProperty(name)){
       material[mapType] = this.textures[name];
     }else{
@@ -46,6 +49,15 @@ class TextureBackground {
     }
 
   }
+
+  LerpMaterial(texName1, texName2, alpha ){
+    this.material.uniforms.tex1.value = this.textures[texName1];
+    this.material.uniforms.tex2.value = this.textures[texName2];
+    this.material.uniforms.alpha.value = alpha;
+
+    this.material.uniformsNeedsUpdate = true;
+  }
+
   GetTexture(name){
     return this.textures[name];
   }
