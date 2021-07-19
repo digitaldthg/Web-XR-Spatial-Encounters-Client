@@ -5,7 +5,7 @@ class Skybox extends Gradient{
     super(props);
 
 
-    this.SetGradient([
+    /*this.SetGradient([
       {
         stop : 0,
         value : [250,100,50]
@@ -14,7 +14,7 @@ class Skybox extends Gradient{
         stop : 1,
         value : [0,100,50]
       }
-    ]);
+    ]);*/
   }
 
 

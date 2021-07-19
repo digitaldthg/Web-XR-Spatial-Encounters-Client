@@ -1,5 +1,5 @@
 <template>
-  <div id="controls" :class="{hidden : !config.showDevTools}">
+  <div id="controls" :class="{ hidden: !config.showDevTools }">
     <div class="controls-inner" v-if="open">
       <div>
         <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
@@ -37,7 +37,7 @@
         <label for="speed">Geschwindigkeit der Dreiecke: </label>
         <input
           type="range"
-          id="frequence"
+          id="speed"
           name="frequnence"
           min="0.0001"
           max="1"
@@ -45,42 +45,63 @@
           value="0.1"
           @change="updateSpeed"
         />
-        {{ this.$store.state.speed}}
+        {{ this.$store.state.speed }}
       </div>
+      <div>
+        <label for="theme">Theme Lerp</label>
+        <input
+          type="range"
+          id="theme"
+          name="themee"
+          min="0"
+          max="1"
+          step="0.001"
+          value="0"
+          @change="updateThemeLerp"
+        />
+        {{ this.$store.state.themeLerp }}
+      </div>
+      <div>Last Theme: {{this.$store.state.lastTheme.name}}</div>
+      <div>Next Theme: {{this.$store.state.nextTheme.name}}</div>
     </div>
   </div>
 </template>
 <script>
 import TriangleMesh from "../scripts/triangle.js";
-import { ColorPicker } from 'vue-color-gradient-picker';
+import { ColorPicker } from "vue-color-gradient-picker";
 
-import config from '../../main.config';
-
+import config from "../../main.config";
 
 export default {
   name: "Controls",
-   components: {
-    ColorPicker
+  components: {
+    ColorPicker,
   },
-  data(){
-    return{
-      open : true,
+  data() {
+    return {
+      open: true,
       scale: 0.5,
-      config : config
-    }
+      config: config,
+    };
   },
-  mounted(){
+  mounted() {
     this.InitEvents();
   },
   methods: {
-    InitEvents(){
-      window.addEventListener("keydown", (e) => { 
-        if(e.key == "p"){
+    InitEvents() {
+      window.addEventListener("keydown", (e) => {
+        if (e.key == "p") {
           this.open = !this.open;
         }
-      })
+      });
     },
-
+    updateThemeLerp(event) {
+      console.log("SLIDER VALUE ", event.target.value);
+      //this.frequence = event.target.value;
+      this.$socket.emit("client-theme-lerp", {
+        alpha: parseFloat(event.target.value),
+      });
+    },
     updateSlider(event) {
       console.log("SLIDER VALUE ", event.target.value);
       //this.frequence = event.target.value;
@@ -95,7 +116,7 @@ export default {
         scale: 1 - parseFloat(event.target.value),
       });
     },
-     updateSpeed(event) {
+    updateSpeed(event) {
       console.log("SPEED VALUE SLIDER", event.target.value);
       this.$socket.emit("client-change-speed", {
         speed: parseFloat(event.target.value),
@@ -106,7 +127,6 @@ export default {
 </script>
 
 <style  lang="css" >
-
 #controls {
   position: relative;
   height: 200px;
@@ -119,9 +139,8 @@ export default {
   padding: 1rem;
 }
 
-.hidden{
-  display:none;
+.hidden {
+  display: none;
 }
-
 </style>
 

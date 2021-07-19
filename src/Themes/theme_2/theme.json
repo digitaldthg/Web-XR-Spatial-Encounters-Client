@@ -1,12 +1,13 @@
 {
+  "name":"Theme 2",
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [250,100,50]
+      "value" : [0,10,50]
     },
     {
       "stop" : 1,
-      "value" : [0,100,50]
+      "value" : [0,150,0]
     }
   ],
   "gradient_fogFloor" : [
