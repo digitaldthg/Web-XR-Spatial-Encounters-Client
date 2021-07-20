@@ -8,6 +8,8 @@ import Floor from "./Floor";
 import SkyboxTexture from "./SkyboxTexture";
 import BGFrontTexture from "./BGFrontTexture";
 import BGBackTexture from "./BGBackTexture";
+import BGGradientFront from "./BGGradientFront";
+import BGGradientBack from "./BGGradientBack";
 import ThemeFactory from "./ThemeFactory";
 import theme1 from '../Themes/theme_1/theme.json';
 import theme2 from '../Themes/theme_2/theme.json';
@@ -21,7 +23,7 @@ class MaterialController {
     this.currentTheme = theme1;
     this.nextTheme = theme2;
 
-
+    //GRADIENT
     this.gradient_skybox = new Skybox({
       name: "skybox"
     });
@@ -36,64 +38,80 @@ class MaterialController {
     );
 
 
-    //var lerpMaterial = new LerpMaterial();
+    this.gradient_bg_front = new BGGradientFront({
+      name: "bg_front"
+    });
+    this.gradient_bg_back = new BGGradientBack(
+      {
+        name: "bg_back"
+      }
+    );
 
-    //console.log("lerpMaterial", lerpMaterial);
+    //LERP TEXUTRE OBJECTS
+    var grid_floor_obj = new LerpMaterial({
+      color: 0xff00ff,
+      transparent: true,
+      depthWrite: false,
+
+    });
+    var grid_floor = grid_floor_obj.material;
+
+    //BG Back
+    var bg_back_obj = new LerpMaterial({
+      color: 0xff0000,
+      transparent: true,
+      depthWrite: false,
+    });
+    var bg_back = bg_back_obj.material
+
+    //BG Front
+    var bg_front_obj = new LerpMaterial({
+      color: 0xffffff,
+      transparent: true,
+      depthWrite: false,
+    });
+    var bg_front = bg_front_obj.material
+
+    //Sky Texture
+    var skybox_texture_obj = new LerpMaterial({
+      color: 0x00ff00,
+      transparent: true,
+    })
+    var skybox_texture = skybox_texture_obj.material;
+
+
 
     this.materials = {
       base_floor: new MeshBasicMaterial({
         color: 0x000000,
-      }),
-      grid_floor: new LerpMaterial({
-        color: 0xff0000,
-        transparent: true,
-        depthWrite: false
       }),
       fog_floor: new MeshBasicMaterial({
         color: 0xffffff,
         transparent: true,
         map: this.gradient_fogFloor.GetTexture(),
         alphaMap: this.gradient_fogFloorAlpha.GetTexture(),
-
         depthWrite: false
       }),
-      bg_back: new LerpMaterial({
-        color: 0xff0000,
-        transparent: true,
-        depthWrite: false
-      }),
-      bg_front: new LerpMaterial({
-        color: 0xffffff,
-        transparent: true,
-        depthWrite: false
-        //depthTest: false
-      }),
-
       skybox_gradient: new MeshBasicMaterial({
         map: this.gradient_skybox.GetTexture()
       }),
-      skybox_texture: new LerpMaterial({
-        color: 0x000000,
-        transparent: true,
-
-      })
+      grid_floor,
+      bg_back,
+      bg_front,
+      skybox_texture
     }
-    /*this.tex_floor = new Floor(this.xr);
+
+    this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);
     this.tex_bg_front = new BGFrontTexture(this.xr);
     this.tex_bg_back = new BGBackTexture(this.xr);
 
-    this.tex_skybox.SetTexture("BG", this.materials.skybox_texture, "map");
-
-    this.tex_floor.SetTexture("Grid", this.materials.grid_floor, "map");
-
-    this.tex_bg_front.SetTexture("Mountainsfront", this.materials.bg_front, "alphaMap");
-
-    this.tex_bg_back.SetTexture("Mountains", this.materials.bg_back, "alphaMap");*/
+    this.tex_skybox.SetMaterial("Sky", skybox_texture_obj);
+    this.tex_floor.SetMaterial("Floor", grid_floor_obj);
+    this.tex_bg_front.SetMaterial("BG_Front", bg_front_obj);
+    this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
 
 
-    //gelerpt
-    //this.LerpThemes(this.currentTheme, this.nextTheme, .5);
     this.store.commit("setLastTheme", theme1)
     this.store.commit("setNextTheme", theme2)
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
@@ -109,6 +127,39 @@ class MaterialController {
     return (1 - t) * a + t * b;
   }
 
+  LerpHSV (arr1, arr2, t)
+  {
+      var h = null;
+      var a = {h:arr1[0]/360,s: arr1[1]/100,v:arr1[2]/100}
+      var b = {h:arr2[0]/360,s: arr2[1]/100,v:arr2[2]/100}
+      var d = b.h - a.h;
+
+      if (a.h > b.h)
+      {
+          // Swap (a.h, b.h)
+          var h3 = b.h;
+          b.h = a.h;
+          a.h = h3;
+          d = -d;
+          t = 1 - t;
+      }
+      if (d > 0.5) // 180deg
+      {
+          a.h = a.h + 1; // 360deg
+          h = ( a.h + t * (b.h - a.h) ) % 1; // 360deg
+      }
+      if (d <= 0.5) // 180deg
+      {
+          h = a.h + t * d
+      }
+      // Interpolates the rest
+      return [
+          h*360,            // H
+          (a.s + t * (b.s-a.s))*100,    // S
+          (a.v + t * (b.v-a.v))*100,    // V
+      ];
+  }
+
   lerpColor(arr1, arr2, alpha) {
     var finalArr = [];
 
@@ -120,12 +171,15 @@ class MaterialController {
 
     for (var i = 0; i < arr1.length; i++) {
 
+      var hsv = this.LerpHSV(arr1[i].value, arr2[i].value, alpha);
+      console.log("HSV ",hsv)
+
       finalArr.push({
         stop: this.lerp(arr1[i].stop, arr2[i].stop, alpha),
         value: [
-          this.lerp(arr1[i].value[0], arr2[i].value[0], alpha),
-          this.lerp(arr1[i].value[1], arr2[i].value[1], alpha),
-          this.lerp(arr1[i].value[2], arr2[i].value[2], alpha),
+          hsv[0],
+          hsv[1],
+          hsv[2],
         ]
       })
 
@@ -140,40 +194,39 @@ class MaterialController {
   LerpThemes(themeA, themeB, alpha) {
     var final = ThemeFactory.Get();
 
-
-
     if (themeA == null || themeB == null) {
       if (themeA == null) { themeA = ThemeFactory.Get(); }
       if (themeB == null) { themeB = ThemeFactory.Get(); }
     }
     Object.keys(final).map((keyName) => {
 
-      //if(!final.hasOwnProperty(keyName)){
       if (Array.isArray(themeA[keyName])) {
-        console.log("KEY NAME ", keyName)
+        //console.log("KEY NAME lerp Gradient Color ", keyName)
         final[keyName] = this.lerpColor(themeA[keyName], themeB[keyName], alpha);
-        console.log(final[keyName])
-
+        //console.log(final[keyName])
       }
-
     })
     this.gradient_skybox.SetGradient(final.gradient_skybox);
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
-
-
     this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
 
-    // this.tex_floor.LerpMaterial(themeA.tex_floor,themeA.tex_floor, alpha);
-    // this.tex_skybox.LerpMaterial(themeA.tex_floor,themeA.tex_floor, alpha);
-    // this.tex_bg_front.LerpMaterial(themeA.tex_floor,themeA.tex_floor, alpha);
-    // this.tex_bg_back.LerpMaterial(themeA.tex_floor,themeA.tex_floor, alpha);
+    this.tex_floor.lerpMaterial(themeA.tex_floor, themeB.tex_floor, alpha);
+    this.tex_skybox.lerpMaterial(themeA.tex_skybox, themeB.tex_skybox, alpha);
+
+    this.gradient_bg_front.SetGradient(final.gradient_bg_front);
+    this.gradient_bg_back.SetGradient(final.gradient_bg_back);
+    this.tex_bg_front.lerpMaterial(this.gradient_bg_front.GetTexture(), this.gradient_bg_front.GetTexture(), alpha, themeA.tex_bg_front, themeB.tex_bg_front);
+    this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
+
+
+    console.log("SCENE ", this.xr.Scene)
 
   }
 
   GetHSLColor(hslArray) {
     var color = new Color();
-    color.setHSL(hslArray[0] / 100, hslArray[1] / 100, hslArray[2] / 100)
+    color.setHSL(hslArray[0] / 360, hslArray[1] / 100, hslArray[2] / 100)
     return color;
   }
 

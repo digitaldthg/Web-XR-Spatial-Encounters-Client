@@ -2,13 +2,13 @@
   "name":"Theme 1",
   "base_floor":[{
     "stop" : 0,
-    "value" : [100,200,50]}
+    "value" : [230,70,50]}
   ]
   ,
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [100,200,50]
+      "value" : [100,70,50]
     },
     {
       "stop" : 1,
@@ -36,15 +36,35 @@
     },
     {
       "stop" : 0.5,
-      "value" : [0,200,100]
+      "value" : [0,100,100]
     },
     {
       "stop" : 0.8,
       "value" : [0,0,0]
     }
   ],
-  "tex_floor" : "",
-  "tex_skybox" : "",
-  "tex_bg_front" : "",
-  "tex_bg_back" : ""
+  "gradient_bg_front" : [
+    {
+      "stop" : 0,
+      "value" : [20,100,50]
+    },
+    {
+      "stop" : 1,
+      "value" : [250,100,50]
+    }
+  ],
+  "gradient_bg_back" : [
+    {
+      "stop" : 0,
+      "value" : [0,100,50]
+    },
+    {
+      "stop" : 1,
+      "value" : [200,100,50]
+    }
+  ],
+  "tex_floor" : "Grid",
+  "tex_skybox" : "BG",
+  "tex_bg_front" : "Mountainsfront",
+  "tex_bg_back" : "Mountains"
 }

@@ -1,4 +1,4 @@
-import { CanvasTexture } from "three";
+import { CanvasTexture, Texture } from "three";
 
 class Gradient{
   name = "gradient";
@@ -26,13 +26,16 @@ class Gradient{
     this.canvasElement.name = name;
     this.canvasElement.classList.add(name);
 
-    this.texture = new CanvasTexture(this.canvasElement);
+    //this.texture = new CanvasTexture(this.canvasElement);
+    	
+    this.texture = new Texture(this.canvasElement);
+    this.texture.needsUpdate = true;
 
   }
 
   CreateCanvas(){
     this.canvasElement = document.createElement("canvas");
-    //this.canvasElement.style.display = "none";
+    this.canvasElement.style.display = "none";
     this.c = this.canvasElement.getContext("2d"); 
 
     document.body.appendChild(this.canvasElement);

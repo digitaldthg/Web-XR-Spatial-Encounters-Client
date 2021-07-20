@@ -26,10 +26,10 @@ import {
   DoubleSide,
   MeshBasicMaterial,
   MeshPhongMaterial,
-  BoxGeometry
+  BoxGeometry,
 } from "three";
 
-import envModel from '../Model/environment/environment.glb';
+import envModel from "../Model/environment/environment.glb";
 
 import {
   BloomEffect,
@@ -38,7 +38,7 @@ import {
   RenderPass,
   UnrealBloomPass,
 } from "postprocessing";
-import MaterialController from './MaterialController';
+import MaterialController from "./MaterialController";
 
 export default {
   components: { Player, Friends, Environment },
@@ -47,8 +47,8 @@ export default {
     return {
       xr: null,
       reset: false,
-      envModel : null,
-      materialController : null
+      envModel: null,
+      materialController: null,
     };
   },
   sockets: {
@@ -70,21 +70,16 @@ export default {
       this.xr.Camera.instance.updateProjectionMatrix();
 
       this.xr.Loader.load({
-          name : "EnvironmentModel",
-          onprogress: ()=>{},
-          url : envModel
-        }).then((model)=>{
-        
-        console.log("loaded" , model);
+        name: "EnvironmentModel",
+        onprogress: () => {},
+        url: envModel,
+      }).then((model) => {
+        console.log("loaded", model);
         this.envModel = model.scene;
-        this.xr.Scene.add( this.envModel );
-
+        this.xr.Scene.add(this.envModel);
 
         this.SetEnvironmentModel();
-
       });
-
-
 
       //LIGHTS
       // var ambient = new AmbientLight(0xeeeeee, 1);
@@ -99,18 +94,18 @@ export default {
       //FLOOR
       //const loader = new TextureLoader();
       // this.floorTexuture = loader.load(floorGrid, (texture) => {
-        // console.log("TEXTURE LOADED");
-        //in this example we create the material when the texture is loaded
-        // const geometry = new PlaneGeometry(10, 10);
-        // const material = new MeshPhongMaterial({
-          // color: 0xffffff,
-          // side: DoubleSide,
-          // map: texture,
-          // transparent: true,
-        // });
-        // const plane = new Mesh(geometry, material);
-        // plane.rotation.set(Math.PI / 2, 0, 0);
-        // this.xr.Scene.add(plane);
+      // console.log("TEXTURE LOADED");
+      //in this example we create the material when the texture is loaded
+      // const geometry = new PlaneGeometry(10, 10);
+      // const material = new MeshPhongMaterial({
+      // color: 0xffffff,
+      // side: DoubleSide,
+      // map: texture,
+      // transparent: true,
+      // });
+      // const plane = new Mesh(geometry, material);
+      // plane.rotation.set(Math.PI / 2, 0, 0);
+      // this.xr.Scene.add(plane);
       // });
 
       //DEBUG BOX
@@ -163,47 +158,41 @@ export default {
         this.HandleXRView
       );
     },
-    RenderLoop (){
-
-    },
+    RenderLoop() {},
     HandleXRView(xrMode) {
       console.log("session", xrMode);
     },
 
-    SetEnvironmentModel(){
+    SetEnvironmentModel() {
+      this.envModel.traverse((child) => {
+        var material = this.materialController.GetMaterial(child.name);
+        console.log("Set Materials ", child.name, material);
+        child.material = material;
 
-      this.envModel.traverse(child => {
-        child.material = this.materialController.GetMaterial(child.name);
-
-
-        switch(child.name){
+        switch (child.name) {
           case "base_floor":
             child.renderOrder = 7;
-          break;
+            break;
           case "bg_back":
-            child.renderOrder = 8;
-          break;
-          case "bg_front":
             child.renderOrder = 9;
-          break;
-          case "fog_floor":
+            break;
+          case "bg_front":
             child.renderOrder = 10;
-          break;
+            break;
+          case "fog_floor":
+            child.renderOrder = 11;
+            break;
           case "skybox_gradient":
-            child.renderOrder = 2;
-          break;
-          case "skybox_texture":
             child.renderOrder = 3;
-          break;
-          
+            break;
+          case "skybox_texture":
+            child.renderOrder = 4;
+          case "grid_floor":
+            child.renderOrder = 8;
+            break;
         }
-
-      })
-
-
-    }
-
-
+      });
+    },
   },
 };
 </script>
