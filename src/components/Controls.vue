@@ -61,8 +61,8 @@
         />
         {{ this.$store.state.themeLerp }}
       </div>
-      <div>Last Theme: {{this.$store.state.lastTheme.name}}</div>
-      <div>Next Theme: {{this.$store.state.nextTheme.name}}</div>
+      <div v-if="this.$store.state.lastTheme!=null">Last Theme: {{this.$store.state.lastTheme.name}}</div>
+      <div v-if="this.$store.state.nextTheme!=null">Next Theme: {{this.$store.state.nextTheme.name}}</div>
     </div>
   </div>
 </template>

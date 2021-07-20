@@ -32,7 +32,7 @@ class Gradient{
 
   CreateCanvas(){
     this.canvasElement = document.createElement("canvas");
-    this.canvasElement.style.display = "none";
+    //this.canvasElement.style.display = "none";
     this.c = this.canvasElement.getContext("2d"); 
 
     document.body.appendChild(this.canvasElement);

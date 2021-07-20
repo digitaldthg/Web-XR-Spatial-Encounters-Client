@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, AdditiveBlending } from "three";
+import { MeshBasicMaterial, AdditiveBlending, Color } from "three";
 
 import Skybox from './Skybox';
 import FogFloorDiffuse from './FogFloorDiffuse';
@@ -23,27 +23,28 @@ class MaterialController {
 
 
     this.gradient_skybox = new Skybox({
-      name : "skybox"
+      name: "skybox"
     });
 
     this.gradient_fogFloor = new FogFloorDiffuse({
-      name : "fogColor"
+      name: "fogColor"
     });
     this.gradient_fogFloorAlpha = new FogFloorAlpha(
       {
-        name : "fogAlpha"
+        name: "fogAlpha"
       }
     );
 
-    var lerpMaterial = new LerpMaterial();
 
-    console.log("lerpMaterial", lerpMaterial);
+    //var lerpMaterial = new LerpMaterial();
+
+    //console.log("lerpMaterial", lerpMaterial);
 
     this.materials = {
       base_floor: new MeshBasicMaterial({
         color: 0x000000,
       }),
-      grid_floor: new MeshBasicMaterial({
+      grid_floor: new LerpMaterial({
         color: 0xff0000,
         transparent: true,
         depthWrite: false
@@ -56,12 +57,12 @@ class MaterialController {
 
         depthWrite: false
       }),
-      bg_back: new MeshBasicMaterial({
+      bg_back: new LerpMaterial({
         color: 0xff0000,
         transparent: true,
         depthWrite: false
       }),
-      bg_front: new MeshBasicMaterial({
+      bg_front: new LerpMaterial({
         color: 0xffffff,
         transparent: true,
         depthWrite: false
@@ -71,13 +72,13 @@ class MaterialController {
       skybox_gradient: new MeshBasicMaterial({
         map: this.gradient_skybox.GetTexture()
       }),
-      skybox_texture: new MeshBasicMaterial({
+      skybox_texture: new LerpMaterial({
         color: 0x000000,
         transparent: true,
 
       })
     }
-    this.tex_floor = new Floor(this.xr);
+    /*this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);
     this.tex_bg_front = new BGFrontTexture(this.xr);
     this.tex_bg_back = new BGBackTexture(this.xr);
@@ -88,14 +89,14 @@ class MaterialController {
 
     this.tex_bg_front.SetTexture("Mountainsfront", this.materials.bg_front, "alphaMap");
 
-    this.tex_bg_back.SetTexture("Mountains", this.materials.bg_back, "alphaMap");
+    this.tex_bg_back.SetTexture("Mountains", this.materials.bg_back, "alphaMap");*/
 
-    this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     //gelerpt
     //this.LerpThemes(this.currentTheme, this.nextTheme, .5);
     this.store.commit("setLastTheme", theme1)
     this.store.commit("setNextTheme", theme2)
+    this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
       console.log("Watch Theme Lerp ", newValue);
@@ -131,14 +132,14 @@ class MaterialController {
     }
 
 
-    console.log("lerpColor", arr1, arr2, finalArr);
+    //console.log("lerpColor", arr1, arr2, finalArr);
     return finalArr;
 
   }
 
   LerpThemes(themeA, themeB, alpha) {
     var final = ThemeFactory.Get();
-   
+
 
 
     if (themeA == null || themeB == null) {
@@ -149,16 +150,19 @@ class MaterialController {
 
       //if(!final.hasOwnProperty(keyName)){
       if (Array.isArray(themeA[keyName])) {
-       
+        console.log("KEY NAME ", keyName)
         final[keyName] = this.lerpColor(themeA[keyName], themeB[keyName], alpha);
-        
+        console.log(final[keyName])
+
       }
 
     })
-
     this.gradient_skybox.SetGradient(final.gradient_skybox);
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
+
+
+    this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
 
     // this.tex_floor.LerpMaterial(themeA.tex_floor,themeA.tex_floor, alpha);
     // this.tex_skybox.LerpMaterial(themeA.tex_floor,themeA.tex_floor, alpha);
@@ -167,7 +171,11 @@ class MaterialController {
 
   }
 
-
+  GetHSLColor(hslArray) {
+    var color = new Color();
+    color.setHSL(hslArray[0] / 100, hslArray[1] / 100, hslArray[2] / 100)
+    return color;
+  }
 
 
   GetMaterial(name) {

@@ -1,6 +1,10 @@
 const ThemeFactory = {
   Get(){
     return {
+     base_floor: [{
+        stop : 0,
+        value : [250,100,50]
+      }],
       gradient_skybox: [{
         stop : 0,
         value : [250,100,50]
