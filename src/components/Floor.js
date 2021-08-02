@@ -1,7 +1,6 @@
 import TextureLerpBackground from "./TextureLerpBackground";
 import grid from '../Model/environment/textures/floor/Grid.png';
 import concrete from '../Model/environment/textures/floor/SeamlessConcrete_normal.png';
-import bg from '../Model/environment/texture/bg_texture.png';
 
 import {
   NearestFilter,

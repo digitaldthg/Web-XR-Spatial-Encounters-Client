@@ -1,6 +1,6 @@
 import TextureBackground from "./TextureLerpBackground";
-import Mountainsfront from '../Model/environment/texture/QC_Mountain_front.png';
-import Mountains from '../Model/environment/texture/QC_Mountain.png';
+import Mountainsfront from '../Model/environment/textures/QC_Mountain_front.png';
+import Mountains from '../Model/environment/textures/QC_Mountain.png';
 import {ClampToEdgeWrapping} from 'three';
 
 class BGFrontTexture extends TextureBackground{

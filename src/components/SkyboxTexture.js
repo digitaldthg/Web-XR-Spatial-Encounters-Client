@@ -1,6 +1,5 @@
 import TextureLerpBackground from "./TextureLerpBackground";
-import SkyBG from '../Model/environment/texture/bg_texture.png';
-import Grid from '../Model/environment/texture/Grid.png';
+import SkyBG from '../Model/environment/textures/bg_texture.png';
 
 class SkyboxTexture extends TextureLerpBackground {
 
