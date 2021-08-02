@@ -63,8 +63,8 @@
       "value" : [200,100,50]
     }
   ],
-  "tex_floor" : "Grid2",
-  "tex_skybox" : "BG",
-  "tex_bg_front" : "Mountainsfront",
+  "tex_floor" : null,
+  "tex_skybox" :null,
+  "tex_bg_front" : "Mountains",
   "tex_bg_back" : "Mountains"
 }

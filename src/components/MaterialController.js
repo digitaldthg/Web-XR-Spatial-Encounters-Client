@@ -11,8 +11,16 @@ import BGBackTexture from "./BGBackTexture";
 import BGGradientFront from "./BGGradientFront";
 import BGGradientBack from "./BGGradientBack";
 import ThemeFactory from "./ThemeFactory";
-import theme1 from '../Themes/theme_DunkelConcrete/theme.json';
-import theme2 from '../Themes/theme_DunkelConcrete_Morning/theme.json';
+import theme1 from '../Themes/theme_1/theme.json';
+import theme2 from '../Themes/theme_2/theme.json';
+
+import theme_DunkelConcrete from '../Themes/theme_DunkelConcrete/theme.json';
+import theme_DunkelConcrete_Morning from '../Themes/theme_DunkelConcrete_Morning/theme.json';
+import theme_ThueringerLandschaft from '../Themes/theme_ThueringerLandschaft/theme.json';
+import theme_Turell_gelb from '../Themes/theme_Turell_gelb/theme.json';
+import theme_Sun_Orange2 from '../Themes/theme_Sun_Orange2/theme.json';
+import theme_Cyberpunk_Sun from '../Themes/theme_Cyberpunk_Sun/theme.json';
+import theme_DunkelGrid from '../Themes/theme_DunkelGrid/theme.json';
 
 import LerpMaterial from './LerpMaterial';
 
@@ -20,8 +28,11 @@ class MaterialController {
   constructor(xr, store) {
     this.xr = xr;
     this.store = store;
-    this.currentTheme = theme1;
-    this.nextTheme = theme2;
+
+    this.store.commit("setAllThemes",[theme_DunkelConcrete,theme_DunkelConcrete_Morning,theme_ThueringerLandschaft])
+
+    this.store.commit("setLastTheme",theme_Sun_Orange2 )
+    this.store.commit("setNextTheme", theme_Cyberpunk_Sun)
 
     //GRADIENT
     this.gradient_skybox = new Skybox({
@@ -111,13 +122,12 @@ class MaterialController {
     this.tex_bg_front.SetMaterial("BG_Front", bg_front_obj);
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
 
+ 
 
-    this.store.commit("setLastTheme", theme1)
-    this.store.commit("setNextTheme", theme2)
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", newValue);
+      //console.log("Watch Theme Lerp ", newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
@@ -185,7 +195,7 @@ class MaterialController {
     var finalArr = [];
 
     if (arr1.length != arr2.length) {
-      console.log("lerpColor: themes haben verschiedene color themes ");
+      //console.log("lerpColor: themes haben verschiedene color themes ");
 
       return;
     }
@@ -195,7 +205,7 @@ class MaterialController {
       var val2 = this.hsv_to_hsl(arr2[i].value);
 
       var hsv = this.LerpHSV(val1, val2, alpha);
-      console.log("HSV ",hsv)
+      //console.log("HSV ",hsv)
 
 
 

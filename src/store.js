@@ -12,7 +12,8 @@ export default new Vuex.Store({
       keysInit : false,
       themeLerp: 0,
     lastTheme: null,
-    nextTheme: null
+    nextTheme: null,
+    allThemes: []
     },
     mutations: {
       xr(state, data){
@@ -41,6 +42,9 @@ export default new Vuex.Store({
       },
       setNextTheme(state,theme){
         state.nextTheme = theme
+      },
+      setAllThemes(state,themes){
+        state.allThemes = themes
       },
 
     },

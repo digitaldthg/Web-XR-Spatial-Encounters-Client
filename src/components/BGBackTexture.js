@@ -1,6 +1,5 @@
 import TextureBackground from "./TextureLerpBackground";
-import Mountains from '../Model/environment/texture/QC_Mountain.png';
-import Mountainsfront from '../Model/environment/texture/QC_Mountain_front.png';
+import Mountains from '../Model/environment/textures/background/Horizon_Mountains01.png';
 import {ClampToEdgeWrapping} from 'three';
 
 class BGBackTexture extends TextureBackground{
@@ -12,12 +11,6 @@ class BGBackTexture extends TextureBackground{
 
     this.Load("Mountains", Mountains).then((texture)=>{
       texture.repeat.set( 5 , 1 );
-      texture.offset.set(10,0)
-      texture.wrapT = ClampToEdgeWrapping;
-    });
-
-    this.Load("Mountainsfront", Mountainsfront).then((texture)=>{
-      texture.repeat.set( 20 , 1 );
       texture.offset.set(10,0)
       texture.wrapT = ClampToEdgeWrapping;
     });
