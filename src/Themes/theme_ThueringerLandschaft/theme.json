@@ -12,15 +12,15 @@
     },
     {
       "stop" : 0.45,
-      "value" : "#000000"
+      "value" : "#d0dfff"
     },
     {
       "stop" : 0.55,
-      "value" : "#E6E6FA"
+      "value" : "#d0dfff"
     },
     {
       "stop" : 1,
-      "value" : "#4169E1"
+      "value" : "#4974ff"
     }
   ],
   "gradient_fogFloor" : [
