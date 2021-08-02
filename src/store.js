@@ -11,9 +11,10 @@ export default new Vuex.Store({
       frequency: 1,
       keysInit : false,
       themeLerp: 0,
-    lastTheme: null,
-    nextTheme: null,
-    allThemes: []
+      lastTheme: null,
+      nextTheme: null,
+      allThemes: [],
+      materialController : null,
     },
     mutations: {
       xr(state, data){
@@ -24,6 +25,9 @@ export default new Vuex.Store({
       },
       initKeyEvents(state, data){
         state.keysInit = data;
+      },
+      setMaterialController(state,data){
+        state.materialController = data;
       },
       setSpeed(state, data){
         console.log("Set Speed ",data)
