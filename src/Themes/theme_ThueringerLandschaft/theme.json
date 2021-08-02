@@ -26,20 +26,20 @@
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#cfc502"
     },
     {
       "stop" : 0.5,
-      "value" : "#000080"
+      "value" : "#cfc502"
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#cfc502"
     }
   ],
   "gradient_fogFloorAlpha" : [
     {
-      "stop" : 0,
+      "stop" : 0.45,
       "value" : "#000000"
     },
     {
@@ -47,32 +47,32 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 0.9,
       "value" : "#000000"
     }
   ],
   "gradient_bg_front" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#083801"
     },
     {
-      "stop" : 0.5,
-      "value" : "#800000"
+      "stop" : 1,
+      "value" : "#083801"
     }
   ],
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#ffffff"
     },
     {
       "stop" : 1,
-      "value" : "#800000"
+      "value" : "#ffffff"
     }
   ],
-  "tex_floor" : null,
+  "tex_floor" : "Raps",
   "tex_skybox" : null,
-  "tex_bg_front" : null,
-  "tex_bg_back" : null
+  "tex_bg_front" : "Forrest",
+  "tex_bg_back" : "Wolken"
 }

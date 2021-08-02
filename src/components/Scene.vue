@@ -79,11 +79,11 @@ export default {
         this.xr.Scene.add(this.envModel);
 
         this.envModel.children.forEach((element) => {
-          if (element.name == "bg_front") {
+          /*if (element.name == "bg_front") {
             element.visible = false;
           }else if (element.name == "bg_back") {
             element.visible = false;
-          }
+          }*/
         });
         this.SetEnvironmentModel();
       });
