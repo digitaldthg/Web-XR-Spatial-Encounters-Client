@@ -25,15 +25,15 @@
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : [10,100,100]
+      "value" : [0,0,0]
     },
     {
       "stop" : 0.5,
-      "value" : [232,100,50]
+      "value" : [0,0,0]
     },
     {
       "stop" : 1,
-      "value" : [10,100,100]
+      "value" : [0,0,0]
     }
   ],
   "gradient_fogFloorAlpha" : [
