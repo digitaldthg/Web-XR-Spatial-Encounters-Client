@@ -71,7 +71,7 @@
       "value" : "#800000"
     }
   ],
-  "tex_floor" : "Grid",
+  "tex_floor" : "GridPink",
   "tex_skybox" : null,
   "tex_bg_front" : null,
   "tex_bg_back" : null
