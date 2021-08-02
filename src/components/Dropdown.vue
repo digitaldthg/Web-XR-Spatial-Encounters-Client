@@ -4,9 +4,7 @@
     <div class="select-wrapper">
       <select :id="id" @change="OnChangeHandler">
         <option v-for="(opt, index) in options" v-bind:key="index" :value="opt">
-          <!-- {{index}} -->
-          {{ optionNames != null ? optionNames[index] : opt }}
-          <!-- {{opt}} -->
+          {{opt}}
         </option>
       </select>
     </div>
@@ -29,8 +27,7 @@ export default {
   watch: {
     "$store.state.allThemes": function (themes) {
       console.log(themes);
-      this.options = themes;
-      this.optionNames = themes.map((t) => {
+      this.options = themes.map((t) => {
         return t.name;
       });
       console.log(
@@ -43,8 +40,10 @@ export default {
   methods: {
     OnChangeHandler(e) {
       var value = e.target.value;
-      console.log("Dorpdown Value ",e);
-      //this.$emit("onChange", value);
+      console.log("Dorpdown Value ",value);
+      var next = this.$store.state.allThemes.find(t=>{return t.name == value})
+      console.log("Next Theme ",next);
+      this.$store.commit("setNextTheme", next)
     },
   },
 };
