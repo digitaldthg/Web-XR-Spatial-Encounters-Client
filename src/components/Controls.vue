@@ -92,6 +92,11 @@
         <input :value="this.$store.state.lastTheme.gradient_skybox[0].value" type='color' @input="e => ChangeThemeColor(e, 0)">
 
       </div>
+
+
+      <div class="">
+        <button @click="e => SaveTheme($store.state.lastTheme)">Save</button>
+      </div>
     </div>
 
     <button class="toggle-button" @click="Toggle">open / close</button>
@@ -104,8 +109,11 @@ import Dropdown from "./Dropdown.vue";
 
 import config from "../../main.config";
 
+import Debug from '../Mixins/Debug';
+
 export default {
   name: "Controls",
+  mixins:[Debug],
   components: {
     ColorPicker,
     Dropdown,
@@ -170,6 +178,9 @@ export default {
         speed: parseFloat(event.target.value),
       });
     },
+
+
+
   },
 };
 </script>

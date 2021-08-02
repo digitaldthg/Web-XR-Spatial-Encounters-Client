@@ -2,7 +2,7 @@
   <div id="app">
     <router-view></router-view>
 
-    <div id="canvases"></div>
+    <div id="canvases" :class="{visible : visible, 'not-visible' : !visible}"></div>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ export default {
   name: 'App',
   data(){
     return {
+      visible : config.showDevTools,
       id: null
     }
   },
@@ -71,4 +72,10 @@ div#canvases {
   height: 100%!important;
   position: relative;
 }
+
+
+.not-visible{
+  display:none!important;
+}
+
 </style>
