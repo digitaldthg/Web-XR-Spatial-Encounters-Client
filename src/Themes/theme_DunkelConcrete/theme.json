@@ -1,0 +1,77 @@
+{
+  "name":"Theme DunkelConcrete",
+  "base_floor":[{
+    "stop" : 0,
+    "value" : [0,0,0]}
+  ],
+  "gradient_skybox": [
+    {
+      "stop" : 0,
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.45,
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.55,
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 1,
+      "value" : [44,44,44]
+    }
+  ],
+  "gradient_fogFloor" : [
+    {
+      "stop" : 0,
+      "value" : [10,100,100]
+    },
+    {
+      "stop" : 0.5,
+      "value" : [232,100,50]
+    },
+    {
+      "stop" : 1,
+      "value" : [10,100,100]
+    }
+  ],
+  "gradient_fogFloorAlpha" : [
+    {
+      "stop" : 0,
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.5,
+      "value" : [0,100,100]
+    },
+    {
+      "stop" : 0.8,
+      "value" : [0,0,0]
+    }
+  ],
+  "gradient_bg_front" : [
+    {
+      "stop" : 0,
+      "value" : [241,100,50]
+    },
+    {
+      "stop" : 0.5,
+      "value" : [0,100,50]
+    }
+  ],
+  "gradient_bg_back" : [
+    {
+      "stop" : 0,
+      "value" : [241,100,50]
+    },
+    {
+      "stop" : 1,
+      "value" : [0,100,50]
+    }
+  ],
+  "tex_floor" : "Concrete",
+  "tex_skybox" : null,
+  "tex_bg_front" : null,
+  "tex_bg_back" : null
+}

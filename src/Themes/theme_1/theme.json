@@ -8,11 +8,11 @@
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [100,70,50]
+      "value" : [100,100,50]
     },
     {
       "stop" : 1,
-      "value" : [100,100,50]
+      "value" : [200,100,50]
     }
   ],
   "gradient_fogFloor" : [
@@ -63,7 +63,7 @@
       "value" : [200,100,50]
     }
   ],
-  "tex_floor" : "Grid",
+  "tex_floor" : "Grid2",
   "tex_skybox" : "BG",
   "tex_bg_front" : "Mountainsfront",
   "tex_bg_back" : "Mountains"

@@ -11,8 +11,8 @@ import BGBackTexture from "./BGBackTexture";
 import BGGradientFront from "./BGGradientFront";
 import BGGradientBack from "./BGGradientBack";
 import ThemeFactory from "./ThemeFactory";
-import theme1 from '../Themes/theme_1/theme.json';
-import theme2 from '../Themes/theme_2/theme.json';
+import theme1 from '../Themes/theme_DunkelConcrete/theme.json';
+import theme2 from '../Themes/theme_DunkelConcrete_Morning/theme.json';
 
 import LerpMaterial from './LerpMaterial';
 
@@ -160,6 +160,27 @@ class MaterialController {
       ];
   }
 
+  hsv_to_hsl(arr) {
+    var h = arr[0]/360;
+    var s = arr[1]/100;
+    var v = arr[2]/100;
+
+    // both hsv and hsl values are in [0, 1]
+    var l = (2 - s) * v / 2;
+
+    if (l != 0) {
+        if (l == 1) {
+            s = 0
+        } else if (l < 0.5) {
+            s = s * v / (l * 2)
+        } else {
+            s = s * v / (2 - l * 2)
+        }
+    }
+
+    return [h*360, s*100, l*100]
+}
+
   lerpColor(arr1, arr2, alpha) {
     var finalArr = [];
 
@@ -170,9 +191,13 @@ class MaterialController {
     }
 
     for (var i = 0; i < arr1.length; i++) {
+      var val1 = this.hsv_to_hsl(arr1[i].value);
+      var val2 = this.hsv_to_hsl(arr2[i].value);
 
-      var hsv = this.LerpHSV(arr1[i].value, arr2[i].value, alpha);
+      var hsv = this.LerpHSV(val1, val2, alpha);
       console.log("HSV ",hsv)
+
+
 
       finalArr.push({
         stop: this.lerp(arr1[i].stop, arr2[i].stop, alpha),

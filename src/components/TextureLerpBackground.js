@@ -58,7 +58,7 @@ class TextureLerpBackground {
     } else {
       tex_2 = texName2;
     }
-    this.material.material.uniforms.texture_1.value = tex_2;
+    this.material.material.uniforms.texture_2.value = tex_2;
     if (tex_2 != null && tex_2 != undefined) {
       if (tex_2.repeat != undefined) {
         this.material.material.uniforms.textureRepeat_2.value = tex_2.repeat;

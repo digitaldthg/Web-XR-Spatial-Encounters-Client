@@ -2,7 +2,7 @@
   "name":"Theme 2",
   "base_floor":[{
     "stop" : 0,
-    "value" : [100,70,100]}
+    "value" : [100,100,50]}
   ],
   "gradient_skybox": [
     {
