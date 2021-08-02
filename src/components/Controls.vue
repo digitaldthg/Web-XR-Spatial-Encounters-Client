@@ -62,10 +62,10 @@
         {{ this.$store.state.themeLerp }}
       </div>
       <div v-if="this.$store.state.lastTheme != null">
-        Last Theme: {{ this.$store.state.lastTheme.name }}
+        Left Theme: {{ this.$store.state.lastTheme.name }}
       </div>
       <div v-if="this.$store.state.nextTheme != null">
-        Next Theme: {{ this.$store.state.nextTheme.name }}
+        Right Theme: {{ this.$store.state.nextTheme.name }}
       </div>
       <div>
       <Dropdown />
