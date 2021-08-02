@@ -54,21 +54,21 @@
   "gradient_bg_front" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#ffffff"
     },
     {
-      "stop" : 0.5,
-      "value" : "#800000"
+      "stop" : 1,
+      "value" : "#ffffff"
     }
   ],
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#ffffff"
     },
     {
       "stop" : 1,
-      "value" : "#800000"
+      "value" : "#ffffff"
     }
   ],
   "tex_floor" : "Concrete",

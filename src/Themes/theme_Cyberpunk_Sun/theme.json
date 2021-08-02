@@ -64,15 +64,15 @@
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#ffffff"
     },
     {
       "stop" : 1,
-      "value" : "#800000"
+      "value" : "#ffffff"
     }
   ],
   "tex_floor" : "GridPink",
   "tex_skybox" : null,
-  "tex_bg_front" : null,
-  "tex_bg_back" : null
+  "tex_bg_front" : "Mountains",
+  "tex_bg_back" : "Wolken"
 }

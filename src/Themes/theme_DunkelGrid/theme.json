@@ -63,7 +63,7 @@
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#ffffff"
     },
     {
       "stop" : 1,
@@ -72,6 +72,6 @@
   ],
   "tex_floor" : "GridConcrete",
   "tex_skybox" : null,
-  "tex_bg_front" : null,
-  "tex_bg_back" : null
+  "tex_bg_front" : "Wolken",
+  "tex_bg_back" : "Black"
 }
