@@ -89,7 +89,7 @@ class Gradient{
   Update(){
     this.c.fillRect(0,0,this.size.x * this.dpr,this.size.y * this.dpr);
 
-    if(config.showDevTools){
+    if(config.dev.showTextureNames){
       this.c.fillStyle = "#ffffff";
       this.c.font = "100px Arial";
       this.c.fillText(this.name, 30, 80);
