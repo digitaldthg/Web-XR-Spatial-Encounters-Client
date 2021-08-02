@@ -70,7 +70,7 @@
       "value" : "#000000"
     }
   ],
-  "tex_floor" : null,
+  "tex_floor" : "YellowDesert",
   "tex_skybox" : null,
   "tex_bg_front" :"Black",
   "tex_bg_back" : "Black"

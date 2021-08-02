@@ -18,12 +18,12 @@ class BGBackTexture extends TextureBackground{
       texture.wrapT = ClampToEdgeWrapping;})
 
     this.Load("Forrest", Forrest).then((texture)=>{
-      texture.repeat.set( 5 , 1 );
+      texture.repeat.set( 4 , 1 );
       texture.wrapT = ClampToEdgeWrapping;
     });
 
     this.Load("Wolken", Wolken).then((texture)=>{
-      texture.repeat.set( 3 , 1 );
+      texture.repeat.set( 5 , 1 );
       texture.wrapT = ClampToEdgeWrapping;
     });
     this.Load("Black", Black).then((texture)=>{

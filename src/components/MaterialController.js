@@ -128,7 +128,7 @@ class MaterialController {
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      //console.log("Watch Theme Lerp ", newValue);
+      console.log("Watch Theme Lerp ", newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
@@ -149,6 +149,7 @@ class MaterialController {
       var h = null;
       var a = {h:arr1[0]/360,s: arr1[1]/100,v:arr1[2]/100}
       var b = {h:arr2[0]/360,s: arr2[1]/100,v:arr2[2]/100}
+      
       var d = b.h - a.h;
 
       if (a.h > b.h)
@@ -169,6 +170,7 @@ class MaterialController {
       {
           h = a.h + t * d
       }
+      console.log("A ",a, " B ",b, " H ",h, " T ",t)
       // Interpolates the rest
       return [
           h*360,            // H
@@ -254,10 +256,12 @@ class MaterialController {
     }
 
     for (var i = 0; i < arr1.length; i++) {
+
       var val1 = this.hexToHSL(arr1[i].value);
       var val2 = this.hexToHSL(arr2[i].value);
-
+      console.log("Lerp Color HSL ",val1, val2)
       var hsv = this.LerpHSV(val1, val2, alpha);
+      console.log("Lerped ",hsv)
       //console.log("HSV ",hsv)
 
 
