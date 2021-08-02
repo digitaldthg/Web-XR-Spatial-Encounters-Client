@@ -2,72 +2,73 @@
   "name":"Theme ThueringerLandschaft",
   "base_floor":[{
     "stop" : 0,
-    "value" : [56,100,100]}
+    "value" : "#FFFF00"
+  }
   ],
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [0,0,0]
+      "value" : "#000000"
     },
     {
       "stop" : 0.45,
-      "value" : [0,0,0]
+      "value" : "#000000"
     },
     {
       "stop" : 0.55,
-      "value" : [220,18,100]
+      "value" : "#E6E6FA"
     },
     {
       "stop" : 1,
-      "value" :  [226,71,100]
+      "value" : "#4169E1"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : [10,100,100]
+      "value" : "#FF4500"
     },
     {
       "stop" : 0.5,
-      "value" : [232,100,50]
+      "value" : "#000080"
     },
     {
       "stop" : 1,
-      "value" : [10,100,100]
+      "value" : "#FF4500"
     }
   ],
   "gradient_fogFloorAlpha" : [
     {
       "stop" : 0,
-      "value" : [0,0,0]
+      "value" : "#000000"
     },
     {
       "stop" : 0.5,
-      "value" : [0,100,100]
+      "value" : "#ffffff"
     },
     {
       "stop" : 0.8,
-      "value" : [0,0,0]
+      "value" : "#000000"
     }
   ],
   "gradient_bg_front" : [
     {
       "stop" : 0,
-      "value" : [241,100,50]
+      "value" : "#000080"
     },
     {
       "stop" : 0.5,
-      "value" : [0,100,50]
+      "value" : "#800000"
     }
   ],
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : [241,100,50]
+      "value" : "#000080"
     },
     {
       "stop" : 1,
-      "value" : [0,100,50]
+      "value" : "#800000"
     }
   ],
   "tex_floor" : null,
