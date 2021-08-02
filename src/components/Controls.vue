@@ -66,14 +66,22 @@
         />
         {{ this.$store.state.themeLerp }}
       </div>
-      <div v-if="this.$store.state.lastTheme!=null">Last Theme: {{this.$store.state.lastTheme.name}}</div>
-      <div v-if="this.$store.state.nextTheme!=null">Next Theme: {{this.$store.state.nextTheme.name}}</div>
+      <div v-if="this.$store.state.lastTheme != null">
+        Last Theme: {{ this.$store.state.lastTheme.name }}
+      </div>
+      <div v-if="this.$store.state.nextTheme != null">
+        Next Theme: {{ this.$store.state.nextTheme.name }}
+      </div>
+      <div>
+      <Dropdown />
+      </div>
     </div>
   </div>
 </template>
 <script>
 import TriangleMesh from "../scripts/triangle.js";
 import { ColorPicker } from "vue-color-gradient-picker";
+import Dropdown from "./Dropdown.vue";
 
 import config from "../../main.config";
 
@@ -81,6 +89,7 @@ export default {
   name: "Controls",
   components: {
     ColorPicker,
+    Dropdown,
   },
   data() {
     return {

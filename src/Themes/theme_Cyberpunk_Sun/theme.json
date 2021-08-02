@@ -2,16 +2,24 @@
   "name":"Theme Cyberpunk Sun",
   "base_floor":[{
     "stop" : 0,
-    "value" : [100,100,50]}
+    "value" :  [234,71,21]}
   ],
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [0,10,50]
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.45,
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.55,
+      "value" : [298,98,72]
     },
     {
       "stop" : 1,
-      "value" : [0,100,0]
+      "value" : [286,96,51]
     }
   ],
   "gradient_fogFloor" : [
@@ -63,7 +71,7 @@
     }
   ],
   "tex_floor" : "Grid",
-  "tex_skybox" : "BG",
-  "tex_bg_front" : "Mountains",
-  "tex_bg_back" : "Mountainsfront"
+  "tex_skybox" : null,
+  "tex_bg_front" : null,
+  "tex_bg_back" : null
 }

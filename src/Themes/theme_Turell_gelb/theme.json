@@ -2,16 +2,24 @@
   "name":"Theme Turell gelb",
   "base_floor":[{
     "stop" : 0,
-    "value" : [100,100,50]}
+    "value" : [42,100,100]}
   ],
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : [0,10,50]
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.45,
+      "value" : [0,0,0]
+    },
+    {
+      "stop" : 0.48,
+      "value" : [72,85,100]
     },
     {
       "stop" : 1,
-      "value" : [0,100,0]
+      "value" :  [28,20,100]
     }
   ],
   "gradient_fogFloor" : [
@@ -62,8 +70,8 @@
       "value" : [0,100,50]
     }
   ],
-  "tex_floor" : "Grid",
-  "tex_skybox" : "BG",
-  "tex_bg_front" : "Mountains",
-  "tex_bg_back" : "Mountainsfront"
+  "tex_floor" : null,
+  "tex_skybox" : null,
+  "tex_bg_front" : null,
+  "tex_bg_back" : null
 }
