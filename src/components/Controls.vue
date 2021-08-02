@@ -93,6 +93,8 @@
 
       </div>
     </div>
+
+    <button class="toggle-button" @click="Toggle">open / close</button>
   </div>
 </template>
 <script>
@@ -110,7 +112,7 @@ export default {
   },
   data() {
     return {
-      open: true,
+      open: false,
       scale: 0.5,
       config: config,
     };
@@ -119,7 +121,9 @@ export default {
     this.InitEvents();
   },
   methods: {
-
+    Toggle(){
+      this.open = !this.open;
+    },
     ChangeThemeColor(e , colorIndex){
 
       console.log("ChangeThemeColor",e.target.value , this.$store.state.lastTheme.gradient_skybox[colorIndex].value);
@@ -218,6 +222,13 @@ input[type="color"]::-webkit-color-swatch {
 .grid-1 {
   width: 100%;
   flex: 1;
+}
+
+.toggle-button{
+  position: absolute;
+  right: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 0 0 1rem 1rem;
 }
 </style>
 
