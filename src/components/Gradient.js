@@ -1,4 +1,5 @@
 import { CanvasTexture, Texture } from "three";
+import config from "../../main.config";
 
 class Gradient{
   name = "gradient";
@@ -87,10 +88,12 @@ class Gradient{
 
   Update(){
     this.c.fillRect(0,0,this.size.x * this.dpr,this.size.y * this.dpr);
-    
-    this.c.fillStyle = "#ffffff";
-    this.c.font = "100px Arial";
-    this.c.fillText(this.name, 30, 80);
+
+    if(config.showDevTools){
+      this.c.fillStyle = "#ffffff";
+      this.c.font = "100px Arial";
+      this.c.fillText(this.name, 30, 80);
+    }
     this.texture.needsUpdate = true;
   }
 
