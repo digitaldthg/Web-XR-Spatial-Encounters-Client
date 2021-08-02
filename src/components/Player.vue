@@ -31,6 +31,7 @@ export default {
       thumb: false,
       rings: [],
       explosition: false,
+      explodingFactor : 0.6,
       ringOffset: 0.15,
       bottomColor: new Color(0xffffff),
       keyArray: ["w", "a", "s", "d", "e"],
@@ -323,14 +324,14 @@ export default {
         this.player.quaternion = this.transform.rotation.clone();
 
         if (
-          this.player.position.y < this.transform.headHeight * 0.6 &&
+          this.player.position.y < this.transform.headHeight * this.explodingFactor &&
           !this.explosition
         ) {
           this.Explode();
         }
 
         if (
-          this.player.position.y > this.transform.headHeight * 0.6 &&
+          this.player.position.y > this.transform.headHeight * this.explodingFactor &&
           this.explosition
         ) {
           this.explosition = false;

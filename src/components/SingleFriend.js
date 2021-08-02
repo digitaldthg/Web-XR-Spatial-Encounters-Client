@@ -7,6 +7,8 @@ class SingleFriend{
     this.xr = store.state.xr;
     this.rings = [];
     this.bottomColor = new Color(0xffffff);
+
+    this.headFactor = 2;
     this.Init(data);
   }
   
@@ -40,7 +42,7 @@ class SingleFriend{
       this.rings.push(ring);
     }
 
-      group.userData.headHeight = data.transform.headHeight;
+      group.userData.headHeight = data.transform.headHeight * this.headFactor;
       group.userData.targetPosition = new Vector3(
         data.transform.position.x,
         data.transform.position.y,
@@ -74,10 +76,10 @@ class SingleFriend{
   updateData = (data) => {
     if(typeof(data) == "undefined"){return;}
     
-    this.instance.userData.headHeight = data.transform.headHeight;
+    this.instance.userData.headHeight = data.transform.headHeight * this.headFactor;
     this.instance.userData.targetPosition = new Vector3(
       data.transform.position.x,
-      data.transform.position.y,
+      data.transform.position.y * this.headFactor,
       data.transform.position.z
     );
 
@@ -127,7 +129,7 @@ class SingleFriend{
 
     var newQuat = this.instance.userData.lastRotation.slerp(this.instance.userData.targetRotation , this.instance.userData.lerpAlpha / 100);
     this.instance.position.set(newPos.x, 0, newPos.z);
-    this.head.position.set(0,newPos.y,0);
+    this.head.position.set(0,newPos.y ,0);
 
     this.head.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
   
