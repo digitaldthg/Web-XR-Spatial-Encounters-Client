@@ -23,6 +23,9 @@ export default {
   },
   mounted() {
     this.id = this._uid;
+    this.options = this.$store.state.allThemes.map((t) => {
+        return t.name;
+      });
   },
   watch: {
     "$store.state.allThemes": function (themes) {
@@ -38,6 +41,7 @@ export default {
     },
   },
   methods: {
+
     OnChangeHandler(e) {
       var value = e.target.value;
       console.log("Dorpdown Value ",value);

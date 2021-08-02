@@ -71,8 +71,8 @@
       "value" : "#800000"
     }
   ],
-  "tex_floor" : "Grid",
+  "tex_floor" : "GridOrange",
   "tex_skybox" : null,
-  "tex_bg_front" : null,
-  "tex_bg_back" : null
+  "tex_bg_front" : "Black",
+  "tex_bg_back" : "Black"
 }

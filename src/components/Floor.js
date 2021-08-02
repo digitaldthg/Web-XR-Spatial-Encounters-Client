@@ -1,6 +1,6 @@
 import TextureLerpBackground from "./TextureLerpBackground";
 import grid from '../Model/environment/textures/floor/Grid.png';
-import concrete from '../Model/environment/textures/floor/SeamlessConcrete_normal.png';
+import concrete from '../Model/environment/textures/floor/SeamlessConcrete_dark.png';
 import raps from '../Model/environment/textures/floor/Raps.png';
 import grid_concrete from '../Model/environment/textures/floor/grid_02_concrete-black.png';
 import grid_orange from '../Model/environment/textures/floor/grid_02_orange.png';
@@ -23,12 +23,12 @@ class Floor extends TextureLerpBackground{
       texture.repeat.set( 1000,1000 );
     });
     this.Load("Concrete", concrete).then((texture)=>{
-      texture.repeat.set( 100,100);
+      texture.repeat.set( 50,50);
     });
     this.Load("Raps", raps).then((texture)=>{
       texture.repeat.set( 100,100);
     });
-    this.Load("GridConrete", grid_concrete).then((texture)=>{
+    this.Load("GridConcrete", grid_concrete).then((texture)=>{
       texture.repeat.set( 100,100);
     });
     this.Load("GridOrange", grid_orange).then((texture)=>{

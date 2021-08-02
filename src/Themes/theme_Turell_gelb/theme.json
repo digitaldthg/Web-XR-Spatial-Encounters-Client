@@ -72,6 +72,6 @@
   ],
   "tex_floor" : null,
   "tex_skybox" : null,
-  "tex_bg_front" : null,
-  "tex_bg_back" : null
+  "tex_bg_front" :"Black",
+  "tex_bg_back" : "Black"
 }
