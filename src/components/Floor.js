@@ -5,7 +5,6 @@ import raps from '../Model/environment/textures/floor/Raps.png';
 import grid_concrete from '../Model/environment/textures/floor/grid_02_concrete-black.png';
 import grid_orange from '../Model/environment/textures/floor/grid_02_orange.png';
 import grid_pink from '../Model/environment/textures/floor/grid_02_pink.png';
-import bg from '../Model/environment/texture/bg_texture.png';
 
 import {
   NearestFilter,

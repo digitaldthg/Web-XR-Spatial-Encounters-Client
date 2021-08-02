@@ -2,7 +2,7 @@
   "name":"Theme Turell gelb",
   "base_floor":[{
     "stop" : 0,
-    "value" : "#FFA500"}
+    "value" : "#ffcc00"}
   ],
   "gradient_skybox": [
     {
@@ -29,7 +29,7 @@
     },
     {
       "stop" : 0.5,
-      "value" : "#000080"
+      "value" : "#ff0000"
     },
     {
       "stop" : 1,
@@ -57,7 +57,7 @@
     },
     {
       "stop" : 0.5,
-      "value" : "#800000"
+      "value" : "#000000"
     }
   ],
   "gradient_bg_back" : [
@@ -67,7 +67,7 @@
     },
     {
       "stop" : 1,
-      "value" : "#800000"
+      "value" : "#000000"
     }
   ],
   "tex_floor" : null,
