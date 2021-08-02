@@ -54,6 +54,9 @@ class MaterialController {
       depthWrite: false,
 
     });
+
+    console.log("grid_floor_obj" , grid_floor_obj);
+
     var grid_floor = grid_floor_obj.material;
 
     //BG Back
@@ -86,7 +89,7 @@ class MaterialController {
         color: 0x000000,
       }),
       fog_floor: new MeshBasicMaterial({
-        color: 0xffffff,
+        color: 0xff0000,
         transparent: true,
         map: this.gradient_fogFloor.GetTexture(),
         alphaMap: this.gradient_fogFloorAlpha.GetTexture(),
@@ -117,7 +120,7 @@ class MaterialController {
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", newValue);
+      //console.log("Watch Theme Lerp ", newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
@@ -161,25 +164,72 @@ class MaterialController {
   }
 
   hsv_to_hsl(arr) {
-    var h = arr[0]/360;
-    var s = arr[1]/100;
-    var v = arr[2]/100;
+    var h = arr[0];///360;
+    var s = arr[1];///100;
+    var v = arr[2];///100;
 
-    // both hsv and hsl values are in [0, 1]
-    var l = (2 - s) * v / 2;
 
-    if (l != 0) {
-        if (l == 1) {
-            s = 0
-        } else if (l < 0.5) {
-            s = s * v / (l * 2)
-        } else {
-            s = s * v / (2 - l * 2)
-        }
+    // determine the lightness in the range [0,100]
+      var l = (2 - s / 100) * v / 2;
+
+      // store the HSL components
+      var hsl = {
+          h : h,
+          s : s * v / (l < 50 ? l * 2 : 200 - l * 2),
+          l : l
+        };
+
+      // correct a division-by-zero error
+      if (isNaN(hsl.s)) hsl.s = 0;
+    
+    return [hsl.h, hsl.s, hsl.l];
+//    return [h*360, s*100, l*100]
+  }
+
+  hexToHSL(H) {
+    // Convert hex to RGB first
+    let r = 0, g = 0, b = 0;
+    if (H.length == 4) {
+      r = "0x" + H[1] + H[1];
+      g = "0x" + H[2] + H[2];
+      b = "0x" + H[3] + H[3];
+    } else if (H.length == 7) {
+      r = "0x" + H[1] + H[2];
+      g = "0x" + H[3] + H[4];
+      b = "0x" + H[5] + H[6];
     }
-
-    return [h*360, s*100, l*100]
-}
+    // Then to HSL
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    let cmin = Math.min(r,g,b),
+        cmax = Math.max(r,g,b),
+        delta = cmax - cmin,
+        h = 0,
+        s = 0,
+        l = 0;
+  
+    if (delta == 0)
+      h = 0;
+    else if (cmax == r)
+      h = ((g - b) / delta) % 6;
+    else if (cmax == g)
+      h = (b - r) / delta + 2;
+    else
+      h = (r - g) / delta + 4;
+  
+    h = Math.round(h * 60);
+  
+    if (h < 0)
+      h += 360;
+  
+    l = (cmax + cmin) / 2;
+    s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+    s = +(s * 100).toFixed(1);
+    l = +(l * 100).toFixed(1);
+  
+    return [h,s,l];
+  }
 
   lerpColor(arr1, arr2, alpha) {
     var finalArr = [];
@@ -194,8 +244,9 @@ class MaterialController {
       var val1 = this.hsv_to_hsl(arr1[i].value);
       var val2 = this.hsv_to_hsl(arr2[i].value);
 
-      var hsv = this.LerpHSV(val1, val2, alpha);
-      console.log("HSV ",hsv)
+      var hsv = this.LerpHSV(arr1[i].value, arr2[i].value, alpha);
+      //var hsv = this.LerpHSV(val1, val2, alpha);
+      //console.log("HSV ",hsv)
 
 
 
@@ -223,6 +274,8 @@ class MaterialController {
       if (themeA == null) { themeA = ThemeFactory.Get(); }
       if (themeB == null) { themeB = ThemeFactory.Get(); }
     }
+
+
     Object.keys(final).map((keyName) => {
 
       if (Array.isArray(themeA[keyName])) {
@@ -233,6 +286,11 @@ class MaterialController {
     })
     this.gradient_skybox.SetGradient(final.gradient_skybox);
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
+
+
+    //console.log(themeA, themeB, final.gradient_fogFloor);
+    console.log(themeA, themeB, final.gradient_fogFloorAlpha);
+
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
     this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
 
@@ -241,11 +299,13 @@ class MaterialController {
 
     this.gradient_bg_front.SetGradient(final.gradient_bg_front);
     this.gradient_bg_back.SetGradient(final.gradient_bg_back);
+
+
     this.tex_bg_front.lerpMaterial(this.gradient_bg_front.GetTexture(), this.gradient_bg_front.GetTexture(), alpha, themeA.tex_bg_front, themeB.tex_bg_front);
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
 
 
-    console.log("SCENE ", this.xr.Scene)
+    //console.log("SCENE ", this.xr.Scene)
 
   }
 

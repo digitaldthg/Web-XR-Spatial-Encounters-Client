@@ -16,6 +16,8 @@
           step="0.1"
           value="1"
           @change="updateSlider"
+          @input="updateSlider"
+
         />
         {{ this.$store.state.frequency }}
       </div>
@@ -30,6 +32,7 @@
           step="0.05"
           value="0.5"
           @change="updateScale"
+          @input="updateScale"
         />
         {{ this.scale }}
       </div>
@@ -44,6 +47,7 @@
           step="0.001"
           value="0.1"
           @change="updateSpeed"
+          @input="updateSpeed"
         />
         {{ this.$store.state.speed }}
       </div>
@@ -58,6 +62,7 @@
           step="0.001"
           value="0"
           @change="updateThemeLerp"
+          @input="updateThemeLerp"
         />
         {{ this.$store.state.themeLerp }}
       </div>

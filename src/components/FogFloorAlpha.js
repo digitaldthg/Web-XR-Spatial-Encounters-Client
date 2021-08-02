@@ -4,7 +4,7 @@ class FogFloorAlpha extends Gradient{
 
   constructor(props){
     super(props);
-
+    
 
   }
 

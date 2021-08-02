@@ -18,8 +18,8 @@ class Gradient{
       var {name , size} = opt;
     }
     
-    size = typeof(size) != "undefined" ? size : this.size;
-    name = typeof(name) != "undefined" ? name : this.name;
+    this.size = typeof(size) != "undefined" ? size : this.size;
+    this.name = typeof(name) != "undefined" ? name : this.name;
 
     this.CreateCanvas();
 
@@ -35,7 +35,7 @@ class Gradient{
 
   CreateCanvas(){
     this.canvasElement = document.createElement("canvas");
-    this.canvasElement.style.display = "none";
+    //this.canvasElement.style.display = "none";
     this.c = this.canvasElement.getContext("2d"); 
 
     document.body.appendChild(this.canvasElement);
@@ -48,6 +48,11 @@ class Gradient{
 
     // Create gradient
     this.gradient = this.c.createLinearGradient(0,0,0,this.size.y * this.dpr);
+
+    console.log("name" , this.name)
+    if(this.name == "fogAlpha"){
+      console.log("gradientArray" , gradientArray);
+    }
     
     for(var i=0;i<gradientArray.length;i++){
       let gradientItem = gradientArray[i];

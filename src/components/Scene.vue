@@ -176,9 +176,12 @@ export default {
         console.log("Set Materials ", child.name, material);
         child.material = material;
 
+
+
+
         switch (child.name) {
           case "base_floor":
-            child.renderOrder = 7;
+            child.renderOrder = 0;
             break;
           case "bg_back":
             child.renderOrder = 9;

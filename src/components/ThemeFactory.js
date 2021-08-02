@@ -37,7 +37,7 @@ const ThemeFactory = {
           value : [0,100,100]
         },
         {
-          stop : .8,
+          stop : 0.8,
           value : [0,0,0]
         }
       ],
