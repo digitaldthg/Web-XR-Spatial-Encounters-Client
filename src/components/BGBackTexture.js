@@ -2,6 +2,7 @@ import TextureBackground from "./TextureLerpBackground";
 import Forrest from '../Model/environment/textures/background/Horizon_Forrest01.png';
 import Wolken from '../Model/environment/textures/background/Horizon_Wolken.png';
 import Mountains from '../Model/environment/textures/background/Horizon_Mountains01.png';
+import Black from '../Model/environment/textures/black.png';
 import {ClampToEdgeWrapping} from 'three';
 
 class BGBackTexture extends TextureBackground{
@@ -23,6 +24,9 @@ class BGBackTexture extends TextureBackground{
 
     this.Load("Wolken", Wolken).then((texture)=>{
       texture.repeat.set( 3 , 1 );
+      texture.wrapT = ClampToEdgeWrapping;
+    });
+    this.Load("Black", Black).then((texture)=>{
       texture.wrapT = ClampToEdgeWrapping;
     });
   }
