@@ -2,7 +2,7 @@
   "name":"Theme Sun Orange2",
   "base_floor":[{
     "stop" : 0,
-    "value" : "#000000"
+    "value" : "#3b1c00"
   }
   ],
   "gradient_skybox": [
@@ -12,11 +12,11 @@
     },
     {
       "stop" : 0.45,
-      "value" : "#000000"
+      "value" : "#ff7800"
     },
     {
-      "stop" : 0.48,
-      "value" : "#FF8C00"
+      "stop" : 0.58,
+      "value" : "#ff7800"
     },
     {
       "stop" : 1,
@@ -26,15 +26,15 @@
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#000000"
     },
     {
       "stop" : 0.5,
-      "value" :"#000080"
+      "value" :"#d43511"
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#000000"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -47,7 +47,7 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 0.9,
       "value" : "#000000"
     }
   ],

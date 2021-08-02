@@ -24,6 +24,7 @@ class Gradient{
     this.CreateCanvas();
 
     this.canvasElement.name = name;
+    this.canvasElement.setAttribute("data-name" , name);
     this.canvasElement.classList.add(name);
 
     //this.texture = new CanvasTexture(this.canvasElement);
@@ -38,7 +39,9 @@ class Gradient{
     //this.canvasElement.style.display = "none";
     this.c = this.canvasElement.getContext("2d"); 
 
-    document.body.appendChild(this.canvasElement);
+    let container = document.getElementById("canvases");
+
+    container.appendChild(this.canvasElement);
 
     this.Resize();
   }
@@ -84,6 +87,10 @@ class Gradient{
 
   Update(){
     this.c.fillRect(0,0,this.size.x * this.dpr,this.size.y * this.dpr);
+    
+    this.c.fillStyle = "#ffffff";
+    this.c.font = "100px Arial";
+    this.c.fillText(this.name, 30, 80);
     this.texture.needsUpdate = true;
   }
 

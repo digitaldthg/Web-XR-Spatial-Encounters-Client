@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <router-view></router-view>
+
+    <div id="canvases"></div>
   </div>
 </template>
 
@@ -52,9 +54,21 @@ body{
 
 
 canvas{
-  position: absolute;
   top: 0;
   left: 0;
-  border: 1px solid #f00;
+}
+
+div#canvases {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 200px;
+  display: flex;
+}
+
+#canvases canvas {
+  width: 20%!important;
+  height: 100%!important;
+  position: relative;
 }
 </style>

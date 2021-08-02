@@ -8,7 +8,7 @@
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#333333"
     },
     {
       "stop" : 0.45,
