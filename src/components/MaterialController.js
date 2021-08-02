@@ -31,8 +31,8 @@ class MaterialController {
 
     this.store.commit("setAllThemes",[theme_DunkelConcrete,theme_DunkelConcrete_Morning,theme_ThueringerLandschaft,theme_Turell_gelb,theme_Sun_Orange2,theme_Cyberpunk_Sun,theme_DunkelGrid])
 
-    this.store.commit("setLastTheme",theme_Sun_Orange2 )
-    this.store.commit("setNextTheme", theme_Cyberpunk_Sun)
+    this.store.commit("setLastTheme",theme_DunkelConcrete)
+    this.store.commit("setNextTheme", theme_DunkelConcrete_Morning)
 
     //GRADIENT
     this.gradient_skybox = new Skybox({
