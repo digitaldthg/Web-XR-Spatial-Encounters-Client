@@ -15,25 +15,25 @@
     },
     {
       "stop" : 0.55,
-      "value" : "#2F4F4F"
+      "value" : "#333333"
     },
     {
-      "stop" : 1,
+      "stop" : 0.65,
       "value" :"#000000"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#000000"
     },
     {
       "stop" : 0.5,
-      "value" : "#000080"
+      "value" : "#000000"
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#000000"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -46,7 +46,7 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 1,
       "value" : "#000000"
     }
   ],
@@ -63,15 +63,15 @@
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#ffffff"
+      "value" : "#999999"
     },
     {
       "stop" : 1,
-      "value" : "#ffffff"
+      "value" : "#999999"
     }
   ],
   "tex_floor" : "GridConcrete",
   "tex_skybox" : null,
-  "tex_bg_front" : "Wolken",
-  "tex_bg_back" : "Black"
+  "tex_bg_front" : "Black",
+  "tex_bg_back" : "Wolken"
 }
