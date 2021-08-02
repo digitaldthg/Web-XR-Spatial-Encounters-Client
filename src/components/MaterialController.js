@@ -30,9 +30,10 @@ class MaterialController {
     this.store = store;
 
     this.store.commit("setAllThemes",[theme_DunkelConcrete,theme_DunkelConcrete_Morning,theme_ThueringerLandschaft,theme_Turell_gelb,theme_Sun_Orange2,theme_Cyberpunk_Sun,theme_DunkelGrid])
-
+    
     this.store.commit("setLastTheme",theme_DunkelConcrete)
     this.store.commit("setNextTheme", theme_DunkelConcrete_Morning)
+    this.store.commit("setMaterialController", this);
 
     //GRADIENT
     this.gradient_skybox = new Skybox({
@@ -131,6 +132,12 @@ class MaterialController {
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
+
+    this.xr.Events.addEventListener("OnTextureLoad", ()=>{
+      console.log("texture wurde geladen");
+
+      this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
+    })
   }
 
   lerp(a, b, t) {
