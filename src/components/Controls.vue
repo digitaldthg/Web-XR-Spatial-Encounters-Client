@@ -20,7 +20,6 @@
               value="1"
               @change="updateSlider"
               @input="updateSlider"
-
             />
             {{ this.$store.state.frequency }}
           </div>
@@ -71,7 +70,6 @@
           </div>
         </div>
 
-
         <div class="grid-2-1">
           <div v-if="this.$store.state.lastTheme != null">
             Left Theme: {{ this.$store.state.lastTheme.name }}
@@ -80,22 +78,35 @@
             Right Theme: {{ this.$store.state.nextTheme.name }}
           </div>
           <div>
-          <Dropdown />
+            <Dropdown @onChange="changeTheme" />
           </div>
         </div>
-
       </div>
       <div class="colorGradients" v-if="$store.state.lastTheme != null">
-        <input :value="this.$store.state.lastTheme.gradient_skybox[3].value" type='color' @input="e => ChangeThemeColor(e, 3)">
-        <input :value="this.$store.state.lastTheme.gradient_skybox[2].value" type='color' @input="e => ChangeThemeColor(e, 2)">
-        <input :value="this.$store.state.lastTheme.gradient_skybox[1].value" type='color' @input="e => ChangeThemeColor(e, 1)">
-        <input :value="this.$store.state.lastTheme.gradient_skybox[0].value" type='color' @input="e => ChangeThemeColor(e, 0)">
-
+        <input
+          :value="this.$store.state.lastTheme.gradient_skybox[3].value"
+          type="color"
+          @input="(e) => ChangeThemeColor(e, 3)"
+        />
+        <input
+          :value="this.$store.state.lastTheme.gradient_skybox[2].value"
+          type="color"
+          @input="(e) => ChangeThemeColor(e, 2)"
+        />
+        <input
+          :value="this.$store.state.lastTheme.gradient_skybox[1].value"
+          type="color"
+          @input="(e) => ChangeThemeColor(e, 1)"
+        />
+        <input
+          :value="this.$store.state.lastTheme.gradient_skybox[0].value"
+          type="color"
+          @input="(e) => ChangeThemeColor(e, 0)"
+        />
       </div>
 
-
       <div class="">
-        <button @click="e => SaveTheme($store.state.lastTheme)">Save</button>
+        <button @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
       </div>
     </div>
 
@@ -109,11 +120,11 @@ import Dropdown from "./Dropdown.vue";
 
 import config from "../../main.config";
 
-import Debug from '../Mixins/Debug';
+import Debug from "../Mixins/Debug";
 
 export default {
   name: "Controls",
-  mixins:[Debug],
+  mixins: [Debug],
   components: {
     ColorPicker,
     Dropdown,
@@ -129,26 +140,38 @@ export default {
     this.InitEvents();
   },
   methods: {
-    Toggle(){
+    Toggle() {
       this.open = !this.open;
     },
-    ChangeThemeColor(e , colorIndex){
+    ChangeThemeColor(e, colorIndex) {
+      console.log(
+        "ChangeThemeColor",
+        e.target.value,
+        this.$store.state.lastTheme.gradient_skybox[colorIndex].value
+      );
 
-      console.log("ChangeThemeColor",e.target.value , this.$store.state.lastTheme.gradient_skybox[colorIndex].value);
-
-
-      this.$store.state.lastTheme.gradient_skybox[colorIndex].value = e.target.value;
+      this.$store.state.lastTheme.gradient_skybox[colorIndex].value =
+        e.target.value;
 
       console.log(this.$store.state.materialController);
 
-      this.$store.state.materialController.LerpThemes(this.$store.state.lastTheme, this.$store.state.nextTheme, this.$store.state.themeLerp);
-
+      this.$store.state.materialController.LerpThemes(
+        this.$store.state.lastTheme,
+        this.$store.state.nextTheme,
+        this.$store.state.themeLerp
+      );
     },
     InitEvents() {
       window.addEventListener("keydown", (e) => {
         if (e.key == "p") {
           this.open = !this.open;
         }
+      });
+    },
+    changeTheme(nextThemeName) {
+      console.log("OnChange Dropdpwn constorls",nextThemeName)
+      this.$socket.emit("client-theme", {
+        name:nextThemeName,
       });
     },
     updateThemeLerp(event) {
@@ -178,9 +201,6 @@ export default {
         speed: parseFloat(event.target.value),
       });
     },
-
-
-
   },
 };
 </script>
@@ -211,21 +231,20 @@ export default {
 }
 
 input[type="color"] {
-	-webkit-appearance: none;
-	border: none;
-	width: 32px;
-	height: 32px;
+  -webkit-appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
   background: #000;
 }
 input[type="color"]::-webkit-color-swatch-wrapper {
-	padding: 0;
+  padding: 0;
 }
 input[type="color"]::-webkit-color-swatch {
-	border: 0;
+  border: 0;
 }
 
-
-.grid{
+.grid {
   display: flex;
   flex-wrap: wrap;
 }
@@ -235,7 +254,7 @@ input[type="color"]::-webkit-color-swatch {
   flex: 1;
 }
 
-.toggle-button{
+.toggle-button {
   position: absolute;
   right: 1rem;
   padding: 1rem 2rem;

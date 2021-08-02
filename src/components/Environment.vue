@@ -29,6 +29,13 @@ export default {
     },
   },
   sockets: {
+    "server-theme-update": function (value) {
+      console.log("Dorpdown Value ",value);
+      var next = this.$store.state.allThemes.find(t=>{return t.name == value})
+      console.log("Next Theme ",next);
+      this.$store.commit("setNextTheme", next)
+
+    },
     "server-environment-update": function (data) {
       this.data = data;
     },

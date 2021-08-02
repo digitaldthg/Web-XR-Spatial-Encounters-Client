@@ -43,11 +43,9 @@ export default {
   methods: {
 
     OnChangeHandler(e) {
+      console.log("OnChange Dropdpwn")
       var value = e.target.value;
-      console.log("Dorpdown Value ",value);
-      var next = this.$store.state.allThemes.find(t=>{return t.name == value})
-      console.log("Next Theme ",next);
-      this.$store.commit("setNextTheme", next)
+      this.$emit("onChange",value)
     },
   },
 };
