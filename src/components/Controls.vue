@@ -75,6 +75,14 @@
       <div>
       <Dropdown />
       </div>
+
+      <div v-if="$store.state.lastTheme != null">
+        <input :value="this.$store.state.lastTheme.gradient_skybox[0].value" type='color' @input="e => ChangeThemeColor(e, 0)">
+        <input :value="this.$store.state.lastTheme.gradient_skybox[1].value" type='color' @input="e => ChangeThemeColor(e, 1)">
+        <input :value="this.$store.state.lastTheme.gradient_skybox[2].value" type='color' @input="e => ChangeThemeColor(e, 2)">
+        <input :value="this.$store.state.lastTheme.gradient_skybox[3].value" type='color' @input="e => ChangeThemeColor(e, 3)">
+
+      </div>
     </div>
   </div>
 </template>
@@ -102,6 +110,10 @@ export default {
     this.InitEvents();
   },
   methods: {
+
+    ChangeThemeColor(e , colorIndex){
+      console.log("ChangeThemeColor",e.target.value , this.$store.state.lastTheme.gradient_skybox[colorIndex].value);
+    },
     InitEvents() {
       window.addEventListener("keydown", (e) => {
         if (e.key == "p") {
