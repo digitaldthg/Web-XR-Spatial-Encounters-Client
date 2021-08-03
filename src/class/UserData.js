@@ -14,9 +14,9 @@ const UserData = {
     scale : { x : 1,y : 1, z: 1},
   },
   color : {
-      r : Math.random(),// 1,
-      g : Math.random(),// 0,
-      b : Math.random(),// 0,
+      r : 0,// 1,
+      g : 0,// 0,
+      b : 0,// 0,
       a : 1,
   },
 }

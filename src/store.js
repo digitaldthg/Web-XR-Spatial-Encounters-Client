@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
       xr : null,
       room : null,
+      ownIdx: 0,
       speed : 0.1,
       frequency: 1,
       keysInit : false,
@@ -20,6 +21,9 @@ export default new Vuex.Store({
       xr(state, data){
         state.xr = data;
       },
+      idx(state,idx){
+        state.ownIdx = idx;
+      },
       room(state,data){
         state.room = data;
       },
@@ -30,15 +34,15 @@ export default new Vuex.Store({
         state.materialController = data;
       },
       setSpeed(state, data){
-        console.log("Set Speed ",data)
+        //console.log("Set Speed ",data)
         state.speed = data
       },
       setFrequency(state,frequ){
-        console.log("Set Frequ ",frequ)
+        //console.log("Set Frequ ",frequ)
         state.frequency = frequ
       },
       setThemeLerp(state,alpha){
-        console.log("Set Theme Lerp",alpha)
+        //onsole.log("Set Theme Lerp",alpha)
         state.themeLerp = alpha
       },
       setLastTheme(state,theme){

@@ -80,6 +80,9 @@ export default {
       }
 
       this.data.Triangles.forEach((triData, idx) => {
+
+        if(typeof(this.constantTris[idx]) == "undefined"){return;}
+
         this.constantTris[idx].UpdateTriangle(triData);
       });
     },
