@@ -304,7 +304,7 @@ export default {
             color,
             Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
           );
-        console.log("---------Set color ",this.currentColor)
+        //console.log("---------Set color ",this.currentColor)
         //ring.material.color = this.currentColor;
 
         this.rings.map((ring, index) => {
