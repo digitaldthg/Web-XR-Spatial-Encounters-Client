@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       delta: 0,
-      fps: .1,
+      fps: 5,
       player: null,
       ready: false,
       timer: null,
@@ -267,11 +267,18 @@ export default {
       var target = this.transform.position.clone();
       var origin = new Vector3(0, 0, 0);
 
-      var hexColor =
+      var colorLastHex =
         this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
-      var rgbColor = Utils.hexToRgb(hexColor);
-      let color = new Color(rgbColor.r, rgbColor.g, rgbColor.b);
+      var colorNextHex =
+        this.$store.state.nextTheme.triangle_colors[this.$store.state.ownIdx];
 
+      var lerpColor = Utils.lerpColor(
+        [{ value: colorLastHex }],
+        [{ value: colorNextHex }],
+        this.$store.state.themeLerp
+      );
+      let color = new Color();
+      color.setHSL(lerpColor[0].value[0]/360, lerpColor[0].value[1]/100, lerpColor[0].value[1]/100);
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
 
@@ -384,20 +391,24 @@ export default {
         this.ReducedFPSCall();
         this.delta = this.delta % this.fps;
       }
-
     },
     ApplyData() {
       var dataCopy = Object.assign({}, this.data);
       dataCopy.transform.position.x = this.player.position.x;
       dataCopy.transform.position.y = this.player.position.y;
       dataCopy.transform.position.z = this.player.position.z;
-      dataCopy.color = {r:this.currentColor.r,g:this.currentColor.g,b:this.currentColor.b};
+      dataCopy.color = {
+        r: this.currentColor.r,
+        g: this.currentColor.g,
+        b: this.currentColor.b,
+      };
 
       this.data = dataCopy;
 
       //console.log("fps");
     },
     ReducedFPSCall() {
+      //console.log("SEND DATA ", this.data);
       this.$socket.emit("client-player", this.data);
     },
   },

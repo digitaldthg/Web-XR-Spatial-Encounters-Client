@@ -124,7 +124,6 @@ class MaterialController {
     this.tex_bg_front.SetMaterial("BG_Front", bg_front_obj);
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
 
- 
 
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
@@ -141,44 +140,8 @@ class MaterialController {
     })
   }
 
-  lerp(a, b, t) {
-    return (1 - t) * a + t * b;
-  }
+ 
 
-  LerpHSV (arr1, arr2, t)
-  {
-      var h = null;
-      var a = {h:arr1[0]/360,s: arr1[1]/100,v:arr1[2]/100}
-      var b = {h:arr2[0]/360,s: arr2[1]/100,v:arr2[2]/100}
-      
-      var d = b.h - a.h;
-
-      if (a.h > b.h)
-      {
-          // Swap (a.h, b.h)
-          var h3 = b.h;
-          b.h = a.h;
-          a.h = h3;
-          d = -d;
-          t = 1 - t;
-      }
-      if (d > 0.5) // 180deg
-      {
-          a.h = a.h + 1; // 360deg
-          h = ( a.h + t * (b.h - a.h) ) % 1; // 360deg
-      }
-      if (d <= 0.5) // 180deg
-      {
-          h = a.h + t * d
-      }
-      console.log("A ",a, " B ",b, " H ",h, " T ",t)
-      // Interpolates the rest
-      return [
-          h*360,            // H
-          (a.s + t * (b.s-a.s))*100,    // S
-          (a.v + t * (b.v-a.v))*100,    // V
-      ];
-  }
 
   hsv_to_hsl(arr) {
     var h = arr[0]/360;
@@ -201,47 +164,6 @@ class MaterialController {
     return [h*360, s*100, l*100]
   }
 
-
- 
-
-  lerpColor(arr1, arr2, alpha) {
-    var finalArr = [];
-
-    if (arr1.length != arr2.length) {
-      //console.log("lerpColor: themes haben verschiedene color themes ");
-
-      return;
-    }
-
-    for (var i = 0; i < arr1.length; i++) {
-
-      var val1 = Utils.hexToHSL(arr1[i].value);
-      var val2 = Utils.hexToHSL(arr2[i].value);
-      
-      console.log("Lerp Color HSL ",val1, val2)
-      var hsv = this.LerpHSV(val1, val2, alpha);
-      console.log("Lerped ",hsv)
-      //console.log("HSV ",hsv)
-
-
-
-      finalArr.push({
-        stop: this.lerp(arr1[i].stop, arr2[i].stop, alpha),
-        value: [
-          hsv[0],
-          hsv[1],
-          hsv[2],
-        ]
-      })
-
-    }
-
-
-    //console.log("lerpColor", arr1, arr2, finalArr);
-    return finalArr;
-
-  }
-
   LerpThemes(themeA, themeB, alpha) {
     var final = ThemeFactory.Get();
 
@@ -253,7 +175,7 @@ class MaterialController {
 
       if (Array.isArray(themeA[keyName])) {
         //console.log("KEY NAME lerp Gradient Color ", keyName)
-        final[keyName] = this.lerpColor(themeA[keyName], themeB[keyName], alpha);
+        final[keyName] = Utils.lerpColor(themeA[keyName], themeB[keyName], alpha);
         //console.log(final[keyName])
       }
     })

@@ -1,5 +1,16 @@
 {
   "name":"Theme ThueringerLandschaft",
+  "triangle_colors": [
+    "#4152C0",
+    "#43B9C0",
+    "#A740BF",
+    "#C0BF43",
+    "#BE3F6D",
+    "#43C050",
+    "#C07443",
+    "#4D3398",
+    "#9A66CC"
+  ],
   "base_floor":[{
     "stop" : 0,
     "value" : "#FFFF00"
