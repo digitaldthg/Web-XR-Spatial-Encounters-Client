@@ -13,12 +13,12 @@ class BGFrontTexture extends TextureBackground{
     console.log(this);
 
     this.Load("Mountains", Mountains).then((texture)=>{
-      texture.repeat.set( 5, 1 );
+      texture.repeat.set( 4, 1 );
       texture.offset.set(1,0)
       texture.wrapT = ClampToEdgeWrapping;})
 
     this.Load("Forrest", Forrest).then((texture)=>{
-      texture.repeat.set( 3 , 1 );
+      texture.repeat.set( 4 , 1 );
       texture.offset.set(5,0)
       texture.wrapT = ClampToEdgeWrapping;
     });
