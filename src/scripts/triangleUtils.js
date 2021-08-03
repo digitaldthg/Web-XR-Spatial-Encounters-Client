@@ -1,6 +1,17 @@
 import * as THREE from 'three';
 import { Color, DoubleSide, Vector2, Vector3 } from 'three';
 const triangleUtils = {
+    LerpFloat(start,end, alpha){
+      return start * (1 - alpha) + end * alpha;
+    },
+    LerpVector(start , end, alpha){
+
+      return new Vector3(
+        this.LerpFloat(start.x,end.x,alpha),
+        this.LerpFloat(start.y,end.y,alpha),
+        this.LerpFloat(start.z,end.z,alpha ),
+      )
+    },
     GetColor(colorData) {
         var colors = colorData;
 
