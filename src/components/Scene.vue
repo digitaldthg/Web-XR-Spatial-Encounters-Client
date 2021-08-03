@@ -173,11 +173,7 @@ export default {
     SetEnvironmentModel() {
       this.envModel.traverse((child) => {
         var material = this.materialController.GetMaterial(child.name);
-        console.log("Set Materials ", child.name, material);
         child.material = material;
-
-
-
 
         switch (child.name) {
           case "base_floor":

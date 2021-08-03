@@ -38,10 +38,13 @@ export default {
     },
     "server-environment-update": function (data) {
       this.data = data;
+
+      this.updateData();
     },
     "server-single-triangle-update": function (data) {
       this.data = data;
       this.spawnTriangles();
+      this.updateData();
     },
     "server-speed-update": function (data) {
       this.$store.commit("setSpeed", data);
@@ -55,6 +58,29 @@ export default {
     },
   },
   methods: {
+    updateData(){
+      if (this.data == null) return;
+      
+      //this.spawnTriangles();
+
+      if (this.data.Triangles.length > this.constantTris) {
+        const tri = new ConstantTriangle({
+          xr: this.$store.state.xr,
+          store: this.$store,
+        });
+        this.constantTris.push(tri);
+      } else if (this.data.Triangles.length < this.constantTris) {
+        this.constantTris.remove(this.constantTris[0]);
+      }
+
+
+      this.data.Triangles.forEach((triData, idx) => {
+
+        if(typeof(this.constantTris[idx]) == "undefined"){return;}
+
+        this.constantTris[idx].UpdateTriangleData(triData);
+      });
+    },
     updateFunction() {
       this.delta += this.clock.getDelta();
       if (this.data == null) return;
@@ -68,23 +94,31 @@ export default {
         this.delta = 0;
       }
 
-      //Constant Tringle
-      if (this.data.Triangles.length > this.constantTris) {
-        const tri = new ConstantTriangle({
-          xr: this.$store.state.xr,
-          store: this.$store,
-        });
-        this.constantTris.push(tri);
-      } else if (this.data.Triangles.length < this.constantTris) {
-        this.constantTris.remove(this.constantTris[0]);
-      }
-
       this.data.Triangles.forEach((triData, idx) => {
 
         if(typeof(this.constantTris[idx]) == "undefined"){return;}
 
-        this.constantTris[idx].UpdateTriangle(triData);
+        this.constantTris[idx].UpdateTriangle();
       });
+
+
+      //Constant Tringle
+      // if (this.data.Triangles.length > this.constantTris) {
+      //   const tri = new ConstantTriangle({
+      //     xr: this.$store.state.xr,
+      //     store: this.$store,
+      //   });
+      //   this.constantTris.push(tri);
+      // } else if (this.data.Triangles.length < this.constantTris) {
+      //   this.constantTris.remove(this.constantTris[0]);
+      // }
+
+      // this.data.Triangles.forEach((triData, idx) => {
+
+      //   if(typeof(this.constantTris[idx]) == "undefined"){return;}
+
+      //   this.constantTris[idx].UpdateTriangle(triData);
+      // });
     },
     spawnTriangles() {
       if (this.data != null) {

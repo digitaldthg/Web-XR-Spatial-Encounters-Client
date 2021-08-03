@@ -128,13 +128,13 @@ class MaterialController {
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", newValue);
+      //console.log("Watch Theme Lerp ", newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
 
     this.xr.Events.addEventListener("OnTextureLoad", ()=>{
-      console.log("texture wurde geladen");
+      //console.log("texture wurde geladen");
 
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
     })
@@ -170,7 +170,7 @@ class MaterialController {
       {
           h = a.h + t * d
       }
-      console.log("A ",a, " B ",b, " H ",h, " T ",t)
+      //console.log("A ",a, " B ",b, " H ",h, " T ",t)
       // Interpolates the rest
       return [
           h*360,            // H
@@ -259,9 +259,9 @@ class MaterialController {
 
       var val1 = this.hexToHSL(arr1[i].value);
       var val2 = this.hexToHSL(arr2[i].value);
-      console.log("Lerp Color HSL ",val1, val2)
+      //console.log("Lerp Color HSL ",val1, val2)
       var hsv = this.LerpHSV(val1, val2, alpha);
-      console.log("Lerped ",hsv)
+      //console.log("Lerped ",hsv)
       //console.log("HSV ",hsv)
 
 
@@ -312,7 +312,7 @@ class MaterialController {
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
 
 
-    console.log("SCENE ", this.xr.Scene)
+    //console.log("SCENE ", this.xr.Scene)
 
   }
 

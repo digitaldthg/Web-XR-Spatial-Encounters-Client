@@ -17,8 +17,6 @@ class SingleFriend{
   Init(data){
     this.instance = this.Create(data);
     
-
-    console.log("created" , this.instance);
   }
 
   Create(data){
@@ -137,7 +135,7 @@ class SingleFriend{
     
     var tPosition = new Vector3(this.instance.userData.targetPosition.x, 0,this.instance.userData.targetPosition.z);
     
-    this.instance.position.lerp(tPosition, clock.getDelta() * this.speed);
+    this.instance.position.set(newPos.x, 0, newPos.z);
     this.head.position.set(0,newPos.y ,0);
 
     this.head.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
@@ -158,17 +156,15 @@ class SingleFriend{
     
     //Headfarbe lerpen
     //this.head.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
-
    
     var targetReached = this.instance.position.x == this.instance.userData.targetPosition.x && this.instance.position.z == this.instance.userData.targetPosition.z; 
     if (this.instance.userData.lerpAlpha >= 100 || targetReached) {
       this.instance.userData.lerpAlpha = 0;
-      this.instance.userData.targetPosition = null;
       this.instance.userData.lastPosition = newPos.clone();
       this.instance.userData.targetReached = true;
     }
 
-    this.instance.userData.lerpAlpha += .1;
+    this.instance.userData.lerpAlpha += 1;
 
   }
 

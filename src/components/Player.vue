@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       delta: 0,
-      fps: 5,
+      fps: 0.1,
       player: null,
       ready: false,
       timer: null,
@@ -384,8 +384,6 @@ export default {
       dataCopy.transform.position.z = this.player.position.z;
 
       this.data = dataCopy;
-
-      console.log("fps");
     },
     ReducedFPSCall() {
       this.$socket.emit("client-player", this.data);

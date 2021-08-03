@@ -11,18 +11,50 @@ class ConstantTriangle {
         this.Init();
         this.xr.Scene.add(this.mesh);
         
+        this.triData = null;
+        this.positions = [];
+        this.lastPositions = null;
+        this.nextPositions = null;
+        this.positionAlphas = null;
     }
     Init() {
         this.mesh = new THREE.Mesh();
     }
 
-    UpdateTriangle(triData) {
-        var positions = triData.Positions;
-        if (positions == null || Object.keys(positions).length < 2) {
-            return;
+    UpdateTriangle() {
+
+        //falls mehr Positionen zurückkommen als vorher
+        if(this.nextPositions.length > this.lastPositions.length){
+          let nextPos = [...this.nextPositions];
+          let lastPos = [...this.lastPositions];
+
+          this.lastPositions.push(...lastPos.slice(-(nextPos.length - lastPos.length)));
         }
-        var geometry = triangleUtils.GetGeometry(positions,this.height)
-        var uniforms = triangleUtils.GetColor(triData.Color)
+        
+        //falls weniger Positionen zurückkommen als vorher
+        if(this.nextPositions.length < this.lastPositions.length){
+
+          let nextPos = [...this.nextPositions];
+          let lastPos = [...this.lastPositions];
+
+          this.lastPositions = [...lastPos.slice(0, (lastPos.length - nextPos.length))];
+
+        }
+
+
+        this.positions = this.nextPositions.map((pos, index)=>{
+          if(this.positionAlphas[index] == null){return pos;}
+          return triangleUtils.LerpVector(this.lastPositions[index] , pos, this.positionAlphas[index] / 100);
+        });
+
+        //console.log(this.positions);
+        
+        this.positionAlphas = this.positionAlphas.map((p, index)=>{
+          return p > 100 ? null : p + 10;
+        });
+
+        var geometry = triangleUtils.GetGeometry(this.positions,this.height)
+        var uniforms = triangleUtils.GetColor(this.triData.Color)
 
         //MeshBasicMaterial
 
@@ -30,6 +62,36 @@ class ConstantTriangle {
 
         this.mesh.material = triMaterial;
         this.mesh.geometry = geometry;
+
+        console.log(this.positionAlphas);
+    }
+
+    UpdateTriangleData(triData){
+      console.log(triData);
+
+        this.triData = triData;
+        var positions = triData.Positions;
+
+        if (positions == null) {
+          // this.xr.Scene.remove(this.mesh);
+          // this.mesh = null;
+          return;
+        }
+
+        if(this.mesh == null){
+          this.Init();
+        }
+        
+        this.nextPositions = [...triData.Positions];
+        this.lastPositions = this.lastPositions == null ? [...triData.Positions] : [...this.positions];
+        
+        //setzt die Alphawerte wieder auf 0
+        this.positionAlphas = this.nextPositions.map(()=> 0);
+        
+        console.log("updateTriangle Data");
+        // console.log(this.nextPositions);
+        // console.log(this.lastPositions);
+        
     }
 }
 export default ConstantTriangle;
