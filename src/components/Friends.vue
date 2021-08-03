@@ -46,14 +46,19 @@ export default {
     "server-friends-update": function (d) {
       var serverFriends = Object.assign({}, d);
       var localFriends = Object.assign({}, this.friends);
-      delete serverFriends[this.$socket.id];
 
-      Object.keys(serverFriends).map((f) => {
-        
+      this.$store.commit("idx",Object.keys(serverFriends).indexOf(this.$socket.id))
+      //delete serverFriends[this.$socket.id];
+
+      Object.keys(serverFriends).map((f,index) => {
+        //console.log("INDEX ",index)
+        if(this.$socket.id == f){
+          return;
+        }
         if (!localFriends.hasOwnProperty(f)) {
             localFriends[f] = new SingleFriend(this.$store , serverFriends[f]);
           } else {
-            localFriends[f].updateData(serverFriends[f]);
+            localFriends[f].updateData(serverFriends[f],index);
           }
       });
 

@@ -17,13 +17,14 @@ import {
 import UserData from "../class/UserData";
 import Timer from "../Timer";
 import explodingRing from "../scripts/explodingRing";
+import Utils from "../scripts/utils";
 
 export default {
   name: "Player",
   data() {
     return {
       delta: 0,
-      fps: 0.1,
+      fps: 5,
       player: null,
       ready: false,
       timer: null,
@@ -31,20 +32,20 @@ export default {
       thumb: false,
       rings: [],
       explosition: false,
-      explodingFactor : 0.6,
+      explodingFactor: 0.6,
       ringOffset: 0.15,
-      bottomColor: new Color(0xffffff),
+      bottomColor: new Color(0xff0000),
       keyArray: ["w", "a", "s", "d", "e"],
       speed: 0.1,
       data: Object.assign({}, UserData),
       raycaster: null,
       transform: {
-        position: new Vector3(),
+        position: new Vector3(0, 1.75, 0),
         rotation: new Quaternion(),
         scale: new Vector3(),
       },
       inVR: false,
-      currentColor: new Color(0xffffff),
+      currentColor: new Color(0x0000ff),
       key: {
         w: 0,
         a: 0,
@@ -73,6 +74,7 @@ export default {
       );
 
       this.playerGroup = new Group();
+
       var color = new Color(
         this.data.color.r,
         this.data.color.g,
@@ -80,13 +82,12 @@ export default {
         this.data.color.a
       );
       this.currentColor = color;
-      var target = new Vector3(
+      /*var target = new Vector3(
         this.data.transform.position.x,
         this.data.transform.position.y,
         this.data.transform.position.z
       );
-      var origin = new Vector3(0, 0, 0);
-
+      var origin = new Vector3(0, 0, 0);*/
       for (var i = 0; i <= 5; i++) {
         let scale = 0.03 * i * i;
         const geometry = new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
@@ -106,8 +107,6 @@ export default {
       this.$store.state.xr.Scene.add(this.playerGroup);
 
       this.data.room = this.$route.params.roomID;
-
-      console.log(this.$route.params.roomID);
 
       this.raycaster = new Raycaster();
       this.CreatePlayerFloor();
@@ -245,28 +244,55 @@ export default {
 
       this.player.position.x += dir.x * this.speed;
       this.player.position.z += dir.z * this.speed;
+      this.player.position.y = 1.75;
 
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
     },
-    Explode(){
-      console.log("explode",this.currentColor);
+    Explode() {
+      console.log("explode", this.currentColor);
       new explodingRing({
         xr: this.$store.state.xr,
         position: this.player.position,
-        currentColor: this.currentColor
+        currentColor: this.currentColor,
       });
       this.$socket.emit("client-player-explode");
     },
     Animate(t) {
-      //console.log("-----Animate")
-
       if (!this.ready) {
         return;
       }
 
+      //UPDATE COLOR
+      var target = this.transform.position.clone();
+      var origin = new Vector3(0, 0, 0);
+
+      var hexColor =
+        this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
+      var rgbColor = Utils.hexToRgb(hexColor);
+      let color = new Color(rgbColor.r, rgbColor.g, rgbColor.b);
+
+      //Ringfarbe lerpen
+      var currentY = target.y == 0 ? 0.01 : target.y;
+
+      this.currentColor = this.bottomColor
+        .clone()
+        .lerp(
+          color,
+          Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
+        );
+
+      //console.log("CURRENT COLOR ", this.currentColor);
+
+      //UPDATE POSITION
       if (!this.inVR) {
         this.KeyBoardMovement();
+
+        this.rings.map((ring, index) => {
+          ring.position.y =
+            this.player.position.y - (index / 5) * this.player.position.y;
+          ring.material.color = this.currentColor;
+        });
       } else {
         var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera(
           this.$store.state.xr.Camera.instance
@@ -288,33 +314,6 @@ export default {
           this.transform.position.z
         );
 
-        var target = this.transform.position.clone();
-        var origin = new Vector3(0, 0, 0);
-        let color = new Color(
-          this.data.color.r,
-          this.data.color.g,
-          this.data.color.b
-        );
-
-        //Ringfarbe lerpen
-        var currentY = target.y == 0 ? 0.01 : target.y;
-        this.currentColor = this.bottomColor
-          .clone()
-          .lerp(
-            color,
-            Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
-          );
-        //console.log("---------Set color ",this.currentColor)
-        //ring.material.color = this.currentColor;
-
-        this.rings.map((ring, index) => {
-          var lerpAlpha = (1 / (this.rings.length - 1)) * index;
-          var lerper = target.clone().lerp(origin, lerpAlpha);
-          //ring.position.set(0,lerper.y, );
-          ring.position.y = lerper.y;
-        });
-        
-
         this.playerFloor.position.set(
           this.transform.position.x,
           0,
@@ -324,18 +323,28 @@ export default {
         this.player.quaternion = this.transform.rotation.clone();
 
         if (
-          this.player.position.y < this.transform.headHeight * this.explodingFactor &&
+          this.player.position.y <
+            this.transform.headHeight * this.explodingFactor &&
           !this.explosition
         ) {
           this.Explode();
         }
 
         if (
-          this.player.position.y > this.transform.headHeight * this.explodingFactor &&
+          this.player.position.y >
+            this.transform.headHeight * this.explodingFactor &&
           this.explosition
         ) {
           this.explosition = false;
         }
+
+        //ring.material.color = this.currentColor;
+        this.rings.map((ring, index) => {
+          var lerpAlpha = (1 / (this.rings.length - 1)) * index;
+          var lerper = target.clone().lerp(origin, lerpAlpha);
+          //ring.position.set(0,lerper.y, );
+          ring.position.y = lerper.y;
+        });
 
         //RESET INTERSECTION CHECK
         var pos = new Vector3();
@@ -368,6 +377,7 @@ export default {
       }
 
       this.delta += t.getDelta();
+      this.ApplyData();
 
       if (this.delta > this.fps) {
         // The draw or time dependent code are here
@@ -375,17 +385,20 @@ export default {
         this.delta = this.delta % this.fps;
       }
 
-      this.ApplyData();
     },
     ApplyData() {
       var dataCopy = Object.assign({}, this.data);
       dataCopy.transform.position.x = this.player.position.x;
       dataCopy.transform.position.y = this.player.position.y;
       dataCopy.transform.position.z = this.player.position.z;
+      dataCopy.color = {r:this.currentColor.r,g:this.currentColor.g,b:this.currentColor.b};
 
       this.data = dataCopy;
+
+      //console.log("fps");
     },
     ReducedFPSCall() {
+      console.log("SEND DATA ", this.data);
       this.$socket.emit("client-player", this.data);
     },
   },

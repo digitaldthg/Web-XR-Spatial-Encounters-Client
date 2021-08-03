@@ -1,78 +1,90 @@
 {
-  "name":"Theme DunkelConcrete",
-  "base_floor":[{
-    "stop" : 0,
-    "value" : "#000000"
-  }
+  "name": "Theme DunkelConcrete",
+  "triangle_colors": [
+    "#4152C0",
+    "#43B9C0",
+    "#A740BF",
+    "#C0BF43",
+    "#BE3F6D",
+    "#43C050",
+    "#C07443",
+    "#4D3398",
+    "#9A66CC"
+  ],
+  "base_floor": [
+    {
+      "stop": 0,
+      "value": "#000000"
+    }
   ],
   "gradient_skybox": [
     {
-      "stop" : 0,
-      "value" : "#333333"
+      "stop": 0,
+      "value": "#333333"
     },
     {
-      "stop" : 0.45,
-      "value" : "#000000"
+      "stop": 0.45,
+      "value": "#000000"
     },
     {
-      "stop" : 0.55,
-      "value" : "#000000"
+      "stop": 0.55,
+      "value": "#000000"
     },
     {
-      "stop" : 1,
-      "value" : "#333333"
+      "stop": 1,
+      "value": "#333333"
     }
   ],
-  "gradient_fogFloor" : [
+  "gradient_fogFloor": [
     {
-      "stop" : 0,
-      "value" : "#000000"
+      "stop": 0,
+      "value": "#000000"
     },
     {
-      "stop" : 0.5,
-      "value" : "#000000"
+      "stop": 0.5,
+      "value": "#000000"
     },
     {
-      "stop" : 1,
-      "value" : "#000000"
+      "stop": 1,
+      "value": "#000000"
     }
   ],
-  "gradient_fogFloorAlpha" : [
+  "gradient_fogFloorAlpha": [
     {
-      "stop" : 0,
-      "value" : "#000000"
+      "stop": 0,
+      "value": "#000000"
     },
     {
-      "stop" : 0.5,
-      "value" : "#ffffff"
+      "stop": 0.5,
+      "value": "#ffffff"
     },
     {
-      "stop" : 1,
-      "value" : "#000000"
+      "stop": 1,
+      "value": "#000000"
     }
   ],
-  "gradient_bg_front" : [
+  "gradient_bg_front": [
     {
-      "stop" : 0,
-      "value" : "#ffffff"
+      "stop": 0,
+      "value": "#ffffff"
     },
     {
-      "stop" : 1,
-      "value" : "#ffffff"
+      "stop": 1,
+      "value": "#ffffff"
     }
   ],
-  "gradient_bg_back" : [
+  "gradient_bg_back": [
     {
-      "stop" : 0,
-      "value" : "#ffffff"
+      "stop": 0,
+      "value": "#ffffff"
     },
     {
-      "stop" : 1,
-      "value" : "#ffffff"
+      "stop": 1,
+      "value": "#ffffff"
     }
   ],
-  "tex_floor" : "Concrete",
-  "tex_skybox" : null,
-  "tex_bg_front" :"Black",
-  "tex_bg_back" : "Black"
+  "tex_floor": "Concrete",
+  "tex_skybox": null,
+  "tex_bg_front": "Black",
+  "tex_bg_back": "Black"
 }
