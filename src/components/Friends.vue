@@ -61,10 +61,10 @@ export default {
     },
   },
   methods: {
-    AnimateFriends() {
+    AnimateFriends(clock) {
       
       Object.values(this.friends).map((friend) => {
-        friend.update();
+        friend.update(clock);
       });
     },
   },

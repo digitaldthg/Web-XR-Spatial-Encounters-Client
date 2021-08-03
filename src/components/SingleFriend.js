@@ -8,6 +8,8 @@ class SingleFriend{
     this.rings = [];
     this.bottomColor = new Color(0xffffff);
 
+    this.speed = 1000;
+
     this.headFactor = 2;
     this.Init(data);
   }
@@ -111,13 +113,17 @@ class SingleFriend{
   LerpVector(start , end, alpha){
 
     return new Vector3(
-      this.LerpFloat(start.x,end.x,this.EaseAlpha(alpha) ),
-      this.LerpFloat(start.y,end.y,this.EaseAlpha(alpha) ),
-      this.LerpFloat(start.z,end.z,this.EaseAlpha(alpha) ),
+      this.LerpFloat(start.x,end.x,alpha),
+      this.LerpFloat(start.y,end.y,alpha),
+      this.LerpFloat(start.z,end.z,alpha ),
     )
   }
-  update = () => {
-    if(this.instance.userData.targetReached){return;}
+  update = (clock) => {
+    
+    //wenn der Spieler seine Target Position erreicht hat 
+    //dann wird sie auf null gesetzt => ziel erreicht
+    if(this.instance.userData.targetPosition == null){return;}
+
     var newPos = this.instance.userData.lastPosition.lerp(
           this.instance.userData.targetPosition,
           this.instance.userData.lerpAlpha / 100
@@ -128,7 +134,10 @@ class SingleFriend{
       this.instance.userData.lerpAlpha / 100);
 
     var newQuat = this.instance.userData.lastRotation.slerp(this.instance.userData.targetRotation , this.instance.userData.lerpAlpha / 100);
-    this.instance.position.set(newPos.x, 0, newPos.z);
+    
+    var tPosition = new Vector3(this.instance.userData.targetPosition.x, 0,this.instance.userData.targetPosition.z);
+    
+    this.instance.position.lerp(tPosition, clock.getDelta() * this.speed);
     this.head.position.set(0,newPos.y ,0);
 
     this.head.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
@@ -151,18 +160,15 @@ class SingleFriend{
     //this.head.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight )  )  );
 
    
-
-    if (this.instance.userData.lerpAlpha >= 100) {
-      
+    var targetReached = this.instance.position.x == this.instance.userData.targetPosition.x && this.instance.position.z == this.instance.userData.targetPosition.z; 
+    if (this.instance.userData.lerpAlpha >= 100 || targetReached) {
       this.instance.userData.lerpAlpha = 0;
       this.instance.userData.targetPosition = null;
       this.instance.userData.lastPosition = newPos.clone();
       this.instance.userData.targetReached = true;
     }
 
-
-    
-    this.instance.userData.lerpAlpha++;
+    this.instance.userData.lerpAlpha += .1;
 
   }
 
