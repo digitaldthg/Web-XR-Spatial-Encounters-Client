@@ -38,6 +38,11 @@ class Triangle {
         if (this.mesh != null) {
             var pos = this.mesh.position;
             this.mesh.position.set(pos.x, pos.y + this.store.state.speed/10, pos.z);
+
+            if(this.mesh.position.y > 50){
+                this.xr.Scene.remove(this.mesh);
+                this.xr.Events.removeEventListener("OnAnimationLoop", this.AnimateTriangle);
+            }
         }
     }
 
