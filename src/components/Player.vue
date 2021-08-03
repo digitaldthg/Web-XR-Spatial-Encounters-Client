@@ -17,6 +17,7 @@ import {
 import UserData from "../class/UserData";
 import Timer from "../Timer";
 import explodingRing from "../scripts/explodingRing";
+import Utils from "../scripts/utils";
 
 export default {
   name: "Player",
@@ -248,22 +249,54 @@ export default {
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
     },
-    Explode(){
-      console.log("explode",this.currentColor);
+    Explode() {
+      console.log("explode", this.currentColor);
       new explodingRing({
         xr: this.$store.state.xr,
         position: this.player.position,
-        currentColor: this.currentColor
+        currentColor: this.currentColor,
       });
       this.$socket.emit("client-player-explode");
     },
     Animate(t) {
-      //console.log("-----Animate")
-
       if (!this.ready) {
         return;
       }
 
+      //UPDATE COLOR
+      var target = this.transform.position.clone();
+      var origin = new Vector3(0, 0, 0);
+
+      //console.log("UPDATE PLAYER ", this.data.idx);
+
+      var hexColor = this.$store.state.lastTheme.triangle_colors[this.data.idx];
+      var hslColor = Utils.hexToHSL(hexColor);
+      //console.log("HSL ",hslColor)
+
+      let color = new Color(
+        this.data.color.r,
+        this.data.color.g,
+        this.data.color.b
+      );
+
+      //Ringfarbe lerpen
+      var currentY = target.y == 0 ? 0.01 : target.y;
+      this.currentColor = this.bottomColor
+        .clone()
+        .lerp(
+          color,
+          Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
+        );
+
+      //ring.material.color = this.currentColor;
+      this.rings.map((ring, index) => {
+        var lerpAlpha = (1 / (this.rings.length - 1)) * index;
+        var lerper = target.clone().lerp(origin, lerpAlpha);
+        //ring.position.set(0,lerper.y, );
+        ring.position.y = lerper.y;
+      });
+
+      //UPDATE POSITION
       if (!this.inVR) {
         this.KeyBoardMovement();
       } else {
@@ -286,33 +319,6 @@ export default {
           0,
           this.transform.position.z
         );
-
-        var target = this.transform.position.clone();
-        var origin = new Vector3(0, 0, 0);
-        let color = new Color(
-          this.data.color.r,
-          this.data.color.g,
-          this.data.color.b
-        );
-
-        //Ringfarbe lerpen
-        var currentY = target.y == 0 ? 0.01 : target.y;
-        this.currentColor = this.bottomColor
-          .clone()
-          .lerp(
-            color,
-            Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
-          );
-        console.log("---------Set color ",this.currentColor)
-        //ring.material.color = this.currentColor;
-
-        this.rings.map((ring, index) => {
-          var lerpAlpha = (1 / (this.rings.length - 1)) * index;
-          var lerper = target.clone().lerp(origin, lerpAlpha);
-          //ring.position.set(0,lerper.y, );
-          ring.position.y = lerper.y;
-        });
-        
 
         this.playerFloor.position.set(
           this.transform.position.x,
