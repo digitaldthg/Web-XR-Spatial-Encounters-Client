@@ -1,13 +1,14 @@
 <template>
-  <div id="controls" :class="{ hidden: !config.showDevTools }">
+<div class="controls-container">
+  <div id="controls" :class="{ hidden: !config.showDevTools, open: open, closed: !open }">
     <div class="controls-inner" v-if="open">
       <div class="grid">
-        <div class="grid-1">
+        <div class="grid-box">
           <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
           <div class="dev-info">Raum: {{ $store.state.room }}</div>
         </div>
 
-        <div class="grid-2-1">
+        <div class="grid-box">
           <div>
             <label for="frequence">Sek. zwischen Dreiecken: </label>
             <input
@@ -66,15 +67,16 @@
               @change="updateThemeLerp"
               @input="updateThemeLerp"
             />
-            {{ this.$store.state.themeLerp }}
+            {{ (this.$store.state.themeLerp).toFixed(2) }}
           </div>
         </div>
 
-        <div class="grid-2-1">
+        <div class="grid-box">
           <div class="themes">
-            <div class="theme" v-for="theme in this.$store.state.allThemes" v-bind:key="theme.name">
-              {{theme.name}}
-              <button @click="e => LerpTheme(theme, 2)">play</button>
+            <div class="theme" v-for="themeO in themeObject" v-bind:key="themeO.theme.name">
+              <label>{{themeO.theme.name}}</label>
+              <input type="number" :value="themeO.time" @change="e => ChangeThemeTransitionDuration(themeO.theme.name, e.target.value)" @input="e => ChangeThemeTransitionDuration(themeO.theme.name, e.target.value)"/>
+              <button class="cta-button" @click="e => LerpTheme(themeO.theme, themeO.time)">play</button>
             </div>
 
           </div>
@@ -113,12 +115,13 @@
       </div>
 
       <div class="">
-        <button @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
+        <button class="cta-button" @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
       </div>
     </div>
 
-    <button class="toggle-button" @click="Toggle">open / close</button>
   </div>
+  <button class="toggle-button" :class="{ hidden: !config.showDevTools, open: open, closed: !open }" @click="Toggle">{{open ? "schliessen" : "öffnen"}}</button>
+</div>
 </template>
 <script>
 import TriangleMesh from "../scripts/triangle.js";
@@ -144,9 +147,20 @@ export default {
       open: true,
       scale: 0.5,
       config: config,
+      themeObject : null
     };
   },
   watch:{
+    "$store.state.allThemes" : function(allThemes){
+      this.themeObject = {};
+
+      allThemes.map((theme)=>{
+        this.themeObject[theme.name] = {
+          theme : theme,
+          time : 1
+        }
+      })
+    },
     "$store.state.xr" : function(nextXR){
       if(nextXR != null){
         nextXR.Events.addEventListener("OnAnimationLoop", ()=> TWEEN.update());
@@ -159,6 +173,13 @@ export default {
   methods: {
     Toggle() {
       this.open = !this.open;
+    },
+    ChangeThemeTransitionDuration(name , value){
+      var themeCopy = {...this.themeObject}
+      themeCopy[name].time = value;
+      this.themeObject = themeCopy;
+
+      console.log("change THemetransitionDuration " , name, value, this.themeObject);
     },
     LerpTheme(nextTheme, time){
       
@@ -173,8 +194,7 @@ export default {
       var lerpObject = { lerp : 0 }
       const tween = new TWEEN.Tween(lerpObject).to({
           lerp : 1
-        }, 1000).onUpdate((v) => {
-          console.log("v lerp" ,  v);
+        }, time * 1000).onUpdate((v) => {
 
           this.$store.commit("setThemeLerp", v.lerp);
           this.$store.state.materialController.LerpThemes(
@@ -189,16 +209,16 @@ export default {
       
     },
     ChangeThemeColor(e, colorIndex) {
-      console.log(
-        "ChangeThemeColor",
-        e.target.value,
-        this.$store.state.lastTheme.gradient_skybox[colorIndex].value
-      );
+      // console.log(
+      //   "ChangeThemeColor",
+      //   e.target.value,
+      //   this.$store.state.lastTheme.gradient_skybox[colorIndex].value
+      // );
 
       this.$store.state.lastTheme.gradient_skybox[colorIndex].value =
         e.target.value;
 
-      console.log(this.$store.state.materialController);
+     // console.log(this.$store.state.materialController);
 
       this.$store.state.materialController.LerpThemes(
         this.$store.state.lastTheme,
@@ -296,16 +316,61 @@ input[type="color"]::-webkit-color-swatch {
   flex-wrap: wrap;
 }
 
-.grid-1 {
-  width: 100%;
-  flex: 1;
+.grid-box{
+  width:100%;
+  margin-bottom: 1rem;
+  background: #eee;
+  padding:1rem;
+  border-radius : 5px;
 }
 
 .toggle-button {
   position: absolute;
-  right: 1rem;
+  top: 0;
   padding: 1rem 2rem;
   border-radius: 0 0 1rem 1rem;
+  right: 320px;
+  z-index: 999;
 }
+
+.toggle-button.closed{
+  right: 1rem;
+}
+
+#controls {
+  position: absolute;
+  background: #fff9;
+  z-index: 999;
+  right: 0;
+  width: 300px;
+  min-height: 100%;
+  overflow-y: scroll;
+  height: 100%;
+  overflow-x: visible;
+}
+#controls.closed{
+  width:0;
+}
+.theme {
+  padding: .5rem;
+  background: #eee;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+.controls-container {
+  position: relative;
+  height: 100%;
+}
+
+input[type="number"] {
+  margin-right: 1rem;
+  width: 50px;
+  line-height: 1.8rem;
+  border-radius: 0.5rem;
+  border: 0;
+  text-align: center;
+}
+
 </style>
 

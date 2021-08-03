@@ -167,10 +167,12 @@ class MaterialController {
   LerpThemes(themeA, themeB, alpha) {
     var final = ThemeFactory.Get();
 
-    if (themeA == null || themeB == null) {
-      if (themeA == null) { themeA = ThemeFactory.Get(); }
-      if (themeB == null) { themeB = ThemeFactory.Get(); }
-    }
+    console.log("themeA" , themeA, "themeB" ,  themeB);
+
+    // if (themeA == null || themeB == null) {
+    //   if (themeA == null) { themeA = ThemeFactory.Get(); }
+    //   if (themeB == null) { themeB = ThemeFactory.Get(); }
+    // }
     Object.keys(final).map((keyName) => {
 
       if (Array.isArray(themeA[keyName])) {
@@ -183,12 +185,14 @@ class MaterialController {
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
     this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
+    
+    this.gradient_bg_front.SetGradient(final.gradient_bg_front);
+    this.gradient_bg_back.SetGradient(final.gradient_bg_back);
+
 
     this.tex_floor.lerpMaterial(themeA.tex_floor, themeB.tex_floor, alpha);
     this.tex_skybox.lerpMaterial(themeA.tex_skybox, themeB.tex_skybox, alpha);
 
-    this.gradient_bg_front.SetGradient(final.gradient_bg_front);
-    this.gradient_bg_back.SetGradient(final.gradient_bg_back);
     this.tex_bg_front.lerpMaterial(this.gradient_bg_front.GetTexture(), this.gradient_bg_front.GetTexture(), alpha, themeA.tex_bg_front, themeB.tex_bg_front);
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
 

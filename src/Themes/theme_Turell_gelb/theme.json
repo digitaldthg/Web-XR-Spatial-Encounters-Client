@@ -64,7 +64,7 @@
   "gradient_bg_front" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#000000"
     },
     {
       "stop" : 0.5,
@@ -74,7 +74,7 @@
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000080"
+      "value" : "#000000"
     },
     {
       "stop" : 1,

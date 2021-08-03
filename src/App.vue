@@ -53,6 +53,10 @@ body{
   color: #2c3e50;
 }
 
+.page {
+  width: 100%;
+  height: 100%;
+}
 
 canvas{
   top: 0;
@@ -60,11 +64,12 @@ canvas{
 }
 
 div#canvases {
+  
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 200px;
-  display: flex;
+  display: none;
 }
 
 #canvases canvas {

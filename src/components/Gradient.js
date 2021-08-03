@@ -56,7 +56,6 @@ class Gradient{
     for(var i=0;i<gradientArray.length;i++){
       let gradientItem = gradientArray[i];
       let g = gradientArray[i].value;
-
       this.gradient.addColorStop( gradientItem.stop , `hsl(${ g[0] },${g[1]}%,${g[2]}%)`);
     }
 
