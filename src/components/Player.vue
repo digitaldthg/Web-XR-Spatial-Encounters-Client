@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       delta: 0,
-      fps: 5,
+      fps: .1,
       player: null,
       ready: false,
       timer: null,
@@ -398,7 +398,6 @@ export default {
       //console.log("fps");
     },
     ReducedFPSCall() {
-      console.log("SEND DATA ", this.data);
       this.$socket.emit("client-player", this.data);
     },
   },

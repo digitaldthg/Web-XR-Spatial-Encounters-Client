@@ -71,7 +71,14 @@
         </div>
 
         <div class="grid-2-1">
-          <div v-if="this.$store.state.lastTheme != null">
+          <div class="themes">
+            <div class="theme" v-for="theme in this.$store.state.allThemes" v-bind:key="theme.name">
+              {{theme.name}}
+              <button @click="e => LerpTheme(theme, 2)">play</button>
+            </div>
+
+          </div>
+          <!-- <div v-if="this.$store.state.lastTheme != null">
             Left Theme: {{ this.$store.state.lastTheme.name }}
           </div>
           <div v-if="this.$store.state.nextTheme != null">
@@ -79,7 +86,7 @@
           </div>
           <div>
             <Dropdown @onChange="changeTheme" />
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="colorGradients" v-if="$store.state.lastTheme != null">
@@ -122,6 +129,9 @@ import config from "../../main.config";
 
 import Debug from "../Mixins/Debug";
 
+import TWEEN from '@tweenjs/tween.js';
+
+
 export default {
   name: "Controls",
   mixins: [Debug],
@@ -131,10 +141,17 @@ export default {
   },
   data() {
     return {
-      open: false,
+      open: true,
       scale: 0.5,
       config: config,
     };
+  },
+  watch:{
+    "$store.state.xr" : function(nextXR){
+      if(nextXR != null){
+        nextXR.Events.addEventListener("OnAnimationLoop", ()=> TWEEN.update());
+      }
+    }
   },
   mounted() {
     this.InitEvents();
@@ -142,6 +159,34 @@ export default {
   methods: {
     Toggle() {
       this.open = !this.open;
+    },
+    LerpTheme(nextTheme, time){
+      
+      if(this.$store.state.themeLerp > .5){
+        this.$store.commit("setLastTheme", this.$store.state.nextTheme);
+      }else{        
+        this.$store.commit("setLastTheme", this.$store.state.lastTheme);
+      }
+      this.$store.commit("setNextTheme", nextTheme);
+      this.$store.commit("setThemeLerp", 0);
+
+      var lerpObject = { lerp : 0 }
+      const tween = new TWEEN.Tween(lerpObject).to({
+          lerp : 1
+        }, 1000).onUpdate((v) => {
+          console.log("v lerp" ,  v);
+
+          this.$store.commit("setThemeLerp", v.lerp);
+          this.$store.state.materialController.LerpThemes(
+            this.$store.state.lastTheme,
+            this.$store.state.nextTheme,
+            this.$store.state.themeLerp
+          );
+
+        }).start() // Start
+
+
+      
     },
     ChangeThemeColor(e, colorIndex) {
       console.log(
@@ -162,6 +207,8 @@ export default {
       );
     },
     InitEvents() {
+
+      
       window.addEventListener("keydown", (e) => {
         if (e.key == "p") {
           this.open = !this.open;

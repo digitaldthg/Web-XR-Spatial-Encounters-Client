@@ -49,11 +49,11 @@ export default new Vuex.Store({
         state.lastTheme = theme
       },
       setNextTheme(state,theme){
-        if(this.state.themeLerp == 1){
-          state.lastTheme = theme
-        }else if(this.state.themeLerp == 0){
+        // if(this.state.themeLerp == 1){
+          // state.lastTheme = theme
+        // }else if(this.state.themeLerp == 0){
           state.nextTheme = theme
-        }
+        //}
       },
       setAllThemes(state,themes){
         state.allThemes = themes

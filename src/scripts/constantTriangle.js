@@ -38,12 +38,12 @@ class ConstantTriangle {
           let lastPos = [...this.lastPositions];
 
           this.lastPositions = [...lastPos.slice(0, (lastPos.length - nextPos.length))];
-
         }
-
 
         this.positions = this.nextPositions.map((pos, index)=>{
           if(this.positionAlphas[index] == null){return pos;}
+          if(typeof(this.lastPositions[index]) == "undefined"){return pos;}
+          if(typeof(pos) == "undefined"){return this.lastPositions[index];}
           return triangleUtils.LerpVector(this.lastPositions[index] , pos, this.positionAlphas[index] / 100);
         });
 
@@ -62,12 +62,9 @@ class ConstantTriangle {
 
         this.mesh.material = triMaterial;
         this.mesh.geometry = geometry;
-
-        console.log(this.positionAlphas);
     }
 
     UpdateTriangleData(triData){
-      console.log(triData);
 
         this.triData = triData;
         var positions = triData.Positions;
@@ -87,10 +84,7 @@ class ConstantTriangle {
         
         //setzt die Alphawerte wieder auf 0
         this.positionAlphas = this.nextPositions.map(()=> 0);
-        
-        console.log("updateTriangle Data");
-        // console.log(this.nextPositions);
-        // console.log(this.lastPositions);
+       
         
     }
 }
