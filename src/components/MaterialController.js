@@ -128,13 +128,13 @@ class MaterialController {
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", newValue);
+      //console.log("Watch Theme Lerp ", newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
 
     this.xr.Events.addEventListener("OnTextureLoad", ()=>{
-      console.log("texture wurde geladen");
+      //console.log("texture wurde geladen");
 
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
     })
@@ -193,7 +193,7 @@ class MaterialController {
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
 
 
-    console.log("SCENE ", this.xr.Scene)
+    //console.log("SCENE ", this.xr.Scene)
 
   }
 

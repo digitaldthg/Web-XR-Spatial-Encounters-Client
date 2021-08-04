@@ -68,15 +68,33 @@
             />
             {{ this.$store.state.themeLerp }}
           </div>
+          <div>
+            <label for="fog">FogDistance: </label>
+            <input
+              type="range"
+              id="fog"
+              name="fog"
+              min="0"
+              max="0.1"
+              step="0.00001"
+              value="0.01"
+              @change="updateFog"
+              @input="updateFog"
+            />
+            {{ this.$store.state.fogDistance }}
+          </div>
         </div>
 
         <div class="grid-2-1">
           <div class="themes">
-            <div class="theme" v-for="theme in this.$store.state.allThemes" v-bind:key="theme.name">
-              {{theme.name}}
-              <button @click="e => LerpTheme(theme, 2)">play</button>
+            <div
+              class="theme"
+              v-for="theme in this.$store.state.allThemes"
+              v-bind:key="theme.name"
+            >
+              {{ theme.name }}
+              <button @click="(e) => LerpTheme(theme, 2)">play</button>
             </div>
-
           </div>
           <!-- <div v-if="this.$store.state.lastTheme != null">
             Left Theme: {{ this.$store.state.lastTheme.name }}
@@ -129,8 +147,7 @@ import config from "../../main.config";
 
 import Debug from "../Mixins/Debug";
 
-import TWEEN from '@tweenjs/tween.js';
-
+import TWEEN from "@tweenjs/tween.js";
 
 export default {
   name: "Controls",
@@ -146,12 +163,12 @@ export default {
       config: config,
     };
   },
-  watch:{
-    "$store.state.xr" : function(nextXR){
-      if(nextXR != null){
-        nextXR.Events.addEventListener("OnAnimationLoop", ()=> TWEEN.update());
+  watch: {
+    "$store.state.xr": function (nextXR) {
+      if (nextXR != null) {
+        nextXR.Events.addEventListener("OnAnimationLoop", () => TWEEN.update());
       }
-    }
+    },
   },
   mounted() {
     this.InitEvents();
@@ -160,21 +177,25 @@ export default {
     Toggle() {
       this.open = !this.open;
     },
-    LerpTheme(nextTheme, time){
-      
-      if(this.$store.state.themeLerp > .5){
+    LerpTheme(nextTheme, time) {
+      if (this.$store.state.themeLerp > 0.5) {
         this.$store.commit("setLastTheme", this.$store.state.nextTheme);
-      }else{        
+      } else {
         this.$store.commit("setLastTheme", this.$store.state.lastTheme);
       }
       this.$store.commit("setNextTheme", nextTheme);
       this.$store.commit("setThemeLerp", 0);
 
-      var lerpObject = { lerp : 0 }
-      const tween = new TWEEN.Tween(lerpObject).to({
-          lerp : 1
-        }, 1000).onUpdate((v) => {
-          console.log("v lerp" ,  v);
+      var lerpObject = { lerp: 0 };
+      const tween = new TWEEN.Tween(lerpObject)
+        .to(
+          {
+            lerp: 1,
+          },
+          1000
+        )
+        .onUpdate((v) => {
+          console.log("v lerp", v);
 
           this.$store.commit("setThemeLerp", v.lerp);
           this.$store.state.materialController.LerpThemes(
@@ -182,11 +203,8 @@ export default {
             this.$store.state.nextTheme,
             this.$store.state.themeLerp
           );
-
-        }).start() // Start
-
-
-      
+        })
+        .start(); // Start
     },
     ChangeThemeColor(e, colorIndex) {
       console.log(
@@ -207,8 +225,6 @@ export default {
       );
     },
     InitEvents() {
-
-      
       window.addEventListener("keydown", (e) => {
         if (e.key == "p") {
           this.open = !this.open;
@@ -216,23 +232,30 @@ export default {
       });
     },
     changeTheme(nextThemeName) {
-      console.log("OnChange Dropdpwn constorls",nextThemeName)
+      console.log("OnChange Dropdpwn constorls", nextThemeName);
       this.$socket.emit("client-theme", {
-        name:nextThemeName,
+        name: nextThemeName,
       });
     },
     updateThemeLerp(event) {
-      console.log("SLIDER VALUE ", event.target.value);
+      //console.log("SLIDER VALUE ", event.target.value);
       //this.frequence = event.target.value;
       this.$socket.emit("client-theme-lerp", {
         alpha: parseFloat(event.target.value),
       });
     },
     updateSlider(event) {
-      console.log("SLIDER VALUE ", event.target.value);
+      //console.log("SLIDER VALUE ", event.target.value);
       //this.frequence = event.target.value;
       this.$socket.emit("client-change-frequency", {
         frequency: parseFloat(event.target.value),
+      });
+    },
+    updateFog(event) {
+      console.log("SLIDER FOG VALUE ", event.target.value);
+      //this.frequence = event.target.value;
+      this.$socket.emit("client-change-fog", {
+        fog: parseFloat(event.target.value),
       });
     },
     updateScale(event) {
