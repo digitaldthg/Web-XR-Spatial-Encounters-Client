@@ -1,4 +1,178 @@
+// X, Y, Z of a "D65" light source.
+// "D65" is a standard 6500K Daylight light source.
+// https://en.wikipedia.org/wiki/Illuminant_D65
+const D65 = [95.047, 100, 108.883];
+
+import convert from '@csstools/convert-colors';
+
 var Utils = {
+  /**
+ * Converts RGB color to CIE 1931 XYZ color space.
+ * https://www.image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz
+ * @param  {string} hex
+ * @return {number[]}
+ */
+rgbToXyz(hex) {
+  const [r, g, b] = this.hexToRgb(hex).map(_ => _ / 255).map(sRGBtoLinearRGB)
+  const X =  0.4124 * r + 0.3576 * g + 0.1805 * b
+  const Y =  0.2126 * r + 0.7152 * g + 0.0722 * b
+  const Z =  0.0193 * r + 0.1192 * g + 0.9505 * b
+  // For some reason, X, Y and Z are multiplied by 100.
+  return [X, Y, Z].map(_ => _ * 100)
+},
+
+/**
+* Undoes gamma-correction from an RGB-encoded color.
+* https://en.wikipedia.org/wiki/SRGB#Specification_of_the_transformation
+* https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color
+* @param  {number}
+* @return {number}
+*/
+sRGBtoLinearRGB(color) {
+  // Send this function a decimal sRGB gamma encoded color value
+  // between 0.0 and 1.0, and it returns a linearized value.
+  if (color <= 0.04045) {
+      return color / 12.92
+  } else {
+      return Math.pow((color + 0.055) / 1.055, 2.4)
+  }
+},
+
+/**
+* Converts hex color to RGB.
+* https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+* @param  {string} hex
+* @return {number[]} [rgb]
+*/
+hexToRgb(hex) {
+  const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  if (match) {
+      match.shift()
+      return match.map(_ => parseInt(_, 16))
+  }
+},
+
+/**
+* Converts CIE 1931 XYZ colors to CIE L*a*b*.
+* The conversion formula comes from <http://www.easyrgb.com/en/math.php>.
+* https://github.com/cangoektas/xyz-to-lab/blob/master/src/index.js
+* @param   {number[]} color The CIE 1931 XYZ color to convert which refers to
+*                           the D65/2° standard illuminant.
+* @returns {number[]}       The color in the CIE L*a*b* color space.
+*/
+
+xyzToLab([x, y, z]) {
+[x, y, z] = [x, y, z].map((v, i) => {
+  v = v / D65[i]
+  return v > 0.008856 ? Math.pow(v, 1 / 3) : v * 7.787 + 16 / 116
+})
+const l = 116 * y - 16
+const a = 500 * (x - y)
+const b = 200 * (y - z)
+return [l, a, b]
+},
+
+/**
+* Converts Lab color space to Luminance-Chroma-Hue color space.
+* http://www.brucelindbloom.com/index.html?Eqn_Lab_to_LCH.html
+* @param  {number[]}
+* @return {number[]}
+*/
+labToLch([l, a, b]) {
+  const c = Math.sqrt(a * a + b * b)
+  const h = this.abToHue(a, b)
+  return [l, c, h]
+},
+
+/**
+* Converts a and b of Lab color space to Hue of LCH color space.
+* https://stackoverflow.com/questions/53733379/conversion-of-cielab-to-cielchab-not-yielding-correct-result
+* @param  {number} a
+* @param  {number} b
+* @return {number}
+*/
+abToHue(a, b) {
+  if (a >= 0 && b === 0) {
+      return 0
+  }
+  if (a < 0 && b === 0) {
+      return 180
+  }
+  if (a === 0 && b > 0) {
+      return 90
+  }
+  if (a === 0 && b < 0) {
+      return 270
+  }
+  let xBias
+  if (a > 0 && b > 0) {
+      xBias = 0
+  } else if (a < 0) {
+      xBias = 180
+  } else if (a > 0 && b < 0) {
+      xBias = 360
+  }
+  return this.radiansToDegrees(Math.atan(b / a)) + xBias;
+},
+radiansToDegrees(radians) {
+  return radians * (180 / Math.PI)
+},
+degreesToRadians(degrees) {
+  return degrees * Math.PI / 180
+},
+setXYZ(x, y, z) {
+  var rgb = {
+    r: x *  3.2406 + y * -1.5372 + z * -0.4986,
+    g: x * -0.9689 + y *  1.8758 + z *  0.0415,
+    b: x *  0.0557 + y * -0.2040 + z *  1.0570
+  };
+
+  [ "r", "g", "b" ].forEach(function(key) {
+    rgb[key] /= 100;
+
+    if (rgb[key] < 0) {
+      rgb[key] = 0;
+    }
+
+    if (rgb[key] > 0.0031308) {
+      rgb[key] = 1.055 * Math.pow(rgb[key], (1 / 2.4)) - 0.055;
+    }
+    else {
+      rgb[key] *= 12.92;
+    }
+  });
+
+  return {
+    r : rgb.r,
+    g : rgb.g,
+    b : rgb.b,
+  };
+},
+labToRGB(lab){
+    var y = (lab.l + 16) / 116;
+    var x = lab.a / 500 + y;
+    var z = y - lab.b / 200;
+  
+    var xyz = { x: x, y: y, z: z };
+    var pow;
+  
+    [ "x", "y", "z" ].forEach(function(key) {
+      pow = Math.pow(xyz[key], 3);
+  
+      if (pow > 0.008856) {
+        xyz[key] = pow;
+      }
+      else {
+        xyz[key] = (xyz[key] - 16 / 116) / 7.787;
+      }
+    });
+  
+    var color = this.fromXYZ(xyz.x, xyz.y, xyz.z);
+  
+    return color;
+
+},
+
   hexToHSL(H) {
     // Convert hex to RGB first
     let r = 0, g = 0, b = 0;
@@ -86,7 +260,6 @@ var Utils = {
     ];
   },
 
-
   lerpColor(arr1, arr2, alpha) {
     var finalArr = [];
 
@@ -95,6 +268,16 @@ var Utils = {
       return;
     }
     for (var i = 0; i < arr1.length; i++) {
+
+      // var rgb = Utils.hexToRgb(arr1[i].value);
+      // var xyz = Utils.rgbToXyz(rgb);
+      // var lab = Utils.xyzToLab(xyz);
+
+      //console.log("lab" , lab);
+      //var hsv = convert.lab2hsl(lab);
+
+
+
       var val1 = this.hexToHSL(arr1[i].value);
       var val2 = this.hexToHSL(arr2[i].value);
       var hsv = this.LerpHSV(val1, val2, alpha);
