@@ -16,6 +16,7 @@
     "value" : "#000000"
     }
   ],
+  "fog_color":"#ff0000",
   "gradient_skybox": [
     {
       "stop" : 0,

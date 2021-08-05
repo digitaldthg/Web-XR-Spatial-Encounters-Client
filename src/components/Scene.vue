@@ -14,19 +14,12 @@ import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Umgebung from "../Model/playarea.glb";
 import floorGrid from "../assets/grid-01.png";
+import Utils from "../scripts/utils";
+
 import {
-  AmbientLight,
   Color,
-  Fog,
+  FogExp2,
   Clock,
-  Vector3,
-  TextureLoader,
-  PlaneGeometry,
-  Mesh,
-  DoubleSide,
-  MeshBasicMaterial,
-  MeshPhongMaterial,
-  BoxGeometry,
 } from "three";
 
 import envModel from "../Model/environment/environment.glb";
@@ -51,15 +44,64 @@ export default {
       materialController: null,
     };
   },
-  sockets: {
-    //  "server-friends-update": function (d) {
-    //     //console.log(d);
-    //   },
-  },
   mounted() {
     this.InitScene();
   },
+  sockets: {
+    "server-fog-update": function (value) {
+      console.log("Fog Value ", value);
+      this.$store.commit("setFogDistance", value);
+    },
+  },
+  watch: {
+    "$store.state.fogDistance": function (fogDistance) {
+      console.log("FOG DISTANCE",fogDistance)
+      this.xr.Scene.fog.density = fogDistance;
+    },
+    "$store.state.themeLerp": function (lerpValue) {
+      this.ChangeFogColor();
+    },
+    "$store.state.lastTheme": function (lerpValue) {
+      if (this.xr.Scene.fog == null) {
+        this.InitFog();
+      }
+    },
+  },
   methods: {
+    ChangeFogColor() {
+      var colorLastHex = this.$store.state.lastTheme["fog_color"];
+      var colorNextHex = this.$store.state.nextTheme["fog_color"];
+
+      var lerpColor = Utils.lerpColor(
+        [{ value: colorLastHex }],
+        [{ value: colorNextHex }],
+        this.$store.state.themeLerp
+      );
+
+      let color = new Color();
+      color.setHSL(
+        lerpColor[0].value[0] / 360,
+        lerpColor[0].value[1] / 100,
+        lerpColor[0].value[2] / 100
+      );
+      
+
+      this.xr.Scene.fog.color = color;
+    },
+    InitFog() {
+      if (
+        this.$store.state.lastTheme == null ||
+        this.$store.state.nextTheme == null
+      ) {
+        return;
+      }
+      console.log("INIT FOG ", this.$store.state.lastTheme["fog_color"]);
+
+      //Init FOG
+      var fogColor = new Color(0, 0, 1);
+      this.xr.Scene.fog = new FogExp2(fogColor, 0.01);
+      this.ChangeFogColor();
+    },
     InitScene() {
       this.xr = new webXRScene("scene");
 
@@ -77,75 +119,8 @@ export default {
         console.log("loaded", model);
         this.envModel = model.scene;
         this.xr.Scene.add(this.envModel);
-
-        this.envModel.children.forEach((element) => {
-          /*if (element.name == "bg_front") {
-            element.visible = false;
-          }else if (element.name == "bg_back") {
-            element.visible = false;
-          }*/
-        });
         this.SetEnvironmentModel();
       });
-
-      //LIGHTS
-      // var ambient = new AmbientLight(0xeeeeee, 1);
-      // this.xr.Scene.add(ambient);
-
-      //FOG
-      // var fogColor = new Color(0, 0, 0);
-      // this.xr.Scene.fog = new Fog(fogColor, 2, 20);
-      // this.xr.Scene.background = fogColor;
-      // this.xr.Renderer.instance.setClearColor(fogColor, 1);
-
-      //FLOOR
-      //const loader = new TextureLoader();
-      // this.floorTexuture = loader.load(floorGrid, (texture) => {
-      // console.log("TEXTURE LOADED");
-      //in this example we create the material when the texture is loaded
-      // const geometry = new PlaneGeometry(10, 10);
-      // const material = new MeshPhongMaterial({
-      // color: 0xffffff,
-      // side: DoubleSide,
-      // map: texture,
-      // transparent: true,
-      // });
-      // const plane = new Mesh(geometry, material);
-      // plane.rotation.set(Math.PI / 2, 0, 0);
-      // this.xr.Scene.add(plane);
-      // });
-
-      //DEBUG BOX
-      // const geometry = new BoxGeometry(0.5,2,0.5);
-      // const material = new MeshBasicMaterial({
-      //   color: 0xffffff
-      // });
-      // const box = new Mesh(geometry, material);
-      // box.position.set(0,1,5.25);
-      // this.xr.Scene.add(box);
-
-      /*this.xr.Loader.load({
-        name : "Playarea",
-        url : Umgebung,
-        onprogress : ()=>{
-          console.log("progress")
-        }
-      }).then(model => this.xr.Scene.add(model.scene));
-
-      /*this.composer = new EffectComposer(this.xr.Renderer.instance);
-      this.composer.addPass(new RenderPass(this.xr.Scene, this.xr.Camera.instance));
-      this.composer.addPass(
-        new EffectPass(this.xr.Camera.instance, new BloomEffect())
-      );*/
-
-      // const geometry = new THREE.PlaneGeometry(50, 50);
-      // const material = new THREE.MeshBasicMaterial({
-      //   color: 0x111111,
-      //   side: THREE.DoubleSide,
-      // });
-      // const plane = new THREE.Mesh(geometry, material);
-      // plane.rotateX(Math.PI / 2);
-      // this.xr.Scene.add(plane);
 
       this.xr.Controls.SetPosition(0, 5, 10);
 
@@ -164,6 +139,8 @@ export default {
         "OnChangeXRView",
         this.HandleXRView
       );
+
+      this.InitFog();
     },
     RenderLoop() {},
     HandleXRView(xrMode) {

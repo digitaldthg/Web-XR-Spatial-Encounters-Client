@@ -278,7 +278,7 @@ export default {
         this.$store.state.themeLerp
       );
       let color = new Color();
-      color.setHSL(lerpColor[0].value[0]/360, lerpColor[0].value[1]/100, lerpColor[0].value[1]/100);
+      color.setHSL(lerpColor[0].value[0]/360, lerpColor[0].value[1]/100, lerpColor[0].value[2]/100);
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
 
