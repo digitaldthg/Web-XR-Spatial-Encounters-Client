@@ -2,8 +2,8 @@
 <script>
 import TriangleMesh from "../scripts/triangle.js";
 import ConstantTriangle from "../scripts/constantTriangle.js";
+import explodingRing from "../scripts/explodingRing";
 import * as THREE from "three";
-
 
 export default {
   name: "Environment",
@@ -42,6 +42,13 @@ export default {
       this.$store.commit("setLastTheme", last);
       this.$store.commit("setNextTheme", next);
     },
+    "server-player-explode": function (data) {
+      new explodingRing({
+        xr: this.$store.state.xr,
+        position: data.position,
+        color: data.color,
+      });
+    },
     "server-environment-update": function (data) {
       this.data = data;
 
@@ -61,9 +68,6 @@ export default {
     "server-theme-lerp-update": function (data) {
       //console.log("From Server lerp value ",data)
       this.$store.commit("setThemeLerp", data);
-    },
-    "test":function(data){
-      console.log("TEST ",data)
     }
   },
   methods: {

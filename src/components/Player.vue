@@ -16,7 +16,7 @@ import {
 } from "three";
 import UserData from "../class/UserData";
 import Timer from "../Timer";
-import explodingRing from "../scripts/explodingRing";
+
 import Utils from "../scripts/utils";
 
 export default {
@@ -56,7 +56,6 @@ export default {
   },
   watch: {
     "$store.state.xr": function (state) {
-      console.log("state player", state);
       this.ready = true;
 
       this.InitPlayer();
@@ -64,6 +63,7 @@ export default {
       this.InitTimer();
     },
   },
+  
 
   mounted() {},
   methods: {
@@ -184,7 +184,7 @@ export default {
           keyCopy.d = 1;
           break;
         case "e":
-          this.Explode();
+          this.EmitExplode();
           break;
       }
 
@@ -249,14 +249,13 @@ export default {
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
     },
-    Explode() {
-      console.log("explode", this.currentColor);
-      new explodingRing({
-        xr: this.$store.state.xr,
-        position: this.player.position,
-        currentColor: this.currentColor,
+    
+    EmitExplode() {
+
+      this.$socket.emit("client-player-explode", {
+        position: this.playerGroup.position,
+        color: {r:this.currentColor.r,g:this.currentColor.g,b:this.currentColor.b}
       });
-      this.$socket.emit("client-player-explode");
     },
     Animate(t) {
       if (!this.ready) {
@@ -278,7 +277,11 @@ export default {
         this.$store.state.themeLerp
       );
       let color = new Color();
-      color.setHSL(lerpColor[0].value[0]/360, lerpColor[0].value[1]/100, lerpColor[0].value[2]/100);
+      color.setHSL(
+        lerpColor[0].value[0] / 360,
+        lerpColor[0].value[1] / 100,
+        lerpColor[0].value[2] / 100
+      );
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
 
@@ -334,7 +337,7 @@ export default {
             this.transform.headHeight * this.explodingFactor &&
           !this.explosition
         ) {
-          this.Explode();
+          this.EmitExplode();
         }
 
         if (
