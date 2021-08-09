@@ -48,6 +48,7 @@ export default {
       player: null,
       ready: false,
       timer: null,
+      maxTimeout : 100,
       timeout: 0,
       thumb: false,
       rings: [],
@@ -357,7 +358,7 @@ export default {
 
         if (intersection.length > 0) {
           this.timer.SetVisible(true);
-          if (this.timeout < 100) {
+          if (this.timeout < this.maxTimeout) {
             this.timeout++;
           } else {
             this.timeout = 0;
@@ -366,7 +367,7 @@ export default {
             this.timer.SetVisible(false);
           }
 
-          this.timer.Progress(this.timeout);
+          this.timer.Progress(this.timeout, this.maxTimeout);
           this.reset = true;
         } else {
           this.timer.SetVisible(false);

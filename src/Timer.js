@@ -26,8 +26,8 @@ class Timer{
   SetVisible = (boolean)=>{
     this.instance.visible = boolean;
   }
-  Progress = (progress)=>{
-    this.timer.scale.setX(progress / 100);
+  Progress = (progress, max = 100)=>{
+    this.timer.scale.setX(progress / max);
   }
 
 }
