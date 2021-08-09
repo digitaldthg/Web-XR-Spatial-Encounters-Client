@@ -259,7 +259,18 @@ labToRGB(lab){
       (a.v + t * (b.v - a.v)) * 100,    // V
     ];
   },
+  lerpHexColor(a, b, amount) { 
 
+    var ah = parseInt(a.replace(/#/g, ''), 16),
+        ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+        bh = parseInt(b.replace(/#/g, ''), 16),
+        br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+        rr = ar + amount * (br - ar),
+        rg = ag + amount * (bg - ag),
+        rb = ab + amount * (bb - ab);
+
+    return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+  },
   lerpColor(arr1, arr2, alpha) {
     var finalArr = [];
 
@@ -269,27 +280,25 @@ labToRGB(lab){
     }
     for (var i = 0; i < arr1.length; i++) {
 
-      // var rgb = Utils.hexToRgb(arr1[i].value);
-      // var xyz = Utils.rgbToXyz(rgb);
-      // var lab = Utils.xyzToLab(xyz);
+      // var val1 = this.hexToHSL(arr1[i].value);
+      // var val2 = this.hexToHSL(arr2[i].value);
+      // var hsv = this.LerpHSV(val1, val2, alpha);
 
-      //console.log("lab" , lab);
-      //var hsv = convert.lab2hsl(lab);
+      //console.log("HSV ",hsv) 
 
+      var lerpHexValue = this.lerpHexColor(arr1[i].value, arr2[i].value, alpha );
 
-
-      var val1 = this.hexToHSL(arr1[i].value);
-      var val2 = this.hexToHSL(arr2[i].value);
-      var hsv = this.LerpHSV(val1, val2, alpha);
-
-      //console.log("HSV ",hsv)
+      console.log(lerpHexValue);
+      
+      var lerpedHSL = this.hexToHSL(lerpHexValue);
+      console.log(lerpedHSL);
 
       finalArr.push({
         stop: this.lerp(arr1[i].stop, arr2[i].stop, alpha),
         value: [
-          hsv[0],
-          hsv[1],
-          hsv[2],
+          lerpedHSL[0],
+          lerpedHSL[1],
+          lerpedHSL[2],
         ]
       })
 
