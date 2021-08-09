@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, AdditiveBlending, Color, Mesh, DoubleSide } from "three";
+import { MeshBasicMaterial, AdditiveBlending, Color, Mesh, DoubleSide, MultiplyBlending } from "three";
 
 import Skybox from './Skybox';
 import FogFloorDiffuse from './FogFloorDiffuse';
@@ -116,7 +116,12 @@ class MaterialController {
         color : 0xff0000
       }),
       guardian : new MeshBasicMaterial({
-        color : 0xff0000,
+        color : 0xffffff,
+        opacity: .1,
+        transparent: true,
+        //depthTest:false,
+        //depthWrite: false,
+        //blending: AdditiveBlending,
         side : DoubleSide
       })
     }
