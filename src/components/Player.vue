@@ -221,7 +221,7 @@ export default {
           keyCopy.d = 1;
           break;
         case "e":
-          this.Explode();
+          this.EmitExplode();
           break;
       }
 
@@ -286,15 +286,15 @@ export default {
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
     },
-    Explode() {
-      console.log("explode", this.currentColor);
-      new explodingRing({
-        xr: this.$store.state.xr,
-        position: this.player.position,
-        currentColor: this.currentColor,
+    EmitExplode() {
+
+      this.$socket.emit("client-player-explode", {
+        position: this.playerGroup.position,
+        color: {r:this.currentColor.r,g:this.currentColor.g,b:this.currentColor.b}
       });
-      this.$socket.emit("client-player-explode");
-    },
+       
+     },
+
     Animate(t) {
       if (!this.ready) {
         return;
