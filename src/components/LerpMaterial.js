@@ -108,6 +108,7 @@ class LerpMaterial {
     });
     this.material.transparent = opts.transparent
     this.material.depthWrite = opts.depthWrite
+    this.material.side = opts.side
   }
 }
 

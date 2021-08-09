@@ -16,6 +16,16 @@
     "stop" : 0,
     "value" : "#000000"}
   ],
+  "gradient_sun" : [
+    {
+      "stop" : 0,
+      "value" : "#F5A43B"
+    },
+    {
+      "stop" : 1,
+      "value" : "#F5A43B"
+    }
+  ],
   "gradient_skybox": [
     {
       "stop" : 0,
@@ -85,5 +95,7 @@
   "tex_floor" : "GridConcrete",
   "tex_skybox" : null,
   "tex_bg_front" : "Black",
-  "tex_bg_back" : "Wolken"
+  "tex_bg_back" : "Wolken",
+  "tex_guardian":"Grid",
+  "tex_sun":"Black"
 }

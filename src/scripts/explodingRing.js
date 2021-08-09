@@ -11,8 +11,10 @@ import {
     Quaternion,
     Raycaster,
     CircleGeometry,
+    TextureLoader,
 } from "three";
 import TWEEN from "@tweenjs/tween.js";
+import alphaMap from "../Model/environment/textures/exploding-circle-vertical.png"
 
 class explodingRing {
     constructor(props) {
@@ -26,14 +28,19 @@ class explodingRing {
         this.Init();
     }
     Init = () => {
+        
         var color = new Color(this.color.r, this.color.g, this.color.b)
         const geometry = new CylinderGeometry(this.scale, this.scale, 0.06, 64, 2, true);
         const material = new MeshBasicMaterial({
             side: DoubleSide,
             color: color,
-            opacity:1,
-            transparent: true
+            opacity: 1,
+            transparent: true,
+            alphaMap: null
         });
+        this.xr.CustomTextureLoader.load(alphaMap).then((map) => {
+            material.alphaMap = map;
+        })
 
         for (var i = 0; i < 5; i++) {
             this.horizontalMeshs.push(this.CreateMesh(color, geometry, material))
@@ -59,10 +66,10 @@ class explodingRing {
                 this.verticalMesh.material.opacity = 1 - v.lerp;
 
                 //UPDATE HORIZONTAL
-                this.horizontalMeshs.forEach((ring,idx) => {
-                    var scale = ring.scale.x + v.lerp * (0.1+Math.pow(idx,2)*0.2)
+                this.horizontalMeshs.forEach((ring, idx) => {
+                    var scale = ring.scale.x + v.lerp * (0.1 + Math.pow(idx, 2) * 0.2)
                     ring.scale = new Vector3(scale, ring.scale.y, scale);
-                    ring.material.opacity = 1 - v.lerp;
+                    ring.material.opacity = 1 - v.lerp * 2;
                 });
 
 
@@ -71,8 +78,8 @@ class explodingRing {
                 this.horizontalMeshs.forEach(ring => {
                     this.xr.Scene.remove(ring);
                 })
-                
-                
+
+
             })
             .start(); // Start
 
@@ -82,6 +89,7 @@ class explodingRing {
 
         var mesh = new Mesh(geometry, material);
         mesh.position.set(this.position.x, this.position.y, this.position.z)
+        mesh.renderOrder = 15
         this.xr.Scene.add(mesh);
         return mesh;
     }

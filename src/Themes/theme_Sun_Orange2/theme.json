@@ -12,6 +12,16 @@
     "#4D3398",
     "#9A66CC"
   ],
+  "gradient_sun" : [
+    {
+      "stop" : 0,
+      "value" : "#F5A43B"
+    },
+    {
+      "stop" : 1,
+      "value" : "#F5A43B"
+    }
+  ],
   "base_floor":[{
     "stop" : 0,
     "value" : "#3b1c00"
@@ -86,5 +96,7 @@
   "tex_floor" : "GridOrange",
   "tex_skybox" : null,
   "tex_bg_front" : "Black",
-  "tex_bg_back" : "Black"
+  "tex_bg_back" : "Black",
+  "tex_guardian":"Grid",
+  "tex_sun":"Sun"
 }

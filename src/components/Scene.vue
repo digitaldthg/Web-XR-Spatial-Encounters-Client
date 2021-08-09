@@ -12,15 +12,9 @@ import webXRScene from "../webXRScene/src";
 import Environment from "./Environment.vue";
 import Friends from "./Friends.vue";
 import Player from "./Player.vue";
-import Umgebung from "../Model/playarea.glb";
-import floorGrid from "../assets/grid-01.png";
 import Utils from "../scripts/utils";
 
-import {
-  Color,
-  FogExp2,
-  Clock,
-} from "three";
+import { Color, FogExp2, Clock } from "three";
 
 import envModel from "../Model/environment/environment.glb";
 
@@ -42,7 +36,7 @@ export default {
       reset: false,
       envModel: null,
       materialController: null,
-      pressed : false
+      pressed: false,
     };
   },
   mounted() {
@@ -71,8 +65,7 @@ export default {
       var colorLastHex = this.$store.state.lastTheme["fog_color"];
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
 
-
-      console.log("Fog Color:",colorLastHex, colorNextHex);
+      console.log("Fog Color:", colorLastHex, colorNextHex);
 
       var lerpColor = Utils.lerpColor(
         [{ value: colorLastHex }],
@@ -86,7 +79,6 @@ export default {
         lerpColor[0].value[1] / 100,
         lerpColor[0].value[2] / 100
       );
-      
 
       this.xr.Scene.fog.color = color;
     },
@@ -97,7 +89,6 @@ export default {
       ) {
         return;
       }
-
 
       //Init FOG
       var fogColor = new Color(0, 0, 1);
@@ -144,24 +135,33 @@ export default {
 
       this.InitFog();
     },
-    GamePadLoop(){
-      var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+    GamePadLoop() {
+      var gamepads = navigator.getGamepads
+        ? navigator.getGamepads()
+        : navigator.webkitGetGamepads
+        ? navigator.webkitGetGamepads
+        : [];
       if (!gamepads) {
         return;
       }
 
       var gp = gamepads[0];
 
-      if(gp == null){return;}
-
-      console.log(gp.buttons[0].pressed, this.pressed, gp.buttons[0].pressed && this.pressed);
-      if(gp.buttons[0].pressed && !this.pressed){
-        console.log("pressed",gp.buttons[0].pressed);
-        this.pressed = true;
-      }else{
-        this.pressed = false;
+      if (gp == null) {
+        return;
       }
 
+      console.log(
+        gp.buttons[0].pressed,
+        this.pressed,
+        gp.buttons[0].pressed && this.pressed
+      );
+      if (gp.buttons[0].pressed && !this.pressed) {
+        console.log("pressed", gp.buttons[0].pressed);
+        this.pressed = true;
+      } else {
+        this.pressed = false;
+      }
     },
     RenderLoop() {
       this.GamePadLoop();
@@ -172,13 +172,13 @@ export default {
 
     SetEnvironmentModel() {
       this.envModel.traverse((child) => {
-
-        
-        if(child.name != "Scene"){
+        if (child.name != "Scene") {
           var material = this.materialController.GetMaterial(child.name);
           child.material = material;
+          console.log("CHILD Mat ", child.material)
         }
 
+        console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":
@@ -199,6 +199,12 @@ export default {
           case "skybox_texture":
             child.renderOrder = 4;
           case "grid_floor":
+            child.renderOrder = 7;
+            break;
+          case "guardian":
+            child.renderOrder = 12;
+            break;
+          case "sun":
             child.renderOrder = 8;
             break;
         }
