@@ -319,16 +319,61 @@ input[type="color"]::-webkit-color-swatch {
   flex-wrap: wrap;
 }
 
-.grid-1 {
-  width: 100%;
-  flex: 1;
+.grid-box{
+  width:100%;
+  margin-bottom: 1rem;
+  background: #eee;
+  padding:1rem;
+  border-radius : 5px;
 }
 
 .toggle-button {
   position: absolute;
-  right: 1rem;
+  top: 0;
   padding: 1rem 2rem;
   border-radius: 0 0 1rem 1rem;
+  right: 320px;
+  z-index: 999;
 }
+
+.toggle-button.closed{
+  right: 1rem;
+}
+
+#controls {
+  position: absolute;
+  background: #fff9;
+  z-index: 999;
+  right: 0;
+  width: 300px;
+  min-height: 100%;
+  overflow-y: scroll;
+  height: 100%;
+  overflow-x: visible;
+}
+#controls.closed{
+  width:0;
+}
+.theme {
+  padding: .5rem;
+  background: #eee;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+.controls-container {
+  position: relative;
+  height: 100%;
+}
+
+input[type="number"] {
+  margin-right: 1rem;
+  width: 50px;
+  line-height: 1.8rem;
+  border-radius: 0.5rem;
+  border: 0;
+  text-align: center;
+}
+
 </style>
 
