@@ -30,11 +30,12 @@ export default {
   },
   sockets: {
     "server-theme-update": function (value) {
-      console.log("Dorpdown Value ",value);
-      var next = this.$store.state.allThemes.find(t=>{return t.name == value})
-      console.log("Next Theme ",next);
-      this.$store.commit("setNextTheme", next)
-
+      console.log("Dorpdown Value ", value);
+      var next = this.$store.state.allThemes.find((t) => {
+        return t.name == value;
+      });
+      console.log("Next Theme ", next);
+      this.$store.commit("setNextTheme", next);
     },
     "server-environment-update": function (data) {
       this.data = data;
@@ -58,12 +59,12 @@ export default {
     },
   },
   methods: {
-    updateData(){
+    updateData() {
       if (this.data == null) return;
-      
-      //this.spawnTriangles();
 
-      if (this.data.Triangles.length > this.constantTris) {
+      //this.spawnTriangles();
+      
+      if (this.data.Triangles.length > this.constantTris.length) {
         const tri = new ConstantTriangle({
           xr: this.$store.state.xr,
           store: this.$store,
@@ -73,10 +74,10 @@ export default {
         this.constantTris.remove(this.constantTris[0]);
       }
 
-
       this.data.Triangles.forEach((triData, idx) => {
-
-        if(typeof(this.constantTris[idx]) == "undefined"){return;}
+        if (typeof this.constantTris[idx] == "undefined") {
+          return;
+        }
 
         this.constantTris[idx].UpdateTriangleData(triData);
       });
@@ -95,12 +96,12 @@ export default {
       }
 
       this.data.Triangles.forEach((triData, idx) => {
-
-        if(typeof(this.constantTris[idx]) == "undefined"){return;}
+        if (typeof this.constantTris[idx] == "undefined") {
+          return;
+        }
 
         this.constantTris[idx].UpdateTriangle();
       });
-
 
       //Constant Tringle
       // if (this.data.Triangles.length > this.constantTris) {

@@ -288,10 +288,10 @@ labToRGB(lab){
 
       var lerpHexValue = this.lerpHexColor(arr1[i].value, arr2[i].value, alpha );
 
-      console.log(lerpHexValue);
+      //console.log(lerpHexValue);
       
       var lerpedHSL = this.hexToHSL(lerpHexValue);
-      console.log(lerpedHSL);
+      //console.log(lerpedHSL);
 
       finalArr.push({
         stop: this.lerp(arr1[i].stop, arr2[i].stop, alpha),
