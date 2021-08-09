@@ -1,5 +1,6 @@
 {
   "name":"Theme ThueringerLandschaft",
+  "fog_color":"#ffffff",
   "triangle_colors": [
     "#4152C0",
     "#43B9C0",
