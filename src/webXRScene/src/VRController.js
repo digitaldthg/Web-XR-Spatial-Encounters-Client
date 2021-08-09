@@ -131,6 +131,8 @@ class VRController {
 		const localVec = controller.worldToLocal( vec );
 
 		controller.point.position.copy( localVec );
+
+    console.log(controller.point);
 		controller.point.visible = true;
 
 	}

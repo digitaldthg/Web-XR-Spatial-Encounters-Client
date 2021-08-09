@@ -42,6 +42,7 @@ export default {
       reset: false,
       envModel: null,
       materialController: null,
+      pressed : false
     };
   },
   mounted() {
@@ -71,6 +72,9 @@ export default {
     ChangeFogColor() {
       var colorLastHex = this.$store.state.lastTheme["fog_color"];
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
+
+
+      console.log(colorLastHex, colorNextHex);
 
       var lerpColor = Utils.lerpColor(
         [{ value: colorLastHex }],
@@ -142,7 +146,28 @@ export default {
 
       this.InitFog();
     },
-    RenderLoop() {},
+    GamePadLoop(){
+      var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+      if (!gamepads) {
+        return;
+      }
+
+      var gp = gamepads[0];
+
+      if(gp == null){return;}
+
+      console.log(gp.buttons[0].pressed, this.pressed, gp.buttons[0].pressed && this.pressed);
+      if(gp.buttons[0].pressed && !this.pressed){
+        console.log("pressed",gp.buttons[0].pressed);
+        this.pressed = true;
+      }else{
+        this.pressed = false;
+      }
+
+    },
+    RenderLoop() {
+      this.GamePadLoop();
+    },
     HandleXRView(xrMode) {
       console.log("session", xrMode);
     },

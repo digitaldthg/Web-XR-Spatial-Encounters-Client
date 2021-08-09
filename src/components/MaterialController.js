@@ -111,7 +111,10 @@ class MaterialController {
       grid_floor,
       bg_back,
       bg_front,
-      skybox_texture
+      skybox_texture,
+      sun_material : new MeshBasicMaterial({
+        color : 0xff0000
+      })
     }
 
     this.tex_floor = new Floor(this.xr);
