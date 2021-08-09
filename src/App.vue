@@ -27,6 +27,9 @@ export default {
       console.log(this.$socket.id);
       this.id = this.$socket.id;
     },
+    test : function(d){
+      console.log("test connection" , d);
+    }
    
     
   },
