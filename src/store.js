@@ -12,6 +12,7 @@ export default new Vuex.Store({
     frequency: 1,
     keysInit: false,
     themeLerp: 0,
+    startThemeName: "",
     lastTheme: null,
     nextTheme: null,
     allThemes: [],

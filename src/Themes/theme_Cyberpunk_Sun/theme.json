@@ -1,5 +1,6 @@
 {
   "name":"Theme Cyberpunk Sun",
+  "fog_color":"#ffffff",
   "triangle_colors": [
     "#4152C0",
     "#43B9C0",
@@ -11,6 +12,17 @@
     "#4D3398",
     "#9A66CC"
   ],
+  "gradient_sun" : [
+    {
+      "stop" : 0,
+      "value" : "#F5A43B"
+    },
+    {
+      "stop" : 1,
+      "value" : "#F5A43B"
+    }
+  ],
+  
   "base_floor":[{
     "stop" : 0,
     "value" :  "#191970"
@@ -85,5 +97,7 @@
   "tex_floor" : "GridPink",
   "tex_skybox" : null,
   "tex_bg_front" : "Mountains",
-  "tex_bg_back" : "Wolken"
+  "tex_bg_back" : "Wolken",
+  "tex_guardian":"Grid",
+  "tex_sun":"Sun"
 }

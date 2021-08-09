@@ -96,15 +96,6 @@
               <button @click="(e) => LerpTheme(theme, 2)">play</button>
             </div>
           </div>
-          <!-- <div v-if="this.$store.state.lastTheme != null">
-            Left Theme: {{ this.$store.state.lastTheme.name }}
-          </div>
-          <div v-if="this.$store.state.nextTheme != null">
-            Right Theme: {{ this.$store.state.nextTheme.name }}
-          </div>
-          <div>
-            <Dropdown @onChange="changeTheme" />
-          </div> -->
         </div>
       </div>
       <div class="colorGradients" v-if="$store.state.lastTheme != null">
@@ -178,13 +169,14 @@ export default {
       this.open = !this.open;
     },
     LerpTheme(nextTheme, time) {
-      if (this.$store.state.themeLerp > 0.5) {
-        this.$store.commit("setLastTheme", this.$store.state.nextTheme);
-      } else {
-        this.$store.commit("setLastTheme", this.$store.state.lastTheme);
-      }
-      this.$store.commit("setNextTheme", nextTheme);
-      this.$store.commit("setThemeLerp", 0);
+      this.$socket.emit("client-theme-lerp", {
+        alpha: 0,
+      });
+      
+      this.$socket.emit("client-theme", {
+        last: this.$store.state.nextTheme.name,
+        next: nextTheme.name,
+      });
 
       var lerpObject = { lerp: 0 };
       const tween = new TWEEN.Tween(lerpObject)
@@ -197,12 +189,9 @@ export default {
         .onUpdate((v) => {
           console.log("v lerp", v);
 
-          this.$store.commit("setThemeLerp", v.lerp);
-          this.$store.state.materialController.LerpThemes(
-            this.$store.state.lastTheme,
-            this.$store.state.nextTheme,
-            this.$store.state.themeLerp
-          );
+          this.$socket.emit("client-theme-lerp", {
+            alpha: v.lerp,
+          });
         })
         .start(); // Start
     },

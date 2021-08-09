@@ -1,5 +1,6 @@
 {
   "name":"Theme DunkelGrid",
+  "fog_color":"#ffffff",
   "triangle_colors": [
     "#4152C0",
     "#43B9C0",
@@ -14,6 +15,16 @@
   "base_floor":[{
     "stop" : 0,
     "value" : "#000000"}
+  ],
+  "gradient_sun" : [
+    {
+      "stop" : 0,
+      "value" : "#F5A43B"
+    },
+    {
+      "stop" : 1,
+      "value" : "#F5A43B"
+    }
   ],
   "gradient_skybox": [
     {
@@ -84,5 +95,7 @@
   "tex_floor" : "GridConcrete",
   "tex_skybox" : null,
   "tex_bg_front" : "Black",
-  "tex_bg_back" : "Wolken"
+  "tex_bg_back" : "Wolken",
+  "tex_guardian":"Grid",
+  "tex_sun":"Black"
 }

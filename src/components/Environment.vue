@@ -2,6 +2,7 @@
 <script>
 import TriangleMesh from "../scripts/triangle.js";
 import ConstantTriangle from "../scripts/constantTriangle.js";
+import explodingRing from "../scripts/explodingRing";
 import * as THREE from "three";
 
 export default {
@@ -30,12 +31,23 @@ export default {
   },
   sockets: {
     "server-theme-update": function (value) {
-      console.log("Dorpdown Value ", value);
+      console.log("SERVERTHEME UPDATE ", value);
       var next = this.$store.state.allThemes.find((t) => {
-        return t.name == value;
+        return t.name == value.next;
       });
-      console.log("Next Theme ", next);
+      var last = this.$store.state.allThemes.find((t) => {
+        return t.name == value.last;
+      });
+
+      this.$store.commit("setLastTheme", last);
       this.$store.commit("setNextTheme", next);
+    },
+    "server-player-explode": function (data) {
+      new explodingRing({
+        xr: this.$store.state.xr,
+        position: data.position,
+        color: data.color,
+      });
     },
     "server-environment-update": function (data) {
       this.data = data;
@@ -56,14 +68,14 @@ export default {
     "server-theme-lerp-update": function (data) {
       //console.log("From Server lerp value ",data)
       this.$store.commit("setThemeLerp", data);
-    },
+    }
   },
   methods: {
     updateData() {
       if (this.data == null) return;
 
       //this.spawnTriangles();
-      
+
       if (this.data.Triangles.length > this.constantTris.length) {
         const tri = new ConstantTriangle({
           xr: this.$store.state.xr,
