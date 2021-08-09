@@ -44,7 +44,7 @@ class Renderer {
       transparent : true,
       //autoClear: false,
       //logarithmicDepthBuffer: false
-      powerPreference: "high-performance",
+      //powerPreference: "high-performance",
       // stencil: false,
       //depth: false
     });
