@@ -33,14 +33,11 @@ class SingleFriend {
     var target = new Vector3(data.transform.position.x, data.transform.position.y, data.transform.position.z);
     var origin = new Vector3(0, 0, 0);
 
-    for (var i = 0; i <= 5; i++) {
-      let scale = .2 * i;
+    for (var i = 0; i <= 25; i++) {
+      let scale = .05 * i;
       const geometry = new CylinderGeometry(scale, scale, .06, 64, 2, true);
       const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00 });
       const ring = new Mesh(geometry, material);
-
-      // var lerper = (origin.clone()).lerp( target, 1 / 5 * i);//.lerpVectors(origin,target, 1 / 5 * i);
-      // ring.position.set(lerper.x,lerper.y,lerper.z);
       group.add(ring);
       this.rings.push(ring);
     }
@@ -51,24 +48,27 @@ class SingleFriend {
       data.transform.position.y,
       data.transform.position.z
     );
+
     group.userData.lastPosition = new Vector3(
       data.transform.position.x,
       data.transform.position.y,
       data.transform.position.z
     );
+
     group.userData.lastRotation = new Quaternion(
       data.transform.rotation.x,
       data.transform.rotation.y,
       data.transform.rotation.z,
       data.transform.rotation.w,
-    )
+    );
 
     group.userData.targetRotation = new Quaternion(
       data.transform.rotation.x,
       data.transform.rotation.y,
       data.transform.rotation.z,
       data.transform.rotation.w,
-    )
+    );
+
     group.userData.lerpAlpha = 0;
     group.userData.color = Object.assign({}, data.color);
     //group.userData.targetReached = true;
@@ -113,10 +113,10 @@ class SingleFriend {
     //dann wird sie auf null gesetzt => ziel erreicht
     if (this.instance.userData.targetPosition == null) { return; }
 
-    var newPos = this.instance.userData.lastPosition.lerp(
-      this.instance.userData.targetPosition,
-      this.instance.userData.lerpAlpha / 100
-    );
+    // var newPos = this.instance.userData.lastPosition.lerp(
+    //   this.instance.userData.targetPosition,
+    //   this.instance.userData.lerpAlpha / 100
+    // );
     var lerpPos = this.LerpVector(
       this.instance.userData.lastPosition,
       this.instance.userData.targetPosition,
