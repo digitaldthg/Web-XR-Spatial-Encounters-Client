@@ -4,6 +4,7 @@ import TriangleMesh from "../scripts/triangle.js";
 import ConstantTriangle from "../scripts/constantTriangle.js";
 import * as THREE from "three";
 
+
 export default {
   name: "Environment",
   data() {
@@ -61,6 +62,9 @@ export default {
       //console.log("From Server lerp value ",data)
       this.$store.commit("setThemeLerp", data);
     },
+    "test":function(data){
+      console.log("TEST ",data)
+    }
   },
   methods: {
     updateData() {

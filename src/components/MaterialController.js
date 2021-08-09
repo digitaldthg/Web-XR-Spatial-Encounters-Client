@@ -31,9 +31,6 @@ class MaterialController {
     this.store = store;
 
     this.store.commit("setAllThemes",[theme_DunkelConcrete,theme_DunkelConcrete_Morning,theme_ThueringerLandschaft,theme_Turell_gelb,theme_Sun_Orange2,theme_Cyberpunk_Sun,theme_DunkelGrid])
-    
-    this.store.commit("setLastTheme",theme_DunkelConcrete)
-    this.store.commit("setNextTheme", theme_DunkelConcrete_Morning)
 
     this.store.commit("setMaterialController", this);
 
@@ -133,10 +130,10 @@ class MaterialController {
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
 
 
-    this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
+    //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme);
+      console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme,newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 

@@ -27,8 +27,20 @@ export default {
       console.log(this.$socket.id);
       this.id = this.$socket.id;
     },
-    test : function(d){
-      console.log("test connection" , d);
+    connectResponse : function(d){
+      console.log("on connection" , d, store.state.allThemes);
+
+      var next = store.state.allThemes.find((t) => {
+        return t.name == d.next;
+      });
+      var last = store.state.allThemes.find((t) => {
+        return t.name == d.last;
+      });
+
+      store.commit("setLastTheme", last);
+      store.commit("setNextTheme", next);
+      store.commit("setThemeLerp",d.lerpAlpha);
+
     }
    
     
