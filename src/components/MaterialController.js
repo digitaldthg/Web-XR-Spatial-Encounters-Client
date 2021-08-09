@@ -34,6 +34,7 @@ class MaterialController {
     
     this.store.commit("setLastTheme",theme_DunkelConcrete)
     this.store.commit("setNextTheme", theme_DunkelConcrete_Morning)
+
     this.store.commit("setMaterialController", this);
 
     //GRADIENT
@@ -131,7 +132,7 @@ class MaterialController {
     this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      //console.log("Watch Theme Lerp ", newValue);
+      console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 

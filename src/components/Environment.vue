@@ -30,11 +30,15 @@ export default {
   },
   sockets: {
     "server-theme-update": function (value) {
-      console.log("Dorpdown Value ", value);
+      console.log("SERVERTHEME UPDATE ", value);
       var next = this.$store.state.allThemes.find((t) => {
-        return t.name == value;
+        return t.name == value.next;
       });
-      console.log("Next Theme ", next);
+      var last = this.$store.state.allThemes.find((t) => {
+        return t.name == value.last;
+      });
+
+      this.$store.commit("setLastTheme", last);
       this.$store.commit("setNextTheme", next);
     },
     "server-environment-update": function (data) {
@@ -63,7 +67,7 @@ export default {
       if (this.data == null) return;
 
       //this.spawnTriangles();
-      
+
       if (this.data.Triangles.length > this.constantTris.length) {
         const tri = new ConstantTriangle({
           xr: this.$store.state.xr,

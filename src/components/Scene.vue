@@ -50,13 +50,11 @@ export default {
   },
   sockets: {
     "server-fog-update": function (value) {
-      console.log("Fog Value ", value);
       this.$store.commit("setFogDistance", value);
     },
   },
   watch: {
     "$store.state.fogDistance": function (fogDistance) {
-      console.log("FOG DISTANCE",fogDistance)
       this.xr.Scene.fog.density = fogDistance;
     },
     "$store.state.themeLerp": function (lerpValue) {
@@ -74,7 +72,7 @@ export default {
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
 
 
-      console.log(colorLastHex, colorNextHex);
+      console.log("Fog Color:",colorLastHex, colorNextHex);
 
       var lerpColor = Utils.lerpColor(
         [{ value: colorLastHex }],
@@ -99,7 +97,7 @@ export default {
       ) {
         return;
       }
-      console.log("INIT FOG ", this.$store.state.lastTheme["fog_color"]);
+
 
       //Init FOG
       var fogColor = new Color(0, 0, 1);
