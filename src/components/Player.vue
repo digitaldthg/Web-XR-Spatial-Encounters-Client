@@ -13,18 +13,38 @@ import {
   Quaternion,
   Raycaster,
   CircleGeometry,
+  BackSide
 } from "three";
 import UserData from "../class/UserData";
 import Timer from "../Timer";
 import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
+import triangleUtils from '../scripts/triangleUtils';
+
+
+function ease(x){
+  const c1 = 5.70158;
+  const c3 = c1 + 1;
+
+  return c3 * x * x * x - c1 * x * x;
+}
+
+Vector3.lerp = function ( v, alpha ) {
+
+  this.x += ( v.x - this.x ) * alpha;
+  this.y += ( v.y - this.y ) * alpha;
+  this.z += ( v.z - this.z ) * alpha;
+  this.w += ( v.w - this.w ) * alpha;
+
+  return this;
+}
 
 export default {
   name: "Player",
   data() {
     return {
       delta: 0,
-      fps: 5,
+      fps: .1,
       player: null,
       ready: false,
       timer: null,
@@ -32,11 +52,11 @@ export default {
       thumb: false,
       rings: [],
       explosition: false,
-      explodingFactor: 0.6,
+      explodingFactor: 0.8,
       ringOffset: 0.15,
       bottomColor: new Color(0xff0000),
       keyArray: ["w", "a", "s", "d", "e"],
-      speed: 0.1,
+      speed: 0.05,
       data: Object.assign({}, UserData),
       raycaster: null,
       transform: {
@@ -44,6 +64,9 @@ export default {
         rotation: new Quaternion(),
         scale: new Vector3(),
       },
+      head : null,
+      lazyFollower : null,
+      dummyObject : null,
       inVR: false,
       currentColor: new Color(0x0000ff),
       key: {
@@ -88,8 +111,9 @@ export default {
         this.data.transform.position.z
       );
       var origin = new Vector3(0, 0, 0);*/
-      for (var i = 0; i <= 5; i++) {
-        let scale = 0.03 * i * i;
+      for (var i = 0; i <= 15; i++) {
+        let scale = 0.05 * i;
+        scale = scale < .3 ? .3 : scale;
         const geometry = new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
         const material = new MeshBasicMaterial({
           side: DoubleSide,
@@ -97,7 +121,7 @@ export default {
         });
         const ring = new Mesh(geometry, material);
 
-        this.playerGroup.add(ring);
+        this.$store.state.xr.Scene.add(ring);
         this.rings.push(ring);
       }
 
@@ -105,6 +129,19 @@ export default {
 
       this.$store.state.xr.Scene.add(this.player);
       this.$store.state.xr.Scene.add(this.playerGroup);
+
+      this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1), new MeshNormalMaterial());
+      this.lazyFollower.position = new Vector3(0,0,0);
+      this.$store.state.xr.Scene.add(this.lazyFollower);
+      
+      this.head = new Mesh(new BoxGeometry(.1,.1,.1), new MeshBasicMaterial({color : 0xff0000}));
+      this.head.position = new Vector3(0,0,0);
+      this.$store.state.xr.Scene.add(this.head);
+
+
+      this.dummyObject = new Mesh(new BoxGeometry(.1,.1,.1), new MeshNormalMaterial());
+      this.dummyObject.position = new Vector3(0,0,0);
+      this.$store.state.xr.Scene.add(this.dummyObject);
 
       this.data.room = this.$route.params.roomID;
 
@@ -265,7 +302,7 @@ export default {
 
       //UPDATE COLOR
       var target = this.transform.position.clone();
-      var origin = new Vector3(0, 0, 0);
+      var origin = this.lazyFollower.position.clone();
 
       var colorLastHex =
         this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
@@ -289,69 +326,21 @@ export default {
           Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
         );
 
-      //console.log("CURRENT COLOR ", this.currentColor);
-
+      var ring_pos = this.player.position.clone();
+     
       //UPDATE POSITION
       if (!this.inVR) {
         this.KeyBoardMovement();
-
-        this.rings.map((ring, index) => {
-          ring.position.y =
-            this.player.position.y - (index / 5) * this.player.position.y;
-          ring.material.color = this.currentColor;
-        });
       } else {
         var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera(
           this.$store.state.xr.Camera.instance
         );
 
-        vrCamera.matrixWorld.decompose(
-          this.transform.position,
-          this.transform.rotation,
-          this.transform.scale
-        );
-        this.player.position.set(
-          this.transform.position.x,
-          this.transform.position.y,
-          this.transform.position.z
-        );
-        this.playerGroup.position.set(
-          this.transform.position.x,
-          0,
-          this.transform.position.z
-        );
+        vrCamera.matrixWorld.decompose(this.transform.position,this.transform.rotation,this.transform.scale);
 
-        this.playerFloor.position.set(
-          this.transform.position.x,
-          0,
-          this.transform.position.z
-        );
-
-        this.player.quaternion = this.transform.rotation.clone();
-
-        if (
-          this.player.position.y <
-            this.transform.headHeight * this.explodingFactor &&
-          !this.explosition
-        ) {
-          this.Explode();
-        }
-
-        if (
-          this.player.position.y >
-            this.transform.headHeight * this.explodingFactor &&
-          this.explosition
-        ) {
-          this.explosition = false;
-        }
-
-        //ring.material.color = this.currentColor;
-        this.rings.map((ring, index) => {
-          var lerpAlpha = (1 / (this.rings.length - 1)) * index;
-          var lerper = target.clone().lerp(origin, lerpAlpha);
-          //ring.position.set(0,lerper.y, );
-          ring.position.y = lerper.y;
-        });
+        this.player.position.set(this.transform.position.x,this.transform.position.y,this.transform.position.z);
+        this.playerGroup.position.set(this.transform.position.x, 0, this.transform.position.z );
+        this.playerFloor.position.set( this.transform.position.x, 0, this.transform.position.z );
 
         //RESET INTERSECTION CHECK
         var pos = new Vector3();
@@ -363,6 +352,8 @@ export default {
           [this.playerFloor],
           true
         );
+
+        ring_pos = pos.clone();
 
         if (intersection.length > 0) {
           this.timer.SetVisible(true);
@@ -376,12 +367,33 @@ export default {
           }
 
           this.timer.Progress(this.timeout);
-
           this.reset = true;
         } else {
           this.timer.SetVisible(false);
         }
-      }
+      } // end of only VR
+    
+      this.head.position = ring_pos.clone(); //new Vector3(this.player.position.x ,this.player.position.y,this.player.position.z);
+      this.lazyFollower.position.lerp(new Vector3(ring_pos.x,0,ring_pos.z), .01);
+      
+
+
+      this.rings.map((ring, index) => {
+
+        var lerpAlpha = (1 / (this.rings.length)) * index ;
+        var _origin = this.lazyFollower.position.clone();
+        var _target = ring_pos.clone();
+            _target.y *= .6;
+        var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha );
+        var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha );
+
+        ring.position.x = lerperPos.x;
+        ring.position.y = lerper.y;
+        ring.position.z = lerperPos.z;
+
+        ring.material.color = this.currentColor;
+
+      });
 
       this.delta += t.getDelta();
       this.ApplyData();
@@ -408,8 +420,10 @@ export default {
       //console.log("fps");
     },
     ReducedFPSCall() {
-      //console.log("SEND DATA ", this.data);
+      console.log("SEND DATA ", this.data);
       this.$socket.emit("client-player", this.data);
+
+     
     },
   },
 };

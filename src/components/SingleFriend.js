@@ -1,4 +1,4 @@
-const { Group, Vector3, MeshBasicMaterial, DoubleSide, Mesh, Color, Object3D, BoxGeometry, CylinderGeometry, SphereGeometry, Quaternion } = require("three");
+const { Group, Vector3, MeshBasicMaterial, DoubleSide, Mesh, Color, Object3D, BoxGeometry, CylinderGeometry, SphereGeometry, Quaternion, MeshNormalMaterial } = require("three");
 import Ring from "../Model/player_cylinder.glb";
 import Utils from "../scripts/utils";
 
@@ -8,37 +8,37 @@ class SingleFriend {
     this.xr = store.state.xr;
     this.rings = [];
     this.bottomColor = new Color(0xffffff);
-
+    this.lazyFollower = null;
     this.speed = 1000;
 
-    this.headFactor = 2;
+    this.headFactor = 1;
     this.Init(data);
   }
 
   Init(data) {
     this.instance = this.Create(data);
-
-
+    this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1),  new MeshNormalMaterial());
+    this.xr.Scene.add(this.lazyFollower);
     console.log("created", this.instance);
   }
 
   Create(data) {
     var group = new Object3D();
-    group.name = "Friend";
+        group.name = "Friend";
     this.xr.Scene.add(group);
 
-    this.head = new Group();
-    group.add(this.head);
+    this.head = new Mesh(new BoxGeometry(.1,.1,.1) , new MeshNormalMaterial());
+    this.xr.Scene.add(this.head);
 
     var target = new Vector3(data.transform.position.x, data.transform.position.y, data.transform.position.z);
     var origin = new Vector3(0, 0, 0);
 
-    for (var i = 0; i <= 25; i++) {
-      let scale = .05 * i;
+    for (var i = 0; i <= 15; i++) {
+      let scale = 0.05 * i ;
       const geometry = new CylinderGeometry(scale, scale, .06, 64, 2, true);
       const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00 });
       const ring = new Mesh(geometry, material);
-      group.add(ring);
+      this.xr.Scene.add(ring);
       this.rings.push(ring);
     }
 
@@ -113,39 +113,29 @@ class SingleFriend {
     //dann wird sie auf null gesetzt => ziel erreicht
     if (this.instance.userData.targetPosition == null) { return; }
 
-  
-    var lerpPos = this.LerpVector(
-      this.instance.userData.lastPosition,
-      this.instance.userData.targetPosition,
-      this.instance.userData.lerpAlpha / 100);
-
-    var newQuat = this.instance.userData.lastRotation.slerp(this.instance.userData.targetRotation, this.instance.userData.lerpAlpha / 100);
-
-    this.instance.position.set(lerpPos.x, 0 , lerpPos.z);
-    this.head.position.set(0, lerpPos.y, 0);
-
-    this.head.quaternion.set(newQuat.x, newQuat.y, newQuat.z, newQuat.w);
-
+    this.instance.position.lerp(this.instance.userData.targetPosition , .1);
+    this.head.position.lerp(this.instance.userData.targetPosition, .1);// = this.instance.userData.targetPosition.clone();
+    
+    var lazyPos =this.instance.position.clone();
+        lazyPos.y = 0;
+    this.lazyFollower.position.lerp(lazyPos, .05);
+    
     let color = new Color(this.instance.userData.color.r, this.instance.userData.color.g, this.instance.userData.color.b);
 
-    var target = new Vector3(lerpPos.x, lerpPos.y, lerpPos.z);
-    var origin = new Vector3(0, 0, 0);
+    var target = this.instance.position.clone();
+    var origin = this.lazyFollower.position.clone();
 
     this.rings.map((ring, index) => {
       var lerpAlpha = (1 / (this.rings.length - 1)) * index;
       var lerper = (target.clone()).lerp(origin, lerpAlpha);
-      ring.position.set(0, lerper.y, 0);
+      ring.position.x  = lerper.x;
+      ring.position.y  = lerper.y;
+      ring.position.z  = lerper.z;
 
       //Ringfarbe lerpen
-      ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, target.y / this.instance.userData.headHeight)));
+      ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
 
-    this.instance.userData.lerpAlpha += .5;
-    
-    if (this.instance.userData.lerpAlpha >= 100) {
-      this.instance.userData.lerpAlpha = 0;
-      this.instance.userData.lastPosition = this.instance.position.clone();
-    }
   }
 
   delete() {
