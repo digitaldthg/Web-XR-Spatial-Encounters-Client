@@ -113,10 +113,7 @@ class SingleFriend {
     //dann wird sie auf null gesetzt => ziel erreicht
     if (this.instance.userData.targetPosition == null) { return; }
 
-    // var newPos = this.instance.userData.lastPosition.lerp(
-    //   this.instance.userData.targetPosition,
-    //   this.instance.userData.lerpAlpha / 100
-    // );
+  
     var lerpPos = this.LerpVector(
       this.instance.userData.lastPosition,
       this.instance.userData.targetPosition,

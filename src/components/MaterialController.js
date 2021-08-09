@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, AdditiveBlending, Color } from "three";
+import { MeshBasicMaterial, AdditiveBlending, Color, Mesh, DoubleSide } from "three";
 
 import Skybox from './Skybox';
 import FogFloorDiffuse from './FogFloorDiffuse';
@@ -112,8 +112,12 @@ class MaterialController {
       bg_back,
       bg_front,
       skybox_texture,
-      sun_material : new MeshBasicMaterial({
+      sun : new MeshBasicMaterial({
         color : 0xff0000
+      }),
+      guardian : new MeshBasicMaterial({
+        color : 0xff0000,
+        side : DoubleSide
       })
     }
 
@@ -212,7 +216,16 @@ class MaterialController {
 
 
   GetMaterial(name) {
-    return this.materials[name];
+
+    console.log(name);
+
+    if(this.materials.hasOwnProperty(name)){
+      return this.materials[name];
+    }else{
+      console.warn(`Achtung ${name} existiert nicht in den Materials`);
+      return new MeshBasicMaterial({color : 0xff0000});
+
+    }
   }
 }
 
