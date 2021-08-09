@@ -172,8 +172,13 @@ export default {
 
     SetEnvironmentModel() {
       this.envModel.traverse((child) => {
-        var material = this.materialController.GetMaterial(child.name);
-        child.material = material;
+
+        
+        if(child.name != "Scene"){
+          var material = this.materialController.GetMaterial(child.name);
+          child.material = material;
+        }
+
 
         switch (child.name) {
           case "base_floor":
