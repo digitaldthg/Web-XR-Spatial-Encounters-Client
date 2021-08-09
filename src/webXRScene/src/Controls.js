@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import {DesktopControls} from './DesktopControls';
-import {VRController} from './VRController';
 import { VRButton } from './VRButton.js';
 import { ARButton } from './ARButton.js';
 import { Euler, Object3D, Quaternion, Vector3,ArrowHelper } from 'three';
