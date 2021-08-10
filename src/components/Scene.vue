@@ -40,6 +40,8 @@ export default {
   },
   mounted() {
     this.InitScene();
+
+    console.log("mount Scene");
   },
   sockets: {
     "server-fog-update": function (value) {

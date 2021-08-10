@@ -315,10 +315,14 @@ export default {
       var target = this.transform.position.clone();
       var origin = this.lazyFollower.position.clone();
 
-      var colorLastHex =
-        this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
-      var colorNextHex =
-        this.$store.state.nextTheme.triangle_colors[this.$store.state.ownIdx];
+      var colorLastHex = typeof(this.$store.state.lastTheme) == "undefined" ? "#623095" : this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
+      var colorNextHex = typeof(this.$store.state.nextTheme) == "undefined" ? "#623095" : this.$store.state.nextTheme.triangle_colors[this.$store.state.ownIdx];
+
+
+      // var colorLastHex =
+      //   this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
+      // var colorNextHex =
+      //   this.$store.state.nextTheme.triangle_colors[this.$store.state.ownIdx];
 
       var lerpColor = Utils.lerpColor(
         [{ value: colorLastHex }],

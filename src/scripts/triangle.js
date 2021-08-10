@@ -15,7 +15,10 @@ class Triangle {
     Init() {
         var positions = this.data.Positions;
         if (positions == null || Object.keys(positions).length < 2) {
-            return;
+          if(this.mesh != null){
+            this.xr.Scene.remove(this.mesh);
+          }
+          return;
         }
         var geometry = triangleUtils.GetGeometry(positions,this.height)
         var uniforms = triangleUtils.GetColor(this.data.Color)

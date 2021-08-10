@@ -35,19 +35,26 @@ export default {
   sockets: {
     "server-friends-delete": function (friend) {
       console.log("%c smth disconnected", "background:#000; color:#fff;");
-      console.log(friend.id);
+      console.log(friend.id, this.$store.state.socketID, friend.id == this.$store.state.socketID);
 
-      if (this.friends.hasOwnProperty(friend.id)) {
+      if (this.friends.hasOwnProperty(friend.id) && friend.id != this.$store.state.socketID) {
         //this.$store.state.xr.Scene.remove(this.friends[friend.id]);
         this.friends[friend.id].delete();
         delete this.friends[friend.id];
+
+
+        console.log("delete friend with id ", friend.id);
+
+
       }
     },
     "server-friends-update": function (d) {
       var serverFriends = Object.assign({}, d);
       var localFriends = Object.assign({}, this.friends);
 
-      this.$store.commit("idx",Object.keys(serverFriends).indexOf(this.$socket.id))
+      this.$store.commit("idx",Object.keys(serverFriends).indexOf(this.$socket.id));
+
+      this.$store.commit("serverFriends", serverFriends);
       //delete serverFriends[this.$socket.id];
 
       Object.keys(serverFriends).map((f,index) => {

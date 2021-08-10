@@ -87,5 +87,11 @@ class ConstantTriangle {
        
         
     }
+
+    Delete = ()=>{
+
+      this.xr.Scene.remove(this.mesh);
+
+    }
 }
 export default ConstantTriangle;
