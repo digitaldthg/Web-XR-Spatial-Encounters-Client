@@ -8,6 +8,8 @@ export default new Vuex.Store({
     xr: null,
     room: null,
     ownIdx: 0,
+    socketID : null,
+    serverFriends: {},
     speed: 0.1,
     frequency: 1,
     keysInit: false,
@@ -25,6 +27,12 @@ export default new Vuex.Store({
     },
     idx(state, idx) {
       state.ownIdx = idx;
+    },
+    socketID(state, id){
+      state.socketID = id;
+    },
+    serverFriends(state, serverFriends){
+      state.serverFriends = serverFriends;
     },
     room(state, data) {
       state.room = data;

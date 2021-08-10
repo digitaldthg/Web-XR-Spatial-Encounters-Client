@@ -90,6 +90,7 @@ class SingleFriend {
     this.instance.userData.lastPosition.y = this.head.position.y;
 
     this.instance.userData.lerpAlpha = 0;
+    if(typeof(this.store.state.lastTheme) == "undefined"){return}
     var hexColor = this.store.state.lastTheme.triangle_colors[idx];
     var rgbColor = Utils.hexToRgb(hexColor);
 
@@ -140,6 +141,13 @@ class SingleFriend {
 
   delete() {
     this.xr.Scene.remove(this.instance);
+    this.rings.map((ring)=>{
+      this.xr.Scene.remove(ring);
+    });
+    this.xr.Scene.remove(this.head);
+    this.xr.Scene.remove(this.lazyFollower);
+
+    console.log("friend =>  delete myself");
   }
 
 }

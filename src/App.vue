@@ -26,6 +26,8 @@ export default {
     connect: function (d) {
       console.log(this.$socket.id);
       this.id = this.$socket.id;
+
+      this.$store.commit("socketID", this.id);
     },
     connectResponse : function(d){
       console.log("on connection" , d, store.state.allThemes);

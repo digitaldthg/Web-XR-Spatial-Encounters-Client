@@ -6,6 +6,21 @@
           <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
           <div class="dev-info">Raum: {{ $store.state.room }}</div>
         </div>
+        
+        <div class="grid-1">
+          
+          <div class="dev-info" v-for="friend in $store.state.serverFriends" v-bind:key="friend.id">
+            <div class="friend-id" :class="{isMe : friend.id == $socket.id}">{{friend.id}}</div>
+
+            <template v-if="friend.id != $socket.id">
+              <button @click="e => DeleteFriend(friend)">x</button>
+              <input type="checkbox" @input="e => ToggleFriend(friend, e.target.value)" />
+            </template>
+          </div>
+
+
+          
+        </div>
 
         <div class="grid-2-1">
           <div>
@@ -260,6 +275,23 @@ export default {
         speed: parseFloat(event.target.value),
       });
     },
+
+    DeleteFriend(friend){
+      console.log(friend);
+
+      this.$socket.emit("client-delete-friend", {
+        friend: friend ,
+        room : this.$store.state.room
+      });
+    },
+    ToggleFriend(friend , boolean){
+      
+      console.log(friend, boolean);
+
+      this.$socket.emit("client-change-speed", {
+        speed: parseFloat(event.target.value),
+      });
+    }
   },
 };
 </script>
@@ -363,6 +395,16 @@ input[type="number"] {
   border: 0;
   text-align: center;
 }
+
+
+.friend-id{
+  padding:1rem;
+  margin-bottom: .5rem;
+}
+
+.friend-id.isMe {
+    background:#eee;
+  }
 
 </style>
 

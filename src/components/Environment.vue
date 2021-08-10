@@ -82,9 +82,15 @@ export default {
           store: this.$store,
         });
         this.constantTris.push(tri);
-      } else if (this.data.Triangles.length < this.constantTris) {
-        this.constantTris.remove(this.constantTris[0]);
-      }
+      } else if(this.data.Triangles.length == 0){
+        this.constantTris.map((tri)=>{
+          tri.Delete();
+        });
+        this.constantTris = []
+        
+      }else if (this.data.Triangles.length < this.constantTris) {
+        this.constantTris.shift();
+      } 
 
       this.data.Triangles.forEach((triData, idx) => {
         if (typeof this.constantTris[idx] == "undefined") {

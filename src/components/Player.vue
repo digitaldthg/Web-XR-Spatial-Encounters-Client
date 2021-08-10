@@ -307,6 +307,7 @@ export default {
       var target = this.transform.position.clone();
       var origin = this.lazyFollower.position.clone();
 
+      if(typeof(this.$store.state.lastTheme) == "undefined" || typeof(this.$store.state.nextTheme) == "undefined" ){return;}
       var colorLastHex =
         this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
       var colorNextHex =
@@ -363,8 +364,6 @@ export default {
           if (this.timeout < this.maxTimeout ) {
             this.timeout++;
           } else {
-
-            console.log("timer auslösen");
             this.timeout = 0;
             this.ResetCamera();
             this.thumb = false;
