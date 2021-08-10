@@ -11,7 +11,7 @@ button[disabled]{
 }
 
 .cta-button{
-  background:tomato;
+  background:#607d8b;
   color:#fff;
   padding:.5rem 1rem;
   border-radius: 5px;

@@ -3,6 +3,7 @@ const UserData = {
   idx: 0,
   role : 0,
   room : null,
+  visible : true,
   transform : {
     headHeight : 1.75,
     position : { 

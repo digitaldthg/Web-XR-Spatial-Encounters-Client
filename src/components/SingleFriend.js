@@ -92,6 +92,7 @@ class SingleFriend {
   updateData = (data, idx) => {
     if (typeof (data) == "undefined") { return; }
 
+
     this.instance.userData.headHeight = data.transform.headHeight * this.headFactor;
     this.instance.userData.targetPosition = new Vector3(
       data.transform.position.x,
@@ -152,13 +153,13 @@ class SingleFriend {
       //Ringfarbe lerpen
       ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
-    
+
     this.myText.lookAt(this.xr.Controls.GetCameraPosition());
 
     this.myText.sync();
   }
 
-  delete() {
+  delete = () => {
     this.xr.Scene.remove(this.instance);
     this.rings.map((ring)=>{
       this.xr.Scene.remove(ring);

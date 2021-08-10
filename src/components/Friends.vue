@@ -59,14 +59,24 @@ export default {
 
       Object.keys(serverFriends).map((f,index) => {
         //console.log("INDEX ",index)
-        if(this.$socket.id == f){
+        console.log(serverFriends[f]);
+
+
+        if(this.$socket.id == f || !serverFriends[f].visible){
+
+          if(localFriends.hasOwnProperty(f)){
+            localFriends[f].delete();
+            delete localFriends[f];
+            console.log("delete local friend because invisible");
+          }
+
           return;
         }
         if (!localFriends.hasOwnProperty(f)) {
             localFriends[f] = new SingleFriend(this.$store , serverFriends[f]);
-          } else {
-            localFriends[f].updateData(serverFriends[f],index);
-          }
+        } else {
+          localFriends[f].updateData(serverFriends[f],index);
+        }
       });
 
       this.friends = localFriends;
@@ -78,6 +88,7 @@ export default {
       Object.values(this.friends).map((friend) => {
         friend.update(clock);
       });
+      
     },
   },
 };
