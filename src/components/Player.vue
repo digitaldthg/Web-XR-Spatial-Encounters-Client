@@ -166,6 +166,8 @@ export default {
         color: 0xffff00,
         transparent: true,
         opacity: 0,
+        depthTest : false,
+        depthWrite : false
       });
       const circle = new Mesh(geometry, material);
       circle.rotation.x = (-90 * Math.PI) / 180;
