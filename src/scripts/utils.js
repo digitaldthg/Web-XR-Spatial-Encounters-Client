@@ -260,7 +260,6 @@ labToRGB(lab){
     ];
   },
   lerpHexColor(a, b, amount) { 
-
     var ah = parseInt(a.replace(/#/g, ''), 16),
         ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
         bh = parseInt(b.replace(/#/g, ''), 16),
