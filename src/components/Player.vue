@@ -136,12 +136,14 @@ export default {
         new MeshNormalMaterial()
       );
       this.lazyFollower.position = new Vector3(0, 0, 0);
+      this.lazyFollower.scale.set(0, 0, 0);
       this.$store.state.xr.Scene.add(this.lazyFollower);
 
       this.head = new Mesh(
         new BoxGeometry(0.1, 0.1, 0.1),
         new MeshBasicMaterial({ color: 0xff0000 })
       );
+      this.head.scale = new Vector3(0, 0, 0);
       this.head.position = new Vector3(0, 0, 0);
       this.$store.state.xr.Scene.add(this.head);
 

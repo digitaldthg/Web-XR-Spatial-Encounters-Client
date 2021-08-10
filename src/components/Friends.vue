@@ -58,10 +58,7 @@ export default {
       //delete serverFriends[this.$socket.id];
 
       Object.keys(serverFriends).map((f,index) => {
-        //console.log("INDEX ",index)
-        console.log(serverFriends[f]);
-
-
+        
         if(this.$socket.id == f || !serverFriends[f].visible){
 
           if(localFriends.hasOwnProperty(f)){
@@ -88,7 +85,7 @@ export default {
       Object.values(this.friends).map((friend) => {
         friend.update(clock);
       });
-      
+
     },
   },
 };

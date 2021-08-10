@@ -186,8 +186,6 @@ export default {
       }
     },
     "$store.state.serverFriends": function (friends) {
-      console.log("store " , friends);
-
       this.friends = friends;
     },
   },
@@ -376,6 +374,7 @@ input[type="color"]::-webkit-color-swatch {
 
 .grid-1{
   width:100%;
+  margin-bottom: 2rem;
 }
 
 .grid input[type="range"] {
@@ -461,6 +460,7 @@ input[type="number"] {
 }
 .friend.isMe {
   background:#ccc;
+  border: 1px solid;
   justify-content: flex-start;
 }
 

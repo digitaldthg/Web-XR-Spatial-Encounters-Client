@@ -20,6 +20,7 @@ class SingleFriend {
   Init(data) {
     this.instance = this.Create(data);
     this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1),  new MeshNormalMaterial());
+    this.lazyFollower.scale.set(0,0,0);
     this.xr.Scene.add(this.lazyFollower);
     console.log("created", this.instance);
   }
@@ -30,6 +31,7 @@ class SingleFriend {
     this.xr.Scene.add(group);
 
     this.head = new Mesh(new BoxGeometry(.1,.1,.1) , new MeshNormalMaterial());
+    this.head.scale.set(0,0,0);
     this.xr.Scene.add(this.head);
 
     var target = new Vector3(data.transform.position.x, data.transform.position.y, data.transform.position.z);
