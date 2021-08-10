@@ -6,11 +6,29 @@
           <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
           <div class="dev-info">Raum: {{ $store.state.room }}</div>
         </div>
+        <div class="grid-1">
+          
+          <div class="friend flex-between" :class="{isMe : friend.id == $socket.id}" v-for="friend in $store.state.serverFriends" v-bind:key="friend.id">
+            <div class="friend-id" >{{friend.id}}</div>
 
-        <div class="grid-2-1">
-          <div>
-            <label for="frequence">Sek. zwischen Dreiecken: </label>
+            <template v-if="friend.id != $socket.id">
+              <div class="input-checkbox">
+                <label :for="friend.id">Visible</label>
+                <input :id="friend.id" type="checkbox" @input="e => ToggleFriend(friend, e.target.checked)" />
+              </div>
+              <button class="cta-button" @click="e => DeleteFriend(friend)">x</button>
+            </template>
+          </div>
+
+
+          
+        </div>
+
+        <div class="grid-1">
+          <div class="slider">
+            <label for="frequence">Sek. zwischen Dreiecken: {{ this.$store.state.frequency }}</label>
             <input
+              class="slider"
               type="range"
               id="frequence"
               name="frequence"
@@ -21,11 +39,12 @@
               @change="updateSlider"
               @input="updateSlider"
             />
-            {{ this.$store.state.frequency }}
+            
           </div>
-          <div>
-            <label for="scale">Skalierung der Dreiecke: </label>
+          <div class="slider">
+            <label for="scale">Skalierung der Dreiecke: {{ this.scale }}</label>
             <input
+              class="slider"
               type="range"
               id="frequence"
               name="frequnence"
@@ -36,11 +55,12 @@
               @change="updateScale"
               @input="updateScale"
             />
-            {{ this.scale }}
+            
           </div>
-          <div>
-            <label for="speed">Geschwindigkeit der Dreiecke: </label>
+          <div class="slider">
+            <label for="speed">Geschwindigkeit der Dreiecke: {{ this.$store.state.speed }}</label>
             <input
+              class="slider"
               type="range"
               id="speed"
               name="frequnence"
@@ -51,11 +71,12 @@
               @change="updateSpeed"
               @input="updateSpeed"
             />
-            {{ this.$store.state.speed }}
+            
           </div>
-          <div>
-            <label for="theme">Theme Lerp</label>
+          <div class="slider">
+            <label for="theme">Theme Lerp: {{ this.$store.state.themeLerp }}</label>
             <input
+              class="slider"
               type="range"
               id="theme"
               name="themee"
@@ -66,11 +87,12 @@
               @change="updateThemeLerp"
               @input="updateThemeLerp"
             />
-            {{ this.$store.state.themeLerp }}
+            
           </div>
-          <div>
-            <label for="fog">FogDistance: </label>
+          <div class="slider">
+            <label for="fog">FogDistance: {{ this.$store.state.fogDistance }}</label>
             <input
+              class="slider"
               type="range"
               id="fog"
               name="fog"
@@ -81,19 +103,19 @@
               @change="updateFog"
               @input="updateFog"
             />
-            {{ this.$store.state.fogDistance }}
+            
           </div>
         </div>
 
-        <div class="grid-2-1">
+        <div class="grid-1">
           <div class="themes">
             <div
-              class="theme"
+              class="theme flex flex-between flex-align-center"
               v-for="theme in this.$store.state.allThemes"
               v-bind:key="theme.name"
             >
               {{ theme.name }}
-              <button @click="(e) => LerpTheme(theme, 2)">play</button>
+              <button class="cta-button" @click="(e) => LerpTheme(theme, 2)">play</button>
             </div>
           </div>
         </div>
@@ -189,8 +211,7 @@ export default {
           1000
         )
         .onUpdate((v) => {
-          console.log("v lerp", v);
-
+          
           this.$socket.emit("client-theme-lerp", {
             alpha: v.lerp,
             last: this.$store.state.lastTheme.name,
@@ -200,16 +221,16 @@ export default {
         .start(); // Start
     },
     ChangeThemeColor(e, colorIndex) {
-      console.log(
-        "ChangeThemeColor",
-        e.target.value,
-        this.$store.state.lastTheme.gradient_skybox[colorIndex].value
-      );
+      // console.log(
+      //   "ChangeThemeColor",
+      //   e.target.value,
+      //   this.$store.state.lastTheme.gradient_skybox[colorIndex].value
+      // );
 
       this.$store.state.lastTheme.gradient_skybox[colorIndex].value =
         e.target.value;
 
-      console.log(this.$store.state.materialController);
+    //  console.log(this.$store.state.materialController);
 
       this.$store.state.materialController.LerpThemes(
         this.$store.state.lastTheme,
@@ -258,6 +279,23 @@ export default {
         speed: parseFloat(event.target.value),
       });
     },
+    DeleteFriend(friend){
+      console.log(friend);
+
+      this.$socket.emit("client-delete-friend", {
+        friend: friend ,
+        room : this.$store.state.room
+      });
+    },
+    ToggleFriend(friend , boolean){
+      
+      console.log(friend, boolean);
+
+      this.$socket.emit("client-change-speed", {
+        speed: parseFloat(event.target.value),
+      });
+    }
+
   },
 };
 </script>
@@ -301,9 +339,26 @@ input[type="color"]::-webkit-color-swatch {
   border: 0;
 }
 
+.flex{
+  display: flex;
+}
+.flex-align-center{
+    align-items: center;
+}
+.flex-between{
+  justify-content: space-between;
+}
 .grid {
   display: flex;
   flex-wrap: wrap;
+}
+
+.grid-1{
+  width:100%;
+}
+
+.grid input[type="range"] {
+  width: 100%;
 }
 
 .grid-box {
@@ -332,7 +387,8 @@ input[type="color"]::-webkit-color-swatch {
   background: #fff9;
   z-index: 999;
   right: 0;
-  width: 300px;
+  width: 30%;
+  min-width: 300px;
   min-height: 100%;
   overflow-y: scroll;
   height: 100%;
@@ -361,5 +417,104 @@ input[type="number"] {
   border: 0;
   text-align: center;
 }
+
+.friend{
+  padding:1rem;
+  display: flex;
+  margin-bottom: .5rem;
+}
+
+.friend.isMe {
+    background:#eee;
+  }
+
 </style>
 
+
+
+<style scoped>
+input[type=range] {
+  width: 100%;
+  margin: 0px 0;
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  background: #333333;
+  border: 0;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  margin-top: 0px;
+  width: 17px;
+  height: 32px;
+  background: #ffffff;
+  border: 0.4px solid rgba(0, 30, 0, 0.57);
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #333333;
+}
+input[type=range]::-moz-range-track {
+  background: #333333;
+  border: 0;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 17px;
+  height: 32px;
+  background: #ffffff;
+  border: 0.4px solid rgba(0, 30, 0, 0.57);
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  border-width: 0px 0;
+  color: transparent;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+}
+input[type=range]::-ms-fill-lower {
+  background: #333333;
+  border: 0;
+}
+input[type=range]::-ms-fill-upper {
+  background: #333333;
+  border: 0;
+}
+input[type=range]::-ms-thumb {
+  width: 17px;
+  height: 32px;
+  background: #ffffff;
+  border: 0.4px solid rgba(0, 30, 0, 0.57);
+  cursor: pointer;
+  margin-top: 0px;
+  /*Needed to keep the Edge thumb centred*/
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #333333;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #333333;
+}
+/*TODO: Use one of the selectors from https://stackoverflow.com/a/20541859/7077589 and figure out
+how to remove the virtical space around the range input in IE*/
+@supports (-ms-ime-align:auto) {
+  /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
+  input[type=range] {
+    margin: 0;
+    /*Edge starts the margin from the thumb, not the track as other browsers do*/
+  }
+}
+
+</style>

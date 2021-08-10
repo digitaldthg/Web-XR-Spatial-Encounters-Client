@@ -155,7 +155,7 @@ class MaterialController {
     //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
 
     this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme, newValue);
+      //console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme, newValue);
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
     });
 
@@ -198,7 +198,7 @@ class MaterialController {
        if (themeA == null) { themeA = ThemeFactory.Get(); }
        if (themeB == null) { themeB = ThemeFactory.Get(); }
      }
-     console.log("themeA", themeA, "themeB", themeB);
+    // console.log("themeA", themeA, "themeB", themeB);
 
     Object.keys(final).map((keyName) => {
 
@@ -239,9 +239,6 @@ class MaterialController {
 
 
   GetMaterial(name) {
-
-    console.log("GET MATERIAL",name);
-
     if (this.materials.hasOwnProperty(name)) {
       return this.materials[name];
     } else {

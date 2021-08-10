@@ -1,6 +1,8 @@
 const { Group, Vector3, MeshBasicMaterial, DoubleSide, Mesh, Color, Object3D, BoxGeometry, CylinderGeometry, SphereGeometry, Quaternion, MeshNormalMaterial } = require("three");
 import Ring from "../Model/player_cylinder.glb";
 import Utils from "../scripts/utils";
+import {Text} from 'troika-three-text'
+
 
 class SingleFriend {
   constructor(store, data) {
@@ -73,6 +75,17 @@ class SingleFriend {
     group.userData.color = Object.assign({}, data.color);
     //group.userData.targetReached = true;
 
+    this.myText = new Text()
+    group.add(this.myText)
+
+    // Set properties to configure:
+    this.myText.text = data.id;
+    this.myText.fontSize = 0.1
+    this.myText.position.y = .5;
+    this.myText.anchorX ="center";
+    this.myText.color = new Color(data.color);
+
+
     return group;
   }
 
@@ -95,6 +108,9 @@ class SingleFriend {
     var rgbColor = Utils.hexToRgb(hexColor);
 
     this.instance.userData.color = rgbColor;
+
+
+    this.myText.color = new Color(hexColor);
   }
   
   LerpFloat(start, end, alpha) {
@@ -136,7 +152,10 @@ class SingleFriend {
       //Ringfarbe lerpen
       ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
+    
+    this.myText.lookAt(this.xr.Controls.GetCameraPosition());
 
+    this.myText.sync();
   }
 
   delete() {
