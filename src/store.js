@@ -20,7 +20,8 @@ export default new Vuex.Store({
     allThemes: [],
     materialController: null,
     fogDistance: 0.01,
-    playerPosition: null
+    playerPosition: null,
+    startPosition:{x:0,y:0,z:7}
   },
   mutations: {
     xr(state, data) {

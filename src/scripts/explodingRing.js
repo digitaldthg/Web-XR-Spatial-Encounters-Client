@@ -14,7 +14,8 @@ import {
     TextureLoader,
 } from "three";
 import TWEEN from "@tweenjs/tween.js";
-import alphaMap from "../Model/environment/textures/exploding-circle-vertical.png"
+import alphaMapV from "../Model/environment/textures/exploding-circle-vertical_StripesV.png"
+import alphaMapH from "../Model/environment/textures/exploding-circle-vertical_StripesH.png"
 
 class explodingRing {
     constructor(props) {
@@ -28,25 +29,52 @@ class explodingRing {
         this.Init();
     }
     Init = () => {
-        
+
         var color = new Color(this.color.r, this.color.g, this.color.b)
         const geometry = new CylinderGeometry(this.scale, this.scale, 0.06, 64, 2, true);
-        const material = new MeshBasicMaterial({
+
+        //VERTICAL MATERIAL
+        const Vmaterial = new MeshBasicMaterial({
             side: DoubleSide,
             color: color,
             opacity: 1,
             transparent: true,
             alphaMap: null
         });
-        this.xr.CustomTextureLoader.load(alphaMap).then((map) => {
-            material.alphaMap = map;
+
+        var Prom1 = new Promise((resolve) => {
+            this.xr.CustomTextureLoader.load(alphaMapV).then((map) => {
+                Vmaterial.alphaMap = map;
+                this.verticalMesh = this.CreateMesh(color, geometry, Vmaterial);
+                resolve();
+            }) 
         })
 
-        for (var i = 0; i < 5; i++) {
-            this.horizontalMeshs.push(this.CreateMesh(color, geometry, material))
-        }
-        this.verticalMesh = this.CreateMesh(color, geometry, material);
+        //HORIZONTAL MATERIAL
+        const Hmaterial = new MeshBasicMaterial({
+            side: DoubleSide,
+            color: color,
+            opacity: 1,
+            transparent: true,
+            alphaMap: null
+        });
+        var Prom2 = new Promise((resolve) => {
+            this.xr.CustomTextureLoader.load(alphaMapH).then((map) => {
+                Hmaterial.alphaMap = map;
+                for (var i = 0; i < 5; i++) {
+                    this.horizontalMeshs.push(this.CreateMesh(color, geometry, Hmaterial))
+                }
+                resolve();
+            })
+        });
 
+        Promise.all([Prom1, Prom2]).then((values) => {
+            this.Lerp();
+        });
+
+
+    }
+    Lerp = () => {
         var lerpObject = { lerp: 0 };
         const tween = new TWEEN.Tween(lerpObject)
             .to(
@@ -59,7 +87,7 @@ class explodingRing {
 
                 //UPDATE VERTICAL
                 var positionY = this.verticalMesh.position.y + v.lerp * 1;
-                var verticalScale = this.verticalMesh.scale.y + v.lerp * 10;
+                var verticalScale = this.verticalMesh.scale.y + v.lerp * 30;
 
                 this.verticalMesh.position.setY(positionY);
                 this.verticalMesh.scale.setY(verticalScale);

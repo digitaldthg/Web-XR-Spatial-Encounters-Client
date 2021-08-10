@@ -13,9 +13,16 @@ import Environment from "./Environment.vue";
 import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
-
-import { Color, FogExp2, Clock } from "three";
-
+import CalibrationTex from "../Model/environment/textures/calibrationcorner.png";
+import {
+  Color,
+  FogExp2,
+  Clock,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  Mesh,
+  FrontSide,
+} from "three";
 import envModel from "../Model/environment/environment.glb";
 
 import {
@@ -44,6 +51,13 @@ export default {
 
     console.log("mount Scene");
   },
+  destroyed() {
+    this.$store.state.xr.Events.removeEventListener(
+        "OnAnimationLoop",
+        this.RenderLoop
+      );
+    console.log("destroy Scene");
+  },
   sockets: {
     "server-fog-update": function (value) {
       this.$store.commit("setFogDistance", value);
@@ -66,8 +80,6 @@ export default {
     ChangeFogColor() {
       var colorLastHex = this.$store.state.lastTheme["fog_color"];
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
-
-      console.log("Fog Color:", colorLastHex, colorNextHex);
 
       var lerpColor = Utils.lerpColor(
         [{ value: colorLastHex }],
@@ -94,10 +106,12 @@ export default {
 
       //Init FOG
       var fogColor = new Color(0, 0, 1);
-      this.xr.Scene.fog = new FogExp2(fogColor, 0.01);
+      var fogDesity = this.$store.state.fogDistance;
+      this.xr.Scene.fog = new FogExp2(fogColor, fogDesity);
       this.ChangeFogColor();
     },
     InitScene() {
+      console.log("--------INIT SCENE-----------");
       this.xr = new webXRScene("scene");
 
       this.materialController = new MaterialController(this.xr, this.$store);
@@ -135,6 +149,27 @@ export default {
         this.HandleXRView
       );
 
+      //CALIBRATION PLANE
+      const planeGeometry = new PlaneGeometry(1, 1);
+      this.planeMaterial = new MeshBasicMaterial({
+        color: 0xFF10F0,
+        side: FrontSide,
+        transparent: true,
+      });
+      const plane = new Mesh(planeGeometry, this.planeMaterial);
+      plane.renderOrder = 16;
+      plane.position.set(
+        this.$store.state.startPosition.x,
+        this.$store.state.startPosition.y,
+        this.$store.state.startPosition.z
+      );
+      plane.rotation.set(Math.PI * -0.5, 0,Math.PI * 0.25);
+
+      this.xr.CustomTextureLoader.load(CalibrationTex).then((map) => {
+        this.planeMaterial.alphaMap = map;
+        this.xr.Scene.add(plane);
+      });
+
       this.InitFog();
     },
     GamePadLoop() {
@@ -153,15 +188,12 @@ export default {
         return;
       }
 
-      console.log(
-        gp.buttons[0].pressed,
-        this.pressed,
-        gp.buttons[0].pressed && this.pressed
-      );
       if (gp.buttons[0].pressed && !this.pressed) {
-        console.log("pressed", gp.buttons[0].pressed);
         this.pressed = true;
-      } else {
+        this.$socket.emit("client-gamepad-event",null);
+
+        console.log("set pressed true", gp.buttons[0].pressed);
+      } else if (!gp.buttons[0].pressed) {
         this.pressed = false;
       }
     },
@@ -177,10 +209,10 @@ export default {
         if (child.name != "Scene") {
           var material = this.materialController.GetMaterial(child.name);
           child.material = material;
-         // console.log("CHILD Mat ", child.material)
+          // console.log("CHILD Mat ", child.material)
         }
 
-       // console.log("CHILDREN ", child.name);
+        // console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":

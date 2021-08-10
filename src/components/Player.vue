@@ -47,8 +47,8 @@ export default {
       ready: false,
       timer: null,
       timerTimeout: false,
-      maxTimeout: 300,
-      timerTimeoutTime: 2000,
+      maxTimeout: 500, //Ladezeit
+      timerTimeoutTime: 4000,//Zeit bis zum naechsten Reset
       timeout: 0,
       thumb: false,
       rings: [],
@@ -159,7 +159,7 @@ export default {
       this.InitEvents();
     },
     CreatePlayerFloor() {
-      const geometry = new CircleGeometry(0.5, 32);
+      const geometry = new CircleGeometry(0.2, 32);
       const material = new MeshBasicMaterial({
         color: 0xffff00,
         transparent: true,
@@ -182,7 +182,7 @@ export default {
 
     ResetCamera() {
       this.$store.state.xr.Controls.SetPositionAndRotation(
-        new Vector3(0, 0, 7),
+        new Vector3(this.$store.state.startPosition.x,this.$store.state.startPosition.y,this.$store.state.startPosition.z),
         new Vector3(0, 0, 10)
       );
 

@@ -19,12 +19,12 @@ class Guardian extends TextureLerpBackground {
     this.isVisible = true;
     this.boundinBox = {
       x: {
-        min: -5,
-        max: 5
+        min: -6.5,
+        max: 6.5
       },
       z: {
-        min: -3,
-        max: 3
+        min: -4,
+        max: 4
       }
     }
 
@@ -35,11 +35,11 @@ class Guardian extends TextureLerpBackground {
     this.store.watch(state => state.playerPosition, (newValue, oldViewMode) => {
       var isOutside = (newValue.x < this.boundinBox.x.min || newValue.x > this.boundinBox.x.max || newValue.z < this.boundinBox.z.min || newValue.z > this.boundinBox.z.max)
       if (!this.isVisible && isOutside) {
-        console.log("Fade in ", isOutside, this.isVisible)
+        //console.log("Fade in ", isOutside, this.isVisible)
         this.isVisible = true;
         this.Fade(true)
       } else if (this.isVisible && !isOutside) {
-        console.log("Fade out ", isOutside, this.isVisible)
+        //console.log("Fade out ", isOutside, this.isVisible)
         this.isVisible = false;
         this.Fade(false)
       }

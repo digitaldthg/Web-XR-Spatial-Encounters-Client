@@ -66,7 +66,7 @@ export default {
       this.$store.commit("setLastTheme", last);
       this.$store.commit("setNextTheme", next);
       this.$store.commit("setThemeLerp", data.alpha);
-    }
+    },
   },
   methods: {
     updateData() {
@@ -80,15 +80,14 @@ export default {
           store: this.$store,
         });
         this.constantTris.push(tri);
-      } else if(this.data.Triangles.length == 0){
-        this.constantTris.map((tri)=>{
+      } else if (this.data.Triangles.length == 0) {
+        this.constantTris.map((tri) => {
           tri.Delete();
         });
-        this.constantTris = []
-        
-      }else if (this.data.Triangles.length < this.constantTris) {
+        this.constantTris = [];
+      } else if (this.data.Triangles.length < this.constantTris) {
         this.constantTris.shift();
-      } 
+      }
 
       this.data.Triangles.forEach((triData, idx) => {
         if (typeof this.constantTris[idx] == "undefined") {
@@ -118,6 +117,7 @@ export default {
 
         this.constantTris[idx].UpdateTriangle();
       });
+
 
       //Constant Tringle
       // if (this.data.Triangles.length > this.constantTris) {
