@@ -13,9 +13,8 @@ import Environment from "./Environment.vue";
 import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
-
-import { Color, FogExp2, Clock } from "three";
-
+import CalibrationTex from "../Model/environment/textures/sun_alpha.png";
+import { Color, FogExp2, Clock, MeshBasicMaterial, PlaneGeometry, Mesh,DoubleSide } from "three";
 import envModel from "../Model/environment/environment.glb";
 
 import {
@@ -65,8 +64,6 @@ export default {
       var colorLastHex = this.$store.state.lastTheme["fog_color"];
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
 
-      console.log("Fog Color:", colorLastHex, colorNextHex);
-
       var lerpColor = Utils.lerpColor(
         [{ value: colorLastHex }],
         [{ value: colorNextHex }],
@@ -96,6 +93,8 @@ export default {
       this.ChangeFogColor();
     },
     InitScene() {
+
+      console.log("--------INIT SCENE-----------")
       this.xr = new webXRScene("scene");
 
       this.materialController = new MaterialController(this.xr, this.$store);
@@ -132,6 +131,23 @@ export default {
         "OnChangeXRView",
         this.HandleXRView
       );
+
+      //CALIBRATION PLANE
+      const planeGeometry = new PlaneGeometry(1, 1);
+      this.planeMaterial = new MeshBasicMaterial({
+        color: 0xffff00,
+        side: DoubleSide,
+        transparent:true
+      });
+      const plane = new Mesh(planeGeometry, this.planeMaterial);
+      plane.position.set(this.$store.state.startPosition.x,this.$store.state.startPosition.y,this.$store.state.startPosition.z);
+      plane.rotation.set(Math.PI*0.5,0,0)
+      this.xr.Scene.add(plane);
+
+      this.xr.CustomTextureLoader.load(CalibrationTex).then((map) => {
+        console.log("TEXTURE LOADED")
+        this.planeMaterial.alphaMap = map;
+      });
 
       this.InitFog();
     },
@@ -175,10 +191,10 @@ export default {
         if (child.name != "Scene") {
           var material = this.materialController.GetMaterial(child.name);
           child.material = material;
-         // console.log("CHILD Mat ", child.material)
+          // console.log("CHILD Mat ", child.material)
         }
 
-       // console.log("CHILDREN ", child.name);
+        // console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":
