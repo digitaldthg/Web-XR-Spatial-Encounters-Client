@@ -13,44 +13,42 @@ import {
   Quaternion,
   Raycaster,
   CircleGeometry,
-  BackSide
+  BackSide,
 } from "three";
 import UserData from "../class/UserData";
 import Timer from "../Timer";
 import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
-import triangleUtils from '../scripts/triangleUtils';
+import triangleUtils from "../scripts/triangleUtils";
 
-
-function ease(x){
+function ease(x) {
   const c1 = 5.70158;
   const c3 = c1 + 1;
 
   return c3 * x * x * x - c1 * x * x;
 }
 
-Vector3.lerp = function ( v, alpha ) {
-
-  this.x += ( v.x - this.x ) * alpha;
-  this.y += ( v.y - this.y ) * alpha;
-  this.z += ( v.z - this.z ) * alpha;
-  this.w += ( v.w - this.w ) * alpha;
+Vector3.lerp = function (v, alpha) {
+  this.x += (v.x - this.x) * alpha;
+  this.y += (v.y - this.y) * alpha;
+  this.z += (v.z - this.z) * alpha;
+  this.w += (v.w - this.w) * alpha;
 
   return this;
-}
+};
 
 export default {
   name: "Player",
   data() {
     return {
       delta: 0,
-      fps: .1,
+      fps: 0.1,
       player: null,
       ready: false,
       timer: null,
-      timerTimeout : false,
-      maxTimeout : 300,
-      timerTimeoutTime : 2000,
+      timerTimeout: false,
+      maxTimeout: 300,
+      timerTimeoutTime: 2000,
       timeout: 0,
       thumb: false,
       rings: [],
@@ -67,9 +65,9 @@ export default {
         rotation: new Quaternion(),
         scale: new Vector3(),
       },
-      head : null,
-      lazyFollower : null,
-      dummyObject : null,
+      head: null,
+      lazyFollower: null,
+      dummyObject: null,
       inVR: false,
       currentColor: new Color(0x0000ff),
       key: {
@@ -116,7 +114,7 @@ export default {
       var origin = new Vector3(0, 0, 0);*/
       for (var i = 0; i <= 15; i++) {
         let scale = 0.05 * i;
-        scale = scale < .3 ? .3 : scale;
+        scale = scale < 0.3 ? 0.3 : scale;
         const geometry = new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
         const material = new MeshBasicMaterial({
           side: DoubleSide,
@@ -133,17 +131,25 @@ export default {
       this.$store.state.xr.Scene.add(this.player);
       this.$store.state.xr.Scene.add(this.playerGroup);
 
-      this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1), new MeshNormalMaterial());
-      this.lazyFollower.position = new Vector3(0,0,0);
+      this.lazyFollower = new Mesh(
+        new BoxGeometry(0.1, 0.1, 0.1),
+        new MeshNormalMaterial()
+      );
+      this.lazyFollower.position = new Vector3(0, 0, 0);
       this.$store.state.xr.Scene.add(this.lazyFollower);
-      
-      this.head = new Mesh(new BoxGeometry(.1,.1,.1), new MeshBasicMaterial({color : 0xff0000}));
-      this.head.position = new Vector3(0,0,0);
+
+      this.head = new Mesh(
+        new BoxGeometry(0.1, 0.1, 0.1),
+        new MeshBasicMaterial({ color: 0xff0000 })
+      );
+      this.head.position = new Vector3(0, 0, 0);
       this.$store.state.xr.Scene.add(this.head);
 
-
-      this.dummyObject = new Mesh(new BoxGeometry(.1,.1,.1), new MeshNormalMaterial());
-      this.dummyObject.position = new Vector3(0,0,0);
+      this.dummyObject = new Mesh(
+        new BoxGeometry(0.1, 0.1, 0.1),
+        new MeshNormalMaterial()
+      );
+      this.dummyObject.position = new Vector3(0, 0, 0);
       this.$store.state.xr.Scene.add(this.dummyObject);
 
       this.data.room = this.$route.params.roomID;
@@ -290,13 +296,15 @@ export default {
       this.playerGroup.position.z += dir.z * this.speed;
     },
     EmitExplode() {
-
       this.$socket.emit("client-player-explode", {
         position: this.playerGroup.position,
-        color: {r:this.currentColor.r,g:this.currentColor.g,b:this.currentColor.b}
+        color: {
+          r: this.currentColor.r,
+          g: this.currentColor.g,
+          b: this.currentColor.b,
+        },
       });
-       
-     },
+    },
 
     Animate(t) {
       if (!this.ready) {
@@ -307,7 +315,6 @@ export default {
       var target = this.transform.position.clone();
       var origin = this.lazyFollower.position.clone();
 
-      if(typeof(this.$store.state.lastTheme) == "undefined" || typeof(this.$store.state.nextTheme) == "undefined" ){return;}
       var colorLastHex =
         this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
       var colorNextHex =
@@ -319,7 +326,11 @@ export default {
         this.$store.state.themeLerp
       );
       let color = new Color();
-      color.setHSL(lerpColor[0].value[0]/360, lerpColor[0].value[1]/100, lerpColor[0].value[2]/100);
+      color.setHSL(
+        lerpColor[0].value[0] / 360,
+        lerpColor[0].value[1] / 100,
+        lerpColor[0].value[2] / 100
+      );
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
 
@@ -331,7 +342,7 @@ export default {
         );
 
       var ring_pos = this.player.position.clone();
-     
+
       //UPDATE POSITION
       if (!this.inVR) {
         this.KeyBoardMovement();
@@ -340,11 +351,27 @@ export default {
           this.$store.state.xr.Camera.instance
         );
 
-        vrCamera.matrixWorld.decompose(this.transform.position,this.transform.rotation,this.transform.scale);
+        vrCamera.matrixWorld.decompose(
+          this.transform.position,
+          this.transform.rotation,
+          this.transform.scale
+        );
 
-        this.player.position.set(this.transform.position.x,this.transform.position.y,this.transform.position.z);
-        this.playerGroup.position.set(this.transform.position.x, 0, this.transform.position.z );
-        this.playerFloor.position.set( this.transform.position.x, 0, this.transform.position.z );
+        this.player.position.set(
+          this.transform.position.x,
+          this.transform.position.y,
+          this.transform.position.z
+        );
+        this.playerGroup.position.set(
+          this.transform.position.x,
+          0,
+          this.transform.position.z
+        );
+        this.playerFloor.position.set(
+          this.transform.position.x,
+          0,
+          this.transform.position.z
+        );
 
         //RESET INTERSECTION CHECK
         var pos = new Vector3();
@@ -361,16 +388,17 @@ export default {
 
         if (intersection.length > 0 && !this.timerTimeout) {
           this.timer.SetVisible(true);
-          if (this.timeout < this.maxTimeout ) {
+          if (this.timeout < this.maxTimeout) {
             this.timeout++;
           } else {
+            console.log("timer auslösen");
             this.timeout = 0;
             this.ResetCamera();
             this.thumb = false;
             this.timer.SetVisible(false);
             this.timerTimeout = true;
 
-            setTimeout(()=>{
+            setTimeout(() => {
               this.timerTimeout = false;
             }, this.timerTimeoutTime);
           }
@@ -381,40 +409,45 @@ export default {
           this.timer.SetVisible(false);
         }
       } // end of only VR
-    
-      this.head.position = ring_pos.clone(); //new Vector3(this.player.position.x ,this.player.position.y,this.player.position.z);
-      this.lazyFollower.position.lerp(new Vector3(ring_pos.x,0,ring_pos.z), .01);
-      
 
+      this.head.position = ring_pos.clone(); //new Vector3(this.player.position.x ,this.player.position.y,this.player.position.z);
+      this.lazyFollower.position.lerp(
+        new Vector3(ring_pos.x, 0, ring_pos.z),
+        0.01
+      );
+
+      this.$store.commit("setPlayerPosition", this.head.position);
 
       this.rings.map((ring, index) => {
-
-        var lerpAlpha = (1 / (this.rings.length)) * index ;
+        var lerpAlpha = (1 / this.rings.length) * index;
         var _origin = this.lazyFollower.position.clone();
         var _target = ring_pos.clone();
-            _target.y *= .6;
-        var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha );
-        var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha );
+        _target.y *= 0.6;
+        var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha);
+        var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha);
 
         ring.position.x = lerperPos.x;
         ring.position.y = lerper.y;
         ring.position.z = lerperPos.z;
 
         ring.material.color = this.currentColor;
-
       });
 
       this.delta += t.getDelta();
       this.ApplyData();
 
-
-      if(!this.explosition && this.player.position.y < this.headHeight * this.explodingFactor){
+      if (
+        !this.explosition &&
+        this.player.position.y < this.headHeight * this.explodingFactor
+      ) {
         this.EmitExplode();
         this.explosition = true;
-      }else if(this.explosition && this.player.position.y > this.headHeight * this.explodingFactor ){
+      } else if (
+        this.explosition &&
+        this.player.position.y > this.headHeight * this.explodingFactor
+      ) {
         this.explosition = false;
       }
-
 
       if (this.delta > this.fps) {
         // The draw or time dependent code are here
@@ -438,7 +471,7 @@ export default {
       //console.log("fps");
     },
     ReducedFPSCall() {
-      this.$socket.emit("client-player", this.data);     
+      this.$socket.emit("client-player", this.data);
     },
   },
 };

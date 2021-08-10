@@ -80,29 +80,29 @@ const triangleUtils = {
             //First Side
             0, 0,
             0, 0,
-            0.5, 0,
+            0.33, 0,
 
             0, 0,
-            0.5, 0,
-            0.5, 0,
+            0.33, 0,
+            0.33, 0,
 
             //SecondSide
-            0.5, 0,
-            0.5, 0,
-            1.0, 0,
+            0.33, 0,
+            0.33, 0,
+            0.66, 0,
 
-            0.5, 0,
-            1.0, 0,
-            1.0, 0,
+            0.33, 0,
+            0.66, 0,
+            0.66, 0,
 
             //thirdSide
+            0.66, 0,
+            0.66, 0,
             1.0, 0,
-            1.0, 0,
-            0, 0,
 
+            0.66, 0,
             1.0, 0,
-            0, 0,
-            0, 0,
+            1.0, 0,
         ]);
 
         return { vertex: vertices, uv: uvs };
@@ -164,10 +164,12 @@ const triangleUtils = {
       
       
         void main() {
-            if(vUv.x <0.5){
-                gl_FragColor = vec4(mix(colorA, colorB, vUv.x * 2.0), 1.0);
+            if(vUv.x <0.33){
+                gl_FragColor = vec4(mix(colorA, colorB, vUv.x * 3.0), 1.0);
+            }else if(vUv.x <0.66){
+                gl_FragColor = vec4(mix(colorB, colorC, (vUv.x - 0.33) * 3.0), 1.0);
             }else{
-                gl_FragColor = vec4(mix(colorB, colorC, (vUv.x - 0.5) * 2.0), 1.0);
+                gl_FragColor = vec4(mix(colorC, colorA, (vUv.x - 0.66) * 3.0), 1.0);
             }
           
         }

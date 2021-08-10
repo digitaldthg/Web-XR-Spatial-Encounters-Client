@@ -49,6 +49,10 @@ class LerpMaterial {
         "textureOffset_2": {
           type: "vec2",
           value: new Vector2(0,0)
+        },
+        "opacity":{
+          type:"float",
+          value: 1
         }
       },
       vertex_shader: [
@@ -76,6 +80,7 @@ class LerpMaterial {
         "uniform vec2 textureRepeat_2;",
         "uniform vec2 textureOffset_1;",
         "uniform vec2 textureOffset_2;",
+        "uniform float opacity;",
 
         "void main() {",
         "vec2 uv_1 = vec2(vUv.x*textureRepeat_1.x + textureOffset_1.x, vUv.y*textureRepeat_1.y+textureOffset_1.y);",
@@ -95,6 +100,7 @@ class LerpMaterial {
         "if(hasAlphaMap_2){a_2 = alpha_tex_2.g;}",
 
         "float a = mix(a_1,a_2,alpha);",
+        "if(opacity<1.0){a=opacity*a;}",
         "gl_FragColor = vec4(finalCol.rgb,a);",
         "}"
 

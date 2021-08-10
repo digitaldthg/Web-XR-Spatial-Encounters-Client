@@ -30,18 +30,6 @@ export default {
     },
   },
   sockets: {
-    "server-theme-update": function (value) {
-      console.log("SERVERTHEME UPDATE ", value);
-      var next = this.$store.state.allThemes.find((t) => {
-        return t.name == value.next;
-      });
-      var last = this.$store.state.allThemes.find((t) => {
-        return t.name == value.last;
-      });
-
-      this.$store.commit("setLastTheme", last);
-      this.$store.commit("setNextTheme", next);
-    },
     "server-player-explode": function (data) {
       new explodingRing({
         xr: this.$store.state.xr,
@@ -67,7 +55,17 @@ export default {
     },
     "server-theme-lerp-update": function (data) {
       //console.log("From Server lerp value ",data)
-      this.$store.commit("setThemeLerp", data);
+      console.log("SERVERTHEME UPDATE ", data);
+      var next = this.$store.state.allThemes.find((t) => {
+        return t.name == data.next;
+      });
+      var last = this.$store.state.allThemes.find((t) => {
+        return t.name == data.last;
+      });
+
+      this.$store.commit("setLastTheme", last);
+      this.$store.commit("setNextTheme", next);
+      this.$store.commit("setThemeLerp", data.alpha);
     }
   },
   methods: {

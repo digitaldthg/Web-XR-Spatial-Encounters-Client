@@ -137,7 +137,7 @@ class MaterialController {
       skybox_texture
 
     }
-    this.tex_guardian = new Guardian(this.xr)
+    this.tex_guardian = new Guardian({xr:this.xr,store:this.store})
     this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);
     this.tex_bg_front = new BGFrontTexture(this.xr);
