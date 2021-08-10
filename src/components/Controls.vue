@@ -2,20 +2,22 @@
   <div id="controls" :class="{ hidden: !config.showDevTools }">
     <div class="controls-inner" v-if="open">
       <div class="grid">
-        <div class="grid-1">
+        <div class="grid-1 info-panel">
           <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
           <div class="dev-info">Raum: {{ $store.state.room }}</div>
         </div>
         <div class="grid-1">
           
-          <div class="friend flex-between" :class="{isMe : friend.id == $socket.id}" v-for="friend in $store.state.serverFriends" v-bind:key="friend.id">
+          <div class="friend flex-between" :class="{isMe : friend.id == $socket.id}" v-for="friend in friends" v-bind:key="friend.id">
+              <div class="friend-color" v-bind:style="{ background: `rgb(${friend.color.r * 255},${friend.color.g* 255},${friend.color.b* 255})` }" ></div>
+              <div class="input-checkbox">
+                <input class="invisible" :checked="friend.visible" :id="friend.id" type="checkbox" @input="e => ToggleFriend(friend, e.target.checked)" />
+                <label class="checkbox-label" :for="friend.id"><span>Visible</span></label>
+              </div>
+          
             <div class="friend-id" >{{friend.id}}</div>
 
             <template v-if="friend.id != $socket.id">
-              <div class="input-checkbox">
-                <label :for="friend.id">Visible</label>
-                <input :id="friend.id" type="checkbox" @input="e => ToggleFriend(friend, e.target.checked)" />
-              </div>
               <button class="cta-button" @click="e => DeleteFriend(friend)">x</button>
             </template>
           </div>
@@ -148,7 +150,7 @@
       </div>
     </div>
 
-    <button class="toggle-button" @click="Toggle">open / close</button>
+    <!-- <button class="toggle-button" @click="Toggle">open / close</button> -->
   </div>
 </template>
 <script>
@@ -174,6 +176,7 @@ export default {
       open: true,
       scale: 0.5,
       config: config,
+      friends : {}
     };
   },
   watch: {
@@ -181,6 +184,11 @@ export default {
       if (nextXR != null) {
         nextXR.Events.addEventListener("OnAnimationLoop", () => TWEEN.update());
       }
+    },
+    "$store.state.serverFriends": function (friends) {
+      console.log("store " , friends);
+
+      this.friends = friends;
     },
   },
   mounted() {
@@ -290,8 +298,10 @@ export default {
       
       console.log(friend, boolean);
 
-      this.$socket.emit("client-change-speed", {
-        speed: parseFloat(event.target.value),
+      this.$socket.emit("client-hide-friend", {
+        friend: friend ,
+        room : this.$store.state.room,
+        visible : boolean
       });
     }
 
@@ -338,6 +348,10 @@ input[type="color"]::-webkit-color-swatch {
   border: 0;
 }
 
+.invisible{
+  display: none;
+}
+
 .flex{
   display: flex;
 }
@@ -347,6 +361,14 @@ input[type="color"]::-webkit-color-swatch {
 .flex-between{
   justify-content: space-between;
 }
+
+.info-panel {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+
+
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -420,12 +442,78 @@ input[type="number"] {
 .friend{
   padding:1rem;
   display: flex;
+  position: relative;
   margin-bottom: .5rem;
+  background: #fff;
 }
 
+.friend-color{
+  position: absolute;
+  left: 0;
+  top:0;
+  width: 5px;
+  height: 100%;
+}
+.friend-id{
+  flex: 1;
+  align-items: center;
+  display: flex;
+}
 .friend.isMe {
-    background:#eee;
-  }
+  background:#ccc;
+  justify-content: flex-start;
+}
+
+.controls-inner label{
+  position: relative;
+}
+
+.checkbox-label {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.checkbox-label:before,.checkbox-label:after{
+  content: '';
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  top:0;
+  left:0;
+  right:0; 
+  bottom: 0;
+  margin: auto;
+}
+
+.checkbox-label:before{
+  width: 30px;
+  height: 30px;
+  background: #fff;
+}
+.checkbox-label:after{
+  width: 24px;
+  height: 24px;
+}
+
+.checkbox-label span {
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 80%;
+}
+.input-checkbox {
+  margin-right: 1rem;
+}
+
+input[type="checkbox"]:checked + .checkbox-label:after{
+  
+  background: #607d8b;
+  
+
+}
+
 
 </style>
 

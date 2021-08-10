@@ -274,7 +274,7 @@ export default {
   color: #fff;
   border-radius: 5px;
   font-weight: 700;
-  background: tomato;
+  background: #607d8b;
   position: relative;
   display: block;
 }
