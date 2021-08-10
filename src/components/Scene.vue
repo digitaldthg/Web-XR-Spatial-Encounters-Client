@@ -175,10 +175,10 @@ export default {
         if (child.name != "Scene") {
           var material = this.materialController.GetMaterial(child.name);
           child.material = material;
-          console.log("CHILD Mat ", child.material)
+         // console.log("CHILD Mat ", child.material)
         }
 
-        console.log("CHILDREN ", child.name);
+       // console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":

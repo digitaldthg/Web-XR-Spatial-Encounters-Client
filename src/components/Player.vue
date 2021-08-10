@@ -48,7 +48,9 @@ export default {
       player: null,
       ready: false,
       timer: null,
-      maxTimeout : 100,
+      timerTimeout : false,
+      maxTimeout : 300,
+      timerTimeoutTime : 2000,
       timeout: 0,
       thumb: false,
       rings: [],
@@ -169,7 +171,7 @@ export default {
         xr: this.$store.state.xr,
       });
 
-      this.player.add(this.timer.instance);
+      this.playerFloor.add(this.timer.instance);
     },
 
     ResetCamera() {
@@ -356,15 +358,22 @@ export default {
 
         ring_pos = pos.clone();
 
-        if (intersection.length > 0) {
+        if (intersection.length > 0 && !this.timerTimeout) {
           this.timer.SetVisible(true);
-          if (this.timeout < this.maxTimeout) {
+          if (this.timeout < this.maxTimeout ) {
             this.timeout++;
           } else {
+
+            console.log("timer auslösen");
             this.timeout = 0;
             this.ResetCamera();
             this.thumb = false;
             this.timer.SetVisible(false);
+            this.timerTimeout = true;
+
+            setTimeout(()=>{
+              this.timerTimeout = false;
+            }, this.timerTimeoutTime);
           }
 
           this.timer.Progress(this.timeout, this.maxTimeout);
@@ -399,6 +408,15 @@ export default {
       this.delta += t.getDelta();
       this.ApplyData();
 
+
+      if(!this.explosition && this.player.position.y < this.headHeight * this.explodingFactor){
+        this.EmitExplode();
+        this.explosition = true;
+      }else if(this.explosition && this.player.position.y > this.headHeight * this.explodingFactor ){
+        this.explosition = false;
+      }
+
+
       if (this.delta > this.fps) {
         // The draw or time dependent code are here
         this.ReducedFPSCall();
@@ -421,10 +439,7 @@ export default {
       //console.log("fps");
     },
     ReducedFPSCall() {
-      console.log("SEND DATA ", this.data);
-      this.$socket.emit("client-player", this.data);
-
-     
+      this.$socket.emit("client-player", this.data);     
     },
   },
 };

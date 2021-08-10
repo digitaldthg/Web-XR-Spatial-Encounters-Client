@@ -13,8 +13,6 @@ import BGBackTexture from "./BGBackTexture";
 import BGGradientFront from "./BGGradientFront";
 import BGGradientBack from "./BGGradientBack";
 import ThemeFactory from "./ThemeFactory";
-import theme1 from '../Themes/theme_1/theme.json';
-import theme2 from '../Themes/theme_2/theme.json';
 
 import theme_DunkelConcrete from '../Themes/theme_DunkelConcrete/theme.json';
 import theme_DunkelConcrete_Morning from '../Themes/theme_DunkelConcrete_Morning/theme.json';
@@ -205,7 +203,6 @@ class MaterialController {
     Object.keys(final).map((keyName) => {
 
       if (Array.isArray(themeA[keyName])) {
-        console.log("KEY NAME lerp Gradient Color ", keyName)
         final[keyName] = Utils.lerpColor(themeA[keyName], themeB[keyName], alpha);
         //console.log(final[keyName])
       }
