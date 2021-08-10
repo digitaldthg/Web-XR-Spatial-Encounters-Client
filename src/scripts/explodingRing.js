@@ -47,7 +47,7 @@ class explodingRing {
                 Vmaterial.alphaMap = map;
                 this.verticalMesh = this.CreateMesh(color, geometry, Vmaterial);
                 resolve();
-            }) 
+            })
         })
 
         //HORIZONTAL MATERIAL
@@ -58,17 +58,12 @@ class explodingRing {
             transparent: true,
             alphaMap: null
         });
-        var Prom2 = new Promise((resolve) => {
-            this.xr.CustomTextureLoader.load(alphaMapH).then((map) => {
-                Hmaterial.alphaMap = map;
-                for (var i = 0; i < 5; i++) {
-                    this.horizontalMeshs.push(this.CreateMesh(color, geometry, Hmaterial))
-                }
-                resolve();
-            })
-        });
+        for (var i = 0; i < 5; i++) {
+            this.horizontalMeshs.push(this.CreateMesh(color, geometry, Hmaterial))
+        }
 
-        Promise.all([Prom1, Prom2]).then((values) => {
+
+        Promise.all([Prom1]).then((values) => {
             this.Lerp();
         });
 
