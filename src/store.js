@@ -18,6 +18,7 @@ export default new Vuex.Store({
     allThemes: [],
     materialController: null,
     fogDistance: 0.01,
+    playerPosition: null
   },
   mutations: {
     xr(state, data) {
@@ -63,6 +64,9 @@ export default new Vuex.Store({
     setAllThemes(state, themes) {
       state.allThemes = themes
     },
+    setPlayerPosition(state,position){
+      state.playerPosition = position
+    }
 
   },
   actions: {

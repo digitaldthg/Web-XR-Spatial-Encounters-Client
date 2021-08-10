@@ -102,6 +102,12 @@ class TextureLerpBackground {
       this.textures[name].offset.set(offset.x, offset.y);
     }
   }
+
+  SetOpacity(opacity){
+    this.material.material.uniforms.opacity.value = opacity;
+    this.material.uniformsNeedsUpdate = true;
+  }
+
 }
 
 export default TextureLerpBackground;

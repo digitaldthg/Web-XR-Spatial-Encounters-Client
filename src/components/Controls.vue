@@ -171,12 +171,14 @@ export default {
     LerpTheme(nextTheme, time) {
       this.$socket.emit("client-theme-lerp", {
         alpha: 0,
-      });
-      
-      this.$socket.emit("client-theme", {
         last: this.$store.state.nextTheme.name,
         next: nextTheme.name,
       });
+
+      /*this.$socket.emit("client-theme", {
+        last: this.$store.state.nextTheme.name,
+        next: nextTheme.name,
+      });*/
 
       var lerpObject = { lerp: 0 };
       const tween = new TWEEN.Tween(lerpObject)
@@ -191,6 +193,8 @@ export default {
 
           this.$socket.emit("client-theme-lerp", {
             alpha: v.lerp,
+            last: this.$store.state.lastTheme.name,
+            next: this.$store.state.nextTheme.name,
           });
         })
         .start(); // Start
@@ -218,12 +222,6 @@ export default {
         if (e.key == "p") {
           this.open = !this.open;
         }
-      });
-    },
-    changeTheme(nextThemeName) {
-      console.log("OnChange Dropdpwn constorls", nextThemeName);
-      this.$socket.emit("client-theme", {
-        name: nextThemeName,
       });
     },
     updateThemeLerp(event) {
@@ -308,12 +306,12 @@ input[type="color"]::-webkit-color-swatch {
   flex-wrap: wrap;
 }
 
-.grid-box{
-  width:100%;
+.grid-box {
+  width: 100%;
   margin-bottom: 1rem;
   background: #eee;
-  padding:1rem;
-  border-radius : 5px;
+  padding: 1rem;
+  border-radius: 5px;
 }
 
 .toggle-button {
@@ -325,7 +323,7 @@ input[type="color"]::-webkit-color-swatch {
   z-index: 999;
 }
 
-.toggle-button.closed{
+.toggle-button.closed {
   right: 1rem;
 }
 
@@ -340,11 +338,11 @@ input[type="color"]::-webkit-color-swatch {
   height: 100%;
   overflow-x: visible;
 }
-#controls.closed{
-  width:0;
+#controls.closed {
+  width: 0;
 }
 .theme {
-  padding: .5rem;
+  padding: 0.5rem;
   background: #eee;
   margin-bottom: 1rem;
   border-radius: 5px;
@@ -363,6 +361,5 @@ input[type="number"] {
   border: 0;
   text-align: center;
 }
-
 </style>
 

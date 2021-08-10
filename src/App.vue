@@ -40,6 +40,9 @@ export default {
       store.commit("setLastTheme", last);
       store.commit("setNextTheme", next);
       store.commit("setThemeLerp",d.lerpAlpha);
+      store.commit("setSpeed",d.speed);
+      store.commit("setFrequency",d.frequency)
+      store.commit("setFogDistance",d.fog)
 
     }
    
