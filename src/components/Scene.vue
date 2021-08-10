@@ -13,8 +13,16 @@ import Environment from "./Environment.vue";
 import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
-import CalibrationTex from "../Model/environment/textures/sun_alpha.png";
-import { Color, FogExp2, Clock, MeshBasicMaterial, PlaneGeometry, Mesh,DoubleSide } from "three";
+import CalibrationTex from "../Model/environment/textures/calibrationcorner.png";
+import {
+  Color,
+  FogExp2,
+  Clock,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  Mesh,
+  FrontSide,
+} from "three";
 import envModel from "../Model/environment/environment.glb";
 
 import {
@@ -42,6 +50,13 @@ export default {
     this.InitScene();
 
     console.log("mount Scene");
+  },
+  destroyed() {
+    this.$store.state.xr.Events.removeEventListener(
+        "OnAnimationLoop",
+        this.RenderLoop
+      );
+    console.log("destroy Scene");
   },
   sockets: {
     "server-fog-update": function (value) {
@@ -95,8 +110,7 @@ export default {
       this.ChangeFogColor();
     },
     InitScene() {
-
-      console.log("--------INIT SCENE-----------")
+      console.log("--------INIT SCENE-----------");
       this.xr = new webXRScene("scene");
 
       this.materialController = new MaterialController(this.xr, this.$store);
@@ -137,18 +151,22 @@ export default {
       //CALIBRATION PLANE
       const planeGeometry = new PlaneGeometry(1, 1);
       this.planeMaterial = new MeshBasicMaterial({
-        color: 0xffff00,
-        side: DoubleSide,
-        transparent:true
+        color: 0xFF10F0,
+        side: FrontSide,
+        transparent: true,
       });
       const plane = new Mesh(planeGeometry, this.planeMaterial);
-      plane.position.set(this.$store.state.startPosition.x,this.$store.state.startPosition.y,this.$store.state.startPosition.z);
-      plane.rotation.set(Math.PI*0.5,0,0)
-      this.xr.Scene.add(plane);
+      plane.renderOrder = 16;
+      plane.position.set(
+        this.$store.state.startPosition.x,
+        this.$store.state.startPosition.y,
+        this.$store.state.startPosition.z
+      );
+      plane.rotation.set(Math.PI * -0.5, 0,Math.PI * 0.25);
 
       this.xr.CustomTextureLoader.load(CalibrationTex).then((map) => {
-        console.log("TEXTURE LOADED")
         this.planeMaterial.alphaMap = map;
+        this.xr.Scene.add(plane);
       });
 
       this.InitFog();
@@ -169,15 +187,12 @@ export default {
         return;
       }
 
-      console.log(
-        gp.buttons[0].pressed,
-        this.pressed,
-        gp.buttons[0].pressed && this.pressed
-      );
       if (gp.buttons[0].pressed && !this.pressed) {
-        console.log("pressed", gp.buttons[0].pressed);
         this.pressed = true;
-      } else {
+        this.$socket.emit("client-gamepad-event",null);
+
+        console.log("set pressed true", gp.buttons[0].pressed);
+      } else if (!gp.buttons[0].pressed) {
         this.pressed = false;
       }
     },

@@ -260,7 +260,6 @@ export default {
       });
     },
     updateFog(event) {
-      console.log("SLIDER FOG VALUE ", event.target.value);
       //this.frequence = event.target.value;
       this.$socket.emit("client-change-fog", {
         fog: parseFloat(event.target.value),
