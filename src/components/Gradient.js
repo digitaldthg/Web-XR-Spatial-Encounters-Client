@@ -56,6 +56,10 @@ class Gradient{
     for(var i=0;i<gradientArray.length;i++){
       let gradientItem = gradientArray[i];
       let g = gradientArray[i].value;
+      //console.log("SET GRADIENT ",this.gradient, gradientItem)
+      if(isNaN(gradientItem.stop)){
+        gradientItem.stop = 0
+      }
       this.gradient.addColorStop( gradientItem.stop , `hsl(${ g[0] },${g[1]}%,${g[2]}%)`);
     }
 

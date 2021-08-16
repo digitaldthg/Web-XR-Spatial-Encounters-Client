@@ -114,12 +114,11 @@ export default {
 
       //Init FOG
       var fogColor = new Color(0, 0, 1);
-      var fogDesity = this.$store.state.fogDistance;
-      this.xr.Scene.fog = new FogExp2(fogColor, fogDesity);
-      this.ChangeFogColor();
+      var fogDensity = this.$store.state.fogDistance;
+      this.xr.Scene.fog = new FogExp2(fogColor, fogDensity);
+
     },
     InitScene() {
-      console.log("--------INIT SCENE-----------");
       this.xr = new webXRScene("scene");
 
       this.InitFog();

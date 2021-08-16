@@ -5,10 +5,7 @@ class Timer{
   constructor(props){
     this.store = props.store;
     this.xr = props.xr;
-  
-   
 
-    console.log(this.xr);
     this.instance = new Group();
     this.timer = new Mesh(new BoxGeometry(1,.2,.01), new MeshBasicMaterial({color: 0xff0000}));
     this.timer.renderOrder = 0;

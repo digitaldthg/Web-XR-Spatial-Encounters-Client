@@ -25,6 +25,7 @@ import theme_DunkelGrid from '../Themes/theme_DunkelGrid/theme.json';
 import LerpMaterial from './LerpMaterial';
 import Utils from "../scripts/utils";
 import SunGradient from "./SunGradient";
+import TWEEN from "@tweenjs/tween.js";
 
 class MaterialController {
   constructor(xr, store) {
@@ -152,17 +153,16 @@ class MaterialController {
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
 
 
-    //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, 0);
+    this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
 
-    this.store.watch(state => state.themeLerp, (newValue, oldViewMode) => {
-      //console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme, newValue);
-      this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, newValue)
+    this.store.watch(state => state.nextTheme, (newValue, oldViewMode) => {
+      console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme);
+      this.StartLerpThemes(this.store.state.lerpDuration);
     });
 
 
     this.xr.Events.addEventListener("OnTextureLoad", () => {
-      //console.log("texture wurde geladen");
-
+      //console.log("LERP ON TEXTURE LOAD");
       this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
     });
 
@@ -174,9 +174,6 @@ class MaterialController {
 
 
   }
-
-
-
 
   hsv_to_hsl(arr) {
     var h = arr[0] / 360;
@@ -197,6 +194,20 @@ class MaterialController {
     }
 
     return [h * 360, s * 100, l * 100]
+  }
+  StartLerpThemes(duration) {
+    var lerpObject = { lerp: 0 };
+    const tween = new TWEEN.Tween(lerpObject)
+      .to(
+        {
+          lerp: 1,
+        },
+        duration*1000
+      )
+      .onUpdate((v) => {
+        this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme,v.lerp)
+      })
+      .start(); // Start
   }
 
   LerpThemes(themeA, themeB, alpha) {

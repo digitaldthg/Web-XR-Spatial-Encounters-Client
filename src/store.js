@@ -17,7 +17,8 @@ export default new Vuex.Store({
     startThemeName: "",
     lastTheme: null,
     nextTheme: null,
-    allThemes: [],
+    lerpDuration: 1,
+    allThemes: null,
     materialController: null,
     fogDistance: 0.01,
     playerPosition: null,
@@ -45,33 +46,37 @@ export default new Vuex.Store({
     initKeyEvents(state, data) {
       state.keysInit = data;
     },
+    setLerpDuration(state,data){
+      state.lerpDuration = data
+    },
     setMaterialController(state, data) {
       state.materialController = data;
     },
     setSpeed(state, data) {
-      //console.log("Set Speed ",data)
+
       state.speed = data
     },
     setFrequency(state, frequ) {
-      //console.log("Set Frequ ",frequ)
+
       state.frequency = frequ
     },
     setThemeLerp(state, alpha) {
-      //onsole.log("Set Theme Lerp",alpha)
+
       state.themeLerp = alpha
     },
     setLastTheme(state, theme) {
+      console.log("SET LAST THEME",theme)
       state.lastTheme = theme
     },
     setNextTheme(state, theme) {
-      // if(this.state.themeLerp == 1){
-      // state.lastTheme = theme
-      // }else if(this.state.themeLerp == 0){
+      console.log("SET NEXT THEME",theme)
       state.nextTheme = theme
-      //}
+
     },
     setAllThemes(state, themes) {
-      state.allThemes = themes
+      if(state.allThemes == null){
+        state.allThemes = themes
+      }  
     },
     setPlayerPosition(state,position){
       state.playerPosition = position

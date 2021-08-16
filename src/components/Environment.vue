@@ -53,9 +53,9 @@ export default {
     "server-frequency-update": function (data) {
       this.$store.commit("setFrequency", data);
     },
-    "server-theme-lerp-update": function (data) {
+    "server-theme-lerp": function (data) {
       //console.log("From Server lerp value ",data)
-      console.log("SERVERTHEME UPDATE ", data);
+      console.log("SERVER START LERP ", data);
       var next = this.$store.state.allThemes.find((t) => {
         return t.name == data.next;
       });
@@ -65,7 +65,7 @@ export default {
 
       this.$store.commit("setLastTheme", last);
       this.$store.commit("setNextTheme", next);
-      this.$store.commit("setThemeLerp", data.alpha);
+      this.$store.commit("setLerpDuration", data.duration);
     },
   },
   methods: {
@@ -117,25 +117,6 @@ export default {
 
         this.constantTris[idx].UpdateTriangle();
       });
-
-
-      //Constant Tringle
-      // if (this.data.Triangles.length > this.constantTris) {
-      //   const tri = new ConstantTriangle({
-      //     xr: this.$store.state.xr,
-      //     store: this.$store,
-      //   });
-      //   this.constantTris.push(tri);
-      // } else if (this.data.Triangles.length < this.constantTris) {
-      //   this.constantTris.remove(this.constantTris[0]);
-      // }
-
-      // this.data.Triangles.forEach((triData, idx) => {
-
-      //   if(typeof(this.constantTris[idx]) == "undefined"){return;}
-
-      //   this.constantTris[idx].UpdateTriangle(triData);
-      // });
     },
     spawnTriangles() {
       if (this.data != null) {

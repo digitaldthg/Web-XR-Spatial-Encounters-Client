@@ -7,28 +7,48 @@
           <div class="dev-info">Raum: {{ $store.state.room }}</div>
         </div>
         <div class="grid-1">
-          
-          <div class="friend flex-between" :class="{isMe : friend.id == $socket.id}" v-for="friend in friends" v-bind:key="friend.id">
-              <div class="friend-color" v-bind:style="{ background: `rgb(${friend.color.r * 255},${friend.color.g* 255},${friend.color.b* 255})` }" ></div>
-              <div class="input-checkbox">
-                <input class="invisible" :checked="friend.visible" :id="friend.id" type="checkbox" @input="e => ToggleFriend(friend, e.target.checked)" />
-                <label class="checkbox-label" :for="friend.id"><span>Visible</span></label>
-              </div>
-          
-            <div class="friend-id" >{{friend.id}}</div>
+          <div
+            class="friend flex-between"
+            :class="{ isMe: friend.id == $socket.id }"
+            v-for="friend in friends"
+            v-bind:key="friend.id"
+          >
+            <div
+              class="friend-color"
+              v-bind:style="{
+                background: `rgb(${friend.color.r * 255},${
+                  friend.color.g * 255
+                },${friend.color.b * 255})`,
+              }"
+            ></div>
+            <div class="input-checkbox">
+              <input
+                class="invisible"
+                :checked="friend.visible"
+                :id="friend.id"
+                type="checkbox"
+                @input="(e) => ToggleFriend(friend, e.target.checked)"
+              />
+              <label class="checkbox-label" :for="friend.id"
+                ><span>Visible</span></label
+              >
+            </div>
+
+            <div class="friend-id">{{ friend.id }}</div>
 
             <template v-if="friend.id != $socket.id">
-              <button class="cta-button" @click="e => DeleteFriend(friend)">x</button>
+              <button class="cta-button" @click="(e) => DeleteFriend(friend)">
+                x
+              </button>
             </template>
           </div>
-
-
-          
         </div>
 
         <div class="grid-1">
           <div class="slider">
-            <label for="frequence">Sek. zwischen Dreiecken: {{ this.$store.state.frequency }}</label>
+            <label for="frequence"
+              >Sek. zwischen Dreiecken: {{ this.$store.state.frequency }}</label
+            >
             <input
               class="slider"
               type="range"
@@ -41,7 +61,6 @@
               @change="updateSlider"
               @input="updateSlider"
             />
-            
           </div>
           <div class="slider">
             <label for="scale">Skalierung der Dreiecke: {{ this.scale }}</label>
@@ -57,10 +76,12 @@
               @change="updateScale"
               @input="updateScale"
             />
-            
           </div>
           <div class="slider">
-            <label for="speed">Geschwindigkeit der Dreiecke: {{ this.$store.state.speed }}</label>
+            <label for="speed"
+              >Geschwindigkeit der Dreiecke:
+              {{ this.$store.state.speed }}</label
+            >
             <input
               class="slider"
               type="range"
@@ -73,10 +94,11 @@
               @change="updateSpeed"
               @input="updateSpeed"
             />
-            
           </div>
           <div class="slider">
-            <label for="theme">Theme Lerp: {{ this.$store.state.themeLerp }}</label>
+            <label for="theme"
+              >Theme Lerp: {{ this.$store.state.themeLerp }}</label
+            >
             <input
               class="slider"
               type="range"
@@ -89,10 +111,11 @@
               @change="updateThemeLerp"
               @input="updateThemeLerp"
             />
-            
           </div>
           <div class="slider">
-            <label for="fog">FogDistance: {{ this.$store.state.fogDistance }}</label>
+            <label for="fog"
+              >FogDistance: {{ this.$store.state.fogDistance }}</label
+            >
             <input
               class="slider"
               type="range"
@@ -105,7 +128,6 @@
               @change="updateFog"
               @input="updateFog"
             />
-            
           </div>
         </div>
 
@@ -117,7 +139,12 @@
               v-bind:key="theme.name"
             >
               {{ theme.name }}
-              <button class="cta-button" @click="(e) => LerpTheme(theme, 2)">play</button>
+              <button
+                class="cta-button"
+                @click="(e) => StartLerpTheme(theme, 2)"
+              >
+                play
+              </button>
             </div>
           </div>
         </div>
@@ -176,7 +203,7 @@ export default {
       open: true,
       scale: 0.5,
       config: config,
-      friends : {}
+      friends: {},
     };
   },
   watch: {
@@ -196,47 +223,18 @@ export default {
     Toggle() {
       this.open = !this.open;
     },
-    LerpTheme(nextTheme, time) {
+    StartLerpTheme(nextTheme, time) {
+      console.log("THEME LERP START CLIENT");
+
       this.$socket.emit("client-theme-lerp", {
-        alpha: 0,
+        duration: time,
         last: this.$store.state.nextTheme.name,
         next: nextTheme.name,
       });
-
-      /*this.$socket.emit("client-theme", {
-        last: this.$store.state.nextTheme.name,
-        next: nextTheme.name,
-      });*/
-
-      var lerpObject = { lerp: 0 };
-      const tween = new TWEEN.Tween(lerpObject)
-        .to(
-          {
-            lerp: 1,
-          },
-          1000
-        )
-        .onUpdate((v) => {
-          
-          this.$socket.emit("client-theme-lerp", {
-            alpha: v.lerp,
-            last: this.$store.state.lastTheme.name,
-            next: this.$store.state.nextTheme.name,
-          });
-        })
-        .start(); // Start
     },
     ChangeThemeColor(e, colorIndex) {
-      // console.log(
-      //   "ChangeThemeColor",
-      //   e.target.value,
-      //   this.$store.state.lastTheme.gradient_skybox[colorIndex].value
-      // );
-
       this.$store.state.lastTheme.gradient_skybox[colorIndex].value =
         e.target.value;
-
-    //  console.log(this.$store.state.materialController);
 
       this.$store.state.materialController.LerpThemes(
         this.$store.state.lastTheme,
@@ -252,57 +250,46 @@ export default {
       });
     },
     updateThemeLerp(event) {
-      //console.log("SLIDER VALUE ", event.target.value);
-      //this.frequence = event.target.value;
       this.$socket.emit("client-theme-lerp", {
         alpha: parseFloat(event.target.value),
       });
     },
     updateSlider(event) {
-      //console.log("SLIDER VALUE ", event.target.value);
-      //this.frequence = event.target.value;
       this.$socket.emit("client-change-frequency", {
         frequency: parseFloat(event.target.value),
       });
     },
     updateFog(event) {
-      //this.frequence = event.target.value;
       this.$socket.emit("client-change-fog", {
         fog: parseFloat(event.target.value),
       });
     },
     updateScale(event) {
-      console.log("SCALE VALUE ", event.target.value);
       this.scale = event.target.value;
       this.$socket.emit("client-change-scale", {
         scale: 1 - parseFloat(event.target.value),
       });
     },
     updateSpeed(event) {
-      console.log("SPEED VALUE SLIDER", event.target.value);
       this.$socket.emit("client-change-speed", {
         speed: parseFloat(event.target.value),
       });
     },
-    DeleteFriend(friend){
-      console.log(friend);
-
+    DeleteFriend(friend) {
       this.$socket.emit("client-delete-friend", {
-        friend: friend ,
-        room : this.$store.state.room
+        friend: friend,
+        room: this.$store.state.room,
       });
     },
-    ToggleFriend(friend , boolean){
-      
+    ToggleFriend(friend, boolean) {
       console.log(friend, boolean);
 
       this.$socket.emit("client-hide-friend", {
-        friend: friend ,
-        room : this.$store.state.room,
-        visible : boolean
+        friend: friend,
+        room: this.$store.state.room,
+        visible: boolean,
       });
-    }
-
+    },
   },
 };
 </script>
@@ -346,17 +333,17 @@ input[type="color"]::-webkit-color-swatch {
   border: 0;
 }
 
-.invisible{
+.invisible {
   display: none;
 }
 
-.flex{
+.flex {
   display: flex;
 }
-.flex-align-center{
-    align-items: center;
+.flex-align-center {
+  align-items: center;
 }
-.flex-between{
+.flex-between {
   justify-content: space-between;
 }
 
@@ -366,14 +353,13 @@ input[type="color"]::-webkit-color-swatch {
   background: #fff;
 }
 
-
 .grid {
   display: flex;
   flex-wrap: wrap;
 }
 
-.grid-1{
-  width:100%;
+.grid-1 {
+  width: 100%;
   margin-bottom: 2rem;
 }
 
@@ -438,33 +424,33 @@ input[type="number"] {
   text-align: center;
 }
 
-.friend{
-  padding:1rem;
+.friend {
+  padding: 1rem;
   display: flex;
   position: relative;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   background: #fff;
 }
 
-.friend-color{
+.friend-color {
   position: absolute;
   left: 0;
-  top:0;
+  top: 0;
   width: 5px;
   height: 100%;
 }
-.friend-id{
+.friend-id {
   flex: 1;
   align-items: center;
   display: flex;
 }
 .friend.isMe {
-  background:#ccc;
+  background: #ccc;
   border: 1px solid;
   justify-content: flex-start;
 }
 
-.controls-inner label{
+.controls-inner label {
   position: relative;
 }
 
@@ -473,24 +459,25 @@ input[type="number"] {
   height: 30px;
   cursor: pointer;
 }
-.checkbox-label:before,.checkbox-label:after{
-  content: '';
+.checkbox-label:before,
+.checkbox-label:after {
+  content: "";
   display: block;
   position: absolute;
   border-radius: 50%;
-  top:0;
-  left:0;
-  right:0; 
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   margin: auto;
 }
 
-.checkbox-label:before{
+.checkbox-label:before {
   width: 30px;
   height: 30px;
   background: #fff;
 }
-.checkbox-label:after{
+.checkbox-label:after {
   width: 24px;
   height: 24px;
 }
@@ -507,36 +494,31 @@ input[type="number"] {
   margin-right: 1rem;
 }
 
-input[type="checkbox"]:checked + .checkbox-label:after{
-  
+input[type="checkbox"]:checked + .checkbox-label:after {
   background: #607d8b;
-  
-
 }
-
-
 </style>
 
 
 
 <style scoped>
-input[type=range] {
+input[type="range"] {
   width: 100%;
   margin: 0px 0;
   background-color: transparent;
   -webkit-appearance: none;
 }
-input[type=range]:focus {
+input[type="range"]:focus {
   outline: none;
 }
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   background: #333333;
   border: 0;
   width: 100%;
   height: 32px;
   cursor: pointer;
 }
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   margin-top: 0px;
   width: 17px;
   height: 32px;
@@ -545,24 +527,24 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   -webkit-appearance: none;
 }
-input[type=range]:focus::-webkit-slider-runnable-track {
+input[type="range"]:focus::-webkit-slider-runnable-track {
   background: #333333;
 }
-input[type=range]::-moz-range-track {
+input[type="range"]::-moz-range-track {
   background: #333333;
   border: 0;
   width: 100%;
   height: 32px;
   cursor: pointer;
 }
-input[type=range]::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
   width: 17px;
   height: 32px;
   background: #ffffff;
   border: 0.4px solid rgba(0, 30, 0, 0.57);
   cursor: pointer;
 }
-input[type=range]::-ms-track {
+input[type="range"]::-ms-track {
   background: transparent;
   border-color: transparent;
   border-width: 0px 0;
@@ -571,15 +553,15 @@ input[type=range]::-ms-track {
   height: 32px;
   cursor: pointer;
 }
-input[type=range]::-ms-fill-lower {
+input[type="range"]::-ms-fill-lower {
   background: #333333;
   border: 0;
 }
-input[type=range]::-ms-fill-upper {
+input[type="range"]::-ms-fill-upper {
   background: #333333;
   border: 0;
 }
-input[type=range]::-ms-thumb {
+input[type="range"]::-ms-thumb {
   width: 17px;
   height: 32px;
   background: #ffffff;
@@ -588,20 +570,19 @@ input[type=range]::-ms-thumb {
   margin-top: 0px;
   /*Needed to keep the Edge thumb centred*/
 }
-input[type=range]:focus::-ms-fill-lower {
+input[type="range"]:focus::-ms-fill-lower {
   background: #333333;
 }
-input[type=range]:focus::-ms-fill-upper {
+input[type="range"]:focus::-ms-fill-upper {
   background: #333333;
 }
 /*TODO: Use one of the selectors from https://stackoverflow.com/a/20541859/7077589 and figure out
 how to remove the virtical space around the range input in IE*/
-@supports (-ms-ime-align:auto) {
+@supports (-ms-ime-align: auto) {
   /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
-  input[type=range] {
+  input[type="range"] {
     margin: 0;
     /*Edge starts the margin from the thumb, not the track as other browsers do*/
   }
 }
-
 </style>
