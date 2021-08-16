@@ -122,7 +122,7 @@
               id="fog"
               name="fog"
               min="0"
-              max="0.1"
+              max="0.3"
               step="0.00001"
               value="0.01"
               @change="updateFog"

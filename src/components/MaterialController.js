@@ -220,6 +220,7 @@ class MaterialController {
     Object.keys(final).map((keyName) => {
 
       if (Array.isArray(themeA[keyName])) {
+
         final[keyName] = Utils.lerpColor(themeA[keyName], themeB[keyName], alpha);
         //console.log(final[keyName])
       }

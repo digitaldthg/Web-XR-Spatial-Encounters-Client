@@ -11,6 +11,7 @@
     "#4D3398",
     "#9A66CC"
   ],
+  "triangle_color_bottom":"#4152C0",
   "gradient_sun" : [
     {
       "stop" : 0,

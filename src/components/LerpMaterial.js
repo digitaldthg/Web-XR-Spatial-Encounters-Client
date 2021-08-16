@@ -55,8 +55,8 @@ class LerpMaterial {
           value: 1
         },
         "fogColor":    { type: "c", value: new Color(0xffffff) },
-        "fogNear":     { type: "f", value: .1  },
-        "fogFar":      { type: "f", value: 10   },
+        "fogNear":     { type: "f", value: 0  },
+        "fogFar":      { type: "f", value: 20   },
         "fogDensity" : { type: "f" , value : 2.0 }
       },
       vertex_shader: [
