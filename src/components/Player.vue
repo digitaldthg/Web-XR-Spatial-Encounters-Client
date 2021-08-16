@@ -14,6 +14,7 @@ import {
   Raycaster,
   CircleGeometry,
   BackSide,
+  TorusGeometry
 } from "three";
 import UserData from "../class/UserData";
 import Timer from "../Timer";
@@ -112,15 +113,16 @@ export default {
         this.data.transform.position.z
       );
       var origin = new Vector3(0, 0, 0);*/
-      for (var i = 0; i <= 15; i++) {
-        let scale = 0.05 * i;
-        scale = scale < 0.3 ? 0.3 : scale;
-        const geometry = new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
+      var count = 10;
+      for (var i = 0; i <= count; i++) {
+        let scale = 1 / (count + 1)  * (i + 1);
+        const geometry = new TorusGeometry( scale, .008, 6, 64);//new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
         const material = new MeshBasicMaterial({
           side: DoubleSide,
           color: color,
         });
         const ring = new Mesh(geometry, material);
+              ring.rotation.x = 90 * Math.PI /180;
 
         this.$store.state.xr.Scene.add(ring);
         this.rings.push(ring);
@@ -432,24 +434,35 @@ export default {
       } // end of only VR
 
       this.head.position = ring_pos.clone(); //new Vector3(this.player.position.x ,this.player.position.y,this.player.position.z);
+      this.head.rotation.copy(this.$store.state.xr.Camera.instance.rotation);
+
       this.lazyFollower.position.lerp(
         new Vector3(ring_pos.x, 0, ring_pos.z),
         0.01
       );
 
       this.$store.commit("setPlayerPosition", this.head.position);
+            //Calculate forward playerDirectionVector für Camera um die Playerringe etwas nach hinten zu schieben
+      this.playerDirectionVector = new Vector3();
+          this.$store.state.xr.Camera.instance.getWorldDirection( this.playerDirectionVector );          
+          this.playerDirectionVector.y = 0;    
+          this.playerDirectionVector.normalize();
+          
+      var fac = -0.2;
+
 
       this.rings.map((ring, index) => {
         var lerpAlpha = (1 / this.rings.length) * index;
         var _origin = this.lazyFollower.position.clone();
         var _target = ring_pos.clone();
-        _target.y *= 0.6;
+        _target.y *= 0.78;
         var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha);
         var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha);
 
-        ring.position.x = lerperPos.x;
+        ring.position.x = lerperPos.x + (this.playerDirectionVector.x * fac);
+
         ring.position.y = lerper.y;
-        ring.position.z = lerperPos.z;
+        ring.position.z = lerperPos.z + (this.playerDirectionVector.x * fac);
 
         ring.material.color = this.currentColor;
       });
