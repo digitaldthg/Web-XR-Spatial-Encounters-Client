@@ -39,8 +39,11 @@ class SingleFriend {
     //var target = new Vector3(data.transform.headPosition.x, data.transform.headPosition.y, data.transform.headPosition.z);
     //var origin = new Vector3(0, 0, 0);
 
-    for (var i = 0; i <= 15; i++) {
-      let scale = 0.005 * i * i ;
+    var count = 15;
+    for (var i = 0; i <= count; i++) {
+      
+      let scale = 1 / (count + 1)  * (i + 1);
+
       const geometry = new CylinderGeometry(scale, scale, .06, 64, 2, true);
       const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00 });
       const ring = new Mesh(geometry, material);
