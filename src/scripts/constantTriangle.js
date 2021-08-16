@@ -23,35 +23,46 @@ class ConstantTriangle {
 
     UpdateTriangle() {
 
+
+
+        console.log(this.nextPositions.length , this.lastPositions.length);
+
         //falls mehr Positionen zurückkommen als vorher
-        if(this.nextPositions.length > this.lastPositions.length){
-          let nextPos = [...this.nextPositions];
-          let lastPos = [...this.lastPositions];
+        // if(this.nextPositions.length > this.lastPositions.length){
+        //   let nextPos = [...this.nextPositions];
+        //   let lastPos = [...this.lastPositions];
 
-          this.lastPositions.push(...lastPos.slice(-(nextPos.length - lastPos.length)));
-        }
+        //   this.lastPositions.push(...lastPos.slice(-(nextPos.length - lastPos.length)));
+        // }
         
-        //falls weniger Positionen zurückkommen als vorher
-        if(this.nextPositions.length < this.lastPositions.length){
+        // //falls weniger Positionen zurückkommen als vorher
+        // if(this.nextPositions.length < this.lastPositions.length){
 
-          let nextPos = [...this.nextPositions];
-          let lastPos = [...this.lastPositions];
+        //   let nextPos = [...this.nextPositions];
+        //   let lastPos = [...this.lastPositions];
 
-          this.lastPositions = [...lastPos.slice(0, (lastPos.length - nextPos.length))];
-        }
+        //   this.lastPositions = [...lastPos.slice(0, (lastPos.length - nextPos.length))];
+        // }
+
+        //console.log(this.lastPositions, this.nextPositions);
+
 
         this.positions = this.nextPositions.map((pos, index)=>{
-          if(this.positionAlphas[index] == null){return pos;}
+          //if(this.positionAlphas[index] == null){return pos;}
           if(typeof(this.lastPositions[index]) == "undefined"){return pos;}
           if(typeof(pos) == "undefined"){return this.lastPositions[index];}
+
+
+          return this.lastPositions[index].lerp( pos , .05);
+
           return triangleUtils.LerpVector(this.lastPositions[index] , pos, this.positionAlphas[index] / 100);
         });
 
         //console.log(this.positions);
         
-        this.positionAlphas = this.positionAlphas.map((p, index)=>{
-          return p > 100 ? null : p + 10;
-        });
+        // this.positionAlphas = this.positionAlphas.map((p, index)=>{
+        //   return p > 100 ? null : p + 10;
+        // });
 
         var geometry = triangleUtils.GetGeometry(this.positions,this.height)
         var uniforms = triangleUtils.GetColor(this.triData.Color)
@@ -79,11 +90,17 @@ class ConstantTriangle {
           this.Init();
         }
         
-        this.nextPositions = [...triData.Positions];
-        this.lastPositions = this.lastPositions == null ? [...triData.Positions] : [...this.positions];
+
+        
+        var newPos = triData.Positions.map((v)=>new Vector3(v.x,v.y,v.z));
+        
+        this.nextPositions = newPos;
+        console.log("triData.Positions" , newPos);
+
+        this.lastPositions = this.lastPositions == null ? newPos : [...this.positions];
         
         //setzt die Alphawerte wieder auf 0
-        this.positionAlphas = this.nextPositions.map(()=> 0);
+        //this.positionAlphas = this.nextPositions.map(()=> 0);
        
         
     }
