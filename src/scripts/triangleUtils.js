@@ -1,18 +1,18 @@
 import * as THREE from 'three';
 import { Color, DoubleSide, Vector2, Vector3 } from 'three';
 const triangleUtils = {
-    LerpFloat(start,end, alpha){
-      return start * (1 - alpha) + end * alpha;
+    LerpFloat(start, end, alpha) {
+        return start * (1 - alpha) + end * alpha;
     },
-    LerpVector(start , end, alpha){
+    LerpVector(start, end, alpha) {
 
-      return new Vector3(
-        this.LerpFloat(start.x,end.x,alpha),
-        this.LerpFloat(start.y,end.y,alpha),
-        this.LerpFloat(start.z,end.z,alpha ),
-      )
+        return new Vector3(
+            this.LerpFloat(start.x, end.x, alpha),
+            this.LerpFloat(start.y, end.y, alpha),
+            this.LerpFloat(start.z, end.z, alpha),
+        )
     },
-    GetColor(colorData) {
+    GetColor(colorData, fogColor={r:1,g:1,b:1}, fogNear= 0, fogFar=20, fogDensity=0.1) {
         var colors = colorData;
 
         if (colors.length == 2) {
@@ -20,9 +20,13 @@ const triangleUtils = {
         }
 
         let uniforms = {
-            colorA: { type: 'vec3', value: new THREE.Color(colors[0].r, colors[0].g, colors[0].b) },
-            colorB: { type: 'vec3', value: new THREE.Color(colors[1].r, colors[1].g, colors[1].b) },
-            colorC: { type: 'vec3', value: new THREE.Color(colors[2].r, colors[2].g, colors[2].b) }
+            colorA: { type: 'vec3', value: new Color(colors[0].r, colors[0].g, colors[0].b) },
+            colorB: { type: 'vec3', value: new Color(colors[1].r, colors[1].g, colors[1].b) },
+            colorC: { type: 'vec3', value: new Color(colors[2].r, colors[2].g, colors[2].b) },
+            fogColor: { type: "c", value: new Color(fogColor.r,fogColor.g,fogColor.b) },
+            fogNear: { type: "f", value: fogNear},
+            fogFar: { type: "f", value: fogFar },
+            fogDensity: { type: "f", value: fogDensity }
         }
         return uniforms
     },
@@ -139,7 +143,8 @@ const triangleUtils = {
             uniforms: uniforms,
             vertexShader: this.vertexShader(),
             fragmentShader: this.fragmentShader(),
-            side: DoubleSide
+            side: DoubleSide,
+            fog: true
         });
     },
 
@@ -161,6 +166,10 @@ const triangleUtils = {
             uniform vec3 colorB;
             uniform vec3 colorC;
             varying vec2 vUv;
+            uniform vec3 fogColor;
+            uniform float fogNear;
+            uniform float fogFar;
+            uniform float fogDensity;
       
       
         void main() {
@@ -171,11 +180,28 @@ const triangleUtils = {
             }else{
                 gl_FragColor = vec4(mix(colorC, colorA, (vUv.x - 0.66) * 3.0), 1.0);
             }
+
+            #ifdef USE_FOG
+              #ifdef USE_LOGDEPTHBUF_EXT
+                  float depth = gl_FragDepthEXT / gl_FragCoord.w;
+             #else
+                  float depth = gl_FragCoord.z / gl_FragCoord.w;
+              #endif
+             float fogFactor = smoothstep( fogNear, fogFar, depth );
+              gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogDensity*fogFactor*10.0);
+            #endif
           
         }
       
         `
+    },
+    UpdateMaterial(material,store,xr){
+        material.uniforms.fogColor.value = xr.Scene.fog.color;
+        material.uniforms.fogNear.value = 0; //this.xr.Camera.near;
+        material.uniforms.fogFar.value = 20; //this.xr.Camera.far;
+        material.uniforms.fogDensity.value = store.state.fogDistance;
     }
+
 
 }
 export default triangleUtils;
