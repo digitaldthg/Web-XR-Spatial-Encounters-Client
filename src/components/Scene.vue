@@ -78,6 +78,11 @@ export default {
   },
   methods: {
     ChangeFogColor() {
+
+      console.log(this.$store.state.lastTheme);
+
+      if(typeof(this.$store.state.lastTheme) == "undefined" || typeof(this.$store.state.nextTheme) == "undefined"){return;}
+
       var colorLastHex = this.$store.state.lastTheme["fog_color"];
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
 
@@ -97,12 +102,12 @@ export default {
       this.xr.Scene.fog.color = color;
     },
     InitFog() {
-      if (
-        this.$store.state.lastTheme == null ||
-        this.$store.state.nextTheme == null
-      ) {
-        return;
-      }
+      // if (
+      //   this.$store.state.lastTheme == null ||
+      //   this.$store.state.nextTheme == null
+      // ) {
+      //   return;
+      // }
 
       //Init FOG
       var fogColor = new Color(0, 0, 1);
@@ -113,6 +118,8 @@ export default {
     InitScene() {
       console.log("--------INIT SCENE-----------");
       this.xr = new webXRScene("scene");
+
+      this.InitFog();
 
       this.materialController = new MaterialController(this.xr, this.$store);
 
@@ -170,7 +177,7 @@ export default {
         this.xr.Scene.add(plane);
       });
 
-      this.InitFog();
+      
     },
     GamePadLoop() {
       var gamepads = navigator.getGamepads

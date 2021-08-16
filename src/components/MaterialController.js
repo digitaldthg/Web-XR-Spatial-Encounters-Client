@@ -124,7 +124,7 @@ class MaterialController {
         transparent: true,
         map: this.gradient_fogFloor.GetTexture(),
         alphaMap: this.gradient_fogFloorAlpha.GetTexture(),
-        depthWrite: false
+        //depthWrite: false
       }),
       skybox_gradient: new MeshBasicMaterial({
         map: this.gradient_skybox.GetTexture()
@@ -227,7 +227,29 @@ class MaterialController {
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
 
 
-    //console.log("SCENE ", this.xr.Scene)
+    console.log("SCENE ", this.xr.Scene);
+
+
+    Object.keys(this.materials).map((matName)=>{
+      
+      if(this.materials[matName].hasOwnProperty("uniforms")){
+        
+        
+        if(this.materials[matName].uniforms.hasOwnProperty("fogColor")){
+
+          console.log( this.xr.Scene.fog )
+
+          console.log(this.materials[matName].uniforms,this.xr.Scene);
+          this.materials[matName].uniforms.fogColor.value = this.xr.Scene.fog.color;
+          this.materials[matName].uniforms.fogDensity.value = this.xr.Scene.fog.density;
+          // this.materials[matName].uniforms.fogFar.value = this.xr.Scene.fog.color;
+          // this.materials[matName].uniforms.fogNear.value = this.xr.Scene.fog.color;
+        }
+
+      }
+    })
+    console.log("this " , this.materials);
+
 
   }
 
