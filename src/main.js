@@ -26,8 +26,6 @@ const socketConnection = new VueSocketIO({
   }
 });
 
-console.log(socketConnection);
-
 
 Vue.use(VueRouter);
 Vue.use(socketConnection);

@@ -29,21 +29,15 @@ export default {
   },
   watch: {
     "$store.state.allThemes": function (themes) {
-      console.log(themes);
       this.options = themes.map((t) => {
         return t.name;
       });
-      console.log(
-        themes.map((t) => {
-          return t.name;
-        })
-      );
     },
   },
   methods: {
 
     OnChangeHandler(e) {
-      console.log("OnChange Dropdpwn")
+
       var value = e.target.value;
       this.$emit("onChange",value)
     },

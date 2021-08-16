@@ -10,8 +10,6 @@ class BGBackTexture extends TextureBackground{
   constructor(props){
     super(props);
 
-    console.log(this);
-
     this.Load("Mountains", Mountains).then((texture)=>{
       texture.repeat.set( 10, 1 );
       texture.offset.set(1,0)

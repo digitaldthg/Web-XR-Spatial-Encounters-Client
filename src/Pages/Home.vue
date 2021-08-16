@@ -40,13 +40,10 @@ export default {
     }
   },
   mounted(){
-    console.log(this.$refs,"no"+ this.currentNumber);
     this.$refs["no"+ this.currentNumber].focus();
   },
   sockets:{
     "room-success" : function(d){
-      console.log("success data",  d);
-
       this.$store.commit("room" , d.room);
       this.$router.push("/room/"+  d.room);
 
@@ -61,8 +58,6 @@ export default {
   methods:{
     Join(){
       var roomNumber = this.GetRoomNumber();
-      console.log("join");
-
       this.$socket.emit("join-room", {
         id: this.$socket.id,
         room : roomNumber
@@ -107,12 +102,9 @@ export default {
 
       
       var checker = Object.values(this.room).filter(o => o == null).length;
-      console.log(checker);
       if(checker == 0){
         this.canCreate = true;
         this.canJoin = true;
-
-        console.log(this);
       }
     }
   }

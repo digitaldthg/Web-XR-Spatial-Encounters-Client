@@ -6,9 +6,6 @@ class Sun extends TextureBackground{
 
   constructor(props){
     super(props);
-
-    console.log(this);
-
     this.Load("Sun", SunMap).then((texture)=>{
       texture.repeat.set( 1, 1 );})
   }
