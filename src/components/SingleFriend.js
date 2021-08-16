@@ -111,14 +111,10 @@ class SingleFriend {
     this.instance.userData.lastPosition.y = this.head.position.y;
 
     this.instance.userData.lerpAlpha = 0;
-    if(typeof(this.store.state.lastTheme) == "undefined"){return}
-    var hexColor = this.store.state.lastTheme.triangle_colors[idx];
-    var rgbColor = Utils.hexToRgb(hexColor);
-
-    this.instance.userData.color = rgbColor;
-
-
-    this.myText.color = new Color(hexColor);
+    
+    this.instance.userData.color = new Color(data.color.r,data.color.g,data.color.b);
+    
+    this.myText.color = new Color(data.color.r,data.color.g,data.color.b);
   }
   
   LerpFloat(start, end, alpha) {
@@ -145,7 +141,7 @@ class SingleFriend {
         lazyPos.y = 0;
     this.lazyFollower.position.lerp(lazyPos, .05);
     
-    let color = new Color(this.instance.userData.color.r, this.instance.userData.color.g, this.instance.userData.color.b);
+    let color = new Color(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);
 
     var target = this.instance.position.clone();
     var origin = this.lazyFollower.position.clone();
@@ -158,7 +154,7 @@ class SingleFriend {
       ring.position.z  = lerper.z;
 
       //Ringfarbe lerpen
-      ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
+      ring.material.color = color;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
 
     this.myText.lookAt(this.xr.Controls.GetCameraPosition());
