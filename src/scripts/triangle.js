@@ -36,7 +36,6 @@ class Triangle {
         this.clock = new THREE.Clock();
 
         this.store.watch(state => state.themeLerp, (newValue) => {
-            console.log("UPDATE MAT ",this.material)
             triangleUtils.UpdateMaterial(this.material,this.store,this.xr)
         })
     }

@@ -69,10 +69,10 @@
               type="range"
               id="frequence"
               name="frequnence"
-              min="0.1"
-              max="0.9"
+              min="0"
+              max="2"
               step="0.05"
-              value="0.5"
+              value="1.25"
               @change="updateScale"
               @input="updateScale"
             />
@@ -201,7 +201,7 @@ export default {
   data() {
     return {
       open: true,
-      scale: 0.5,
+      scale: 1.25,
       config: config,
       friends: {},
     };
@@ -257,7 +257,7 @@ export default {
     updateScale(event) {
       this.scale = event.target.value;
       this.$socket.emit("client-change-scale", {
-        scale: 1 - parseFloat(event.target.value),
+        scale: parseFloat(event.target.value),
       });
     },
     updateSpeed(event) {

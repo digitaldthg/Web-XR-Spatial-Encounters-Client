@@ -48,7 +48,7 @@ export default {
       timer: null,
       timerTimeout: false,
       maxTimeout: 500, //Ladezeit
-      timerTimeoutTime: 4000,//Zeit bis zum naechsten Reset
+      timerTimeoutTime: 4000, //Zeit bis zum naechsten Reset
       timeout: 0,
       thumb: false,
       rings: [],
@@ -166,8 +166,8 @@ export default {
         color: 0xffff00,
         transparent: true,
         opacity: 0,
-        depthTest : false,
-        depthWrite : false
+        depthTest: false,
+        depthWrite: false,
       });
       const circle = new Mesh(geometry, material);
       circle.rotation.x = (-90 * Math.PI) / 180;
@@ -186,7 +186,11 @@ export default {
 
     ResetCamera() {
       this.$store.state.xr.Controls.SetPositionAndRotation(
-        new Vector3(this.$store.state.startPosition.x,this.$store.state.startPosition.y,this.$store.state.startPosition.z),
+        new Vector3(
+          this.$store.state.startPosition.x,
+          this.$store.state.startPosition.y,
+          this.$store.state.startPosition.z
+        ),
         new Vector3(0, 0, 10)
       );
 
@@ -319,9 +323,18 @@ export default {
       var target = this.transform.position.clone();
       var origin = this.lazyFollower.position.clone();
 
-      var colorLastHex = typeof(this.$store.state.lastTheme) == "undefined" ? "#623095" : this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
-      var colorNextHex = typeof(this.$store.state.nextTheme) == "undefined" ? "#623095" : this.$store.state.nextTheme.triangle_colors[this.$store.state.ownIdx];
-
+      var colorLastHex =
+        typeof this.$store.state.lastTheme == "undefined"
+          ? "#623095"
+          : this.$store.state.lastTheme.triangle_colors[
+              this.$store.state.ownIdx
+            ];
+      var colorNextHex =
+        typeof this.$store.state.nextTheme == "undefined"
+          ? "#623095"
+          : this.$store.state.nextTheme.triangle_colors[
+              this.$store.state.ownIdx
+            ];
 
       // var colorLastHex =
       //   this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
@@ -465,9 +478,14 @@ export default {
     },
     ApplyData() {
       var dataCopy = Object.assign({}, this.data);
-      dataCopy.transform.position.x = this.player.position.x;
-      dataCopy.transform.position.y = this.player.position.y;
-      dataCopy.transform.position.z = this.player.position.z;
+      dataCopy.transform.position.x = this.lazyFollower.position.x;
+      dataCopy.transform.position.y = this.lazyFollower.position.y;
+      dataCopy.transform.position.z = this.lazyFollower.position.z;
+
+      dataCopy.transform.headPosition.x = this.player.position.x;
+      dataCopy.transform.headPosition.y = this.player.position.y;
+      dataCopy.transform.headPosition.z = this.player.position.z;
+
       dataCopy.color = {
         r: this.currentColor.r,
         g: this.currentColor.g,
