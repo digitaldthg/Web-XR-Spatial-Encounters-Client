@@ -133,6 +133,14 @@
 
         <div class="grid-1">
           <div class="themes">
+            <div class="">
+              Progress: {{($store.state.themeLerp * 100).toFixed(0)}}% <br />
+              InTransition: {{$store.state.themeLerp != 1}}
+            </div>
+            <div class="margin-bottom">
+              <label>Transitionzeit: {{$store.state.lerpDuration}}Sekunden</label>
+              <input type="range" :value="$store.state.lerpDuration" min="1" max="25" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
+            </div>
             <div
               class="theme flex flex-between flex-align-center"
               v-for="theme in this.$store.state.allThemes"
@@ -141,7 +149,7 @@
               {{ theme.name }}
               <button
                 class="cta-button"
-                @click="(e) => StartLerpTheme(theme, 2)"
+                @click="(e) => StartLerpTheme(theme, $store.state.lerpDuration)"
               >
                 play
               </button>
@@ -222,6 +230,10 @@ export default {
   methods: {
     Toggle() {
       this.open = !this.open;
+    },
+    ChangeThemeLerpDuration(val){
+      console.log(val);
+      this.$store.commit("setLerpDuration" , parseFloat(val));
     },
     StartLerpTheme(nextTheme, time) {
       console.log("THEME LERP START CLIENT");
