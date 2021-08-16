@@ -232,16 +232,6 @@ export default {
         next: nextTheme.name,
       });
     },
-    ChangeThemeColor(e, colorIndex) {
-      this.$store.state.lastTheme.gradient_skybox[colorIndex].value =
-        e.target.value;
-
-      this.$store.state.materialController.LerpThemes(
-        this.$store.state.lastTheme,
-        this.$store.state.nextTheme,
-        this.$store.state.themeLerp
-      );
-    },
     InitEvents() {
       window.addEventListener("keydown", (e) => {
         if (e.key == "p") {

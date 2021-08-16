@@ -25,7 +25,7 @@ class ConstantTriangle {
 
 
 
-        console.log(this.nextPositions.length , this.lastPositions.length);
+        //console.log(this.nextPositions.length , this.lastPositions.length);
 
         //falls mehr Positionen zurückkommen als vorher
         // if(this.nextPositions.length > this.lastPositions.length){
@@ -95,7 +95,7 @@ class ConstantTriangle {
         var newPos = triData.Positions.map((v)=>new Vector3(v.x,v.y,v.z));
         
         this.nextPositions = newPos;
-        console.log("triData.Positions" , newPos);
+        //console.log("triData.Positions" , newPos);
 
         this.lastPositions = this.lastPositions == null ? newPos : [...this.positions];
         

@@ -53,9 +53,9 @@ export default {
   },
   destroyed() {
     this.$store.state.xr.Events.removeEventListener(
-        "OnAnimationLoop",
-        this.RenderLoop
-      );
+      "OnAnimationLoop",
+      this.RenderLoop
+    );
     console.log("destroy Scene");
   },
   sockets: {
@@ -78,10 +78,12 @@ export default {
   },
   methods: {
     ChangeFogColor() {
-
-      console.log(this.$store.state.lastTheme);
-
-      if(typeof(this.$store.state.lastTheme) == "undefined" || typeof(this.$store.state.nextTheme) == "undefined"){return;}
+      if (
+        typeof this.$store.state.lastTheme == "undefined" ||
+        typeof this.$store.state.nextTheme == "undefined"
+      ) {
+        return;
+      }
 
       var colorLastHex = this.$store.state.lastTheme["fog_color"];
       var colorNextHex = this.$store.state.nextTheme["fog_color"];
@@ -100,9 +102,6 @@ export default {
       );
 
       this.xr.Scene.fog.color = color;
-      
-
-
     },
     InitFog() {
       // if (
@@ -116,7 +115,6 @@ export default {
       var fogColor = new Color(0, 0, 1);
       var fogDensity = this.$store.state.fogDistance;
       this.xr.Scene.fog = new FogExp2(fogColor, fogDensity);
-
     },
     InitScene() {
       this.xr = new webXRScene("scene");
@@ -138,6 +136,7 @@ export default {
         this.envModel = model.scene;
         this.xr.Scene.add(this.envModel);
         this.SetEnvironmentModel();
+        this.materialController.StartLerpThemes();
       });
 
       this.xr.Controls.SetPosition(0, 5, 10);
@@ -161,10 +160,10 @@ export default {
       //CALIBRATION PLANE
       const planeGeometry = new PlaneGeometry(1, 1);
       this.planeMaterial = new MeshBasicMaterial({
-        color: 0xFF10F0,
+        color: 0xff10f0,
         side: FrontSide,
         transparent: true,
-        depthTest : false
+        depthTest: false,
       });
       const plane = new Mesh(planeGeometry, this.planeMaterial);
       plane.renderOrder = 16;
@@ -173,14 +172,12 @@ export default {
         this.$store.state.startPosition.y,
         this.$store.state.startPosition.z
       );
-      plane.rotation.set(Math.PI * -0.5, 0,Math.PI * 0.25);
+      plane.rotation.set(Math.PI * -0.5, 0, Math.PI * 0.25);
 
       this.xr.CustomTextureLoader.load(CalibrationTex).then((map) => {
         this.planeMaterial.alphaMap = map;
         this.xr.Scene.add(plane);
       });
-
-      
     },
     GamePadLoop() {
       var gamepads = navigator.getGamepads
@@ -200,7 +197,7 @@ export default {
 
       if (gp.buttons[0].pressed && !this.pressed) {
         this.pressed = true;
-        this.$socket.emit("client-gamepad-event",null);
+        this.$socket.emit("client-gamepad-event", null);
 
         console.log("set pressed true", gp.buttons[0].pressed);
       } else if (!gp.buttons[0].pressed) {

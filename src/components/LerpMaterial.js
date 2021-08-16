@@ -122,7 +122,7 @@ class LerpMaterial {
         "      float depth = gl_FragCoord.z / gl_FragCoord.w;",
         "  #endif",
         "  float fogFactor = smoothstep( fogNear, fogFar, depth );",
-        "  gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogDensity * fogFactor );",
+        "  gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogDensity*fogFactor*10.0);",
         "#endif",
 
 
