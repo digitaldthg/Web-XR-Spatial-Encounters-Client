@@ -105,34 +105,45 @@ class Renderer {
     this.effects = true;
 
 
-    this.renderTarget = new THREE.WebGLRenderTarget( this.size.x ,this.size.y, 
-      { 
-      minFilter: THREE.LinearFilter, 
-      magFilter: THREE.LinearFilter, 
-      format: THREE.RGBAFormat, 
-      stencilBuffer: false
-    });
-    this.renderTarget.depthBuffer = true
-    this.renderTarget.depthTexture = new THREE.DepthTexture();
-
-    this.renderPass = new RenderPass( this.context.Scene, this.context.Camera.instance );
     
-    //Init Composer
-    this.postprocessing.composer = new EffectComposer( this.instance );
-    this.postprocessing.composer.addPass( this.renderPass );
+    this.postprocessing.composer = new EffectComposer( this.instance  );
 
+    this.instance.setRenderTarget( this.postprocessing.composer.readBuffer );
+    
+    /** RenderPass*/
+   // this.postprocessing.RenderPass = new RenderPass( this.context.Scene, this.context.Camera.instance );
+   // this.postprocessing.RenderPass.renderToScreen = true;
+   //this.postprocessing.composer.addPass( this.postprocessing.RenderPass );
+    
+    /** FXAA */
+    this.postprocessing.fxaaPass = new ShaderPass( FXAAShader );
+    
+    this.postprocessing.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( this.size.x * this.dpr );
+    this.postprocessing.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( this.size.y * this.dpr );
+    this.postprocessing.fxaaPass.renderToScreen = true;
+    this.postprocessing.composer.addPass( this.postprocessing.fxaaPass );
+
+    // this.context.Scene.onAfterRender = () => {
+    //   this.postprocessing.composer.render();
+    // };
+
+		//this.postprocessing.composer.addPass( this.postprocessing.lutPass );
+    //this.postprocessing.composer.addPass( this.postprocessing.bloomPass );
+    
+    
+    //this.postprocessing.composer.addPass( this.postprocessing.fxaaPass );
     //Bloom
     
-    this.postprocessing.bloomPass = new UnrealBloomPass( new Vector2(512,512), .94,.9,.5 );
-    this.postprocessing.bloomPass.strength = .6
-    this.postprocessing.bloomPass.radius = 0;
-    this.postprocessing.bloomPass.threshold = 0.15;
+    // this.postprocessing.bloomPass = new UnrealBloomPass( new Vector2(512,512), .94,.9,.5 );
+    // this.postprocessing.bloomPass.strength = .6
+    // this.postprocessing.bloomPass.radius = 0;
+    // this.postprocessing.bloomPass.threshold = 0.15;
     //this.postprocessing.bloomPass.renderToScreen = true;
 
     // this.postprocessing.bloomPass.BlurDirectionX = new THREE.Vector2( 1.0, 0.0 );
     // this.postprocessing.bloomPass.BlurDirectionY = new THREE.Vector2( 0.0, 1.0 );
     
-    this.postprocessing.composer.addPass( this.postprocessing.bloomPass );
+    //this.postprocessing.composer.addPass( this.postprocessing.bloomPass );
 
 
     // this.context.Scene.onAfterRender = ( renderer ) => {
@@ -167,12 +178,54 @@ class Renderer {
     if(this.postprocessing.enabled){
       if(!this.postprocessing.initialized){
         this.InitComposer();
+        return;
       }
 
-      this.instance.setRenderTarget( this.postprocessing.composer.readBuffer );
-      this.instance.render(this.context.Scene, this.context.Camera.instance);
+      //console.log(this.postprocessing.composer.passes);
+      this.postprocessing.composer.passes.map((pass)=>{
+        if(pass.hasOwnProperty("scene")){
+          pass.scene = this.context.Scene;
+        }
+        if(pass.hasOwnProperty("camera")){
+          pass.scene = this.context.Camera.instance;
+        }
+      });
+      
 
-      //this.postprocessing.composer.render(.1);
+      this.postprocessing.composer.passes.map((pass)=>{
+        if(pass.hasOwnProperty("scene")){
+          pass.scene = this.context.Scene;
+        }
+        
+        if(pass.hasOwnProperty("camera")){
+          pass.camera = this.context.Camera.instance;
+        }
+      });
+
+      
+      var cams = this.instance.xr.getCamera();
+      // if(cams.cameras.length > 0){
+      //   this.instance.render(this.context.Scene, cams.cameras[0]);
+      //   this.instance.render(this.context.Scene, cams.cameras[1]);
+      // }
+      //console.log(cams.cameras[0]);
+      //this.postprocessing.composer.render();
+
+      // console.log(this.postprocessing.composer);
+      // console.log(this.context.Camera.instance);
+
+      //this.instance.clear();
+      this.instance.render(this.context.Scene, this.context.Camera.instance);
+      this.instance.setRenderTarget( this.postprocessing.composer.readBuffer );
+
+      console.log(cams.cameras[0],cams.cameras[1]);
+      
+      if(cams.cameras.length > 0){
+        this.instance.render(this.context.Scene, cams.cameras[0]);
+        this.instance.render(this.context.Scene, cams.cameras[1]);
+      }
+
+      this.postprocessing.composer.render();
     }else{
       this.instance.render(this.context.Scene, this.context.Camera.instance);
     }
@@ -187,8 +240,11 @@ class Renderer {
     this.context.Camera.instance.aspect = this.size.x / this.size.y;
     this.context.Camera.instance.updateProjectionMatrix();
     if(this.postprocessing.enabled){
-      this.renderTarget.setSize(this.size.x,this.size.y);
-      //this.motionBlurRenderTarget.setSize(this.size.x,this.size.y);
+      this.postprocessing.composer.setSize( this.size.x , this.size.y );
+      
+      this.postprocessing.fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( this.size.x * this.dpr );
+      this.postprocessing.fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( this.size.y * this.dpr );
+    
     }
 
   }
