@@ -22,28 +22,6 @@ class ConstantTriangle {
     }
 
     UpdateTriangle() {
-
-
-        //falls mehr Positionen zurückkommen als vorher
-        // if(this.nextPositions.length > this.lastPositions.length){
-        //   let nextPos = [...this.nextPositions];
-        //   let lastPos = [...this.lastPositions];
-
-        //   this.lastPositions.push(...lastPos.slice(-(nextPos.length - lastPos.length)));
-        // }
-        
-        // //falls weniger Positionen zurückkommen als vorher
-        // if(this.nextPositions.length < this.lastPositions.length){
-
-        //   let nextPos = [...this.nextPositions];
-        //   let lastPos = [...this.lastPositions];
-
-        //   this.lastPositions = [...lastPos.slice(0, (lastPos.length - nextPos.length))];
-        // }
-
-        //console.log(this.lastPositions, this.nextPositions);
-
-
         this.positions = this.nextPositions.map((pos, index)=>{
           //if(this.positionAlphas[index] == null){return pos;}
           if(typeof(this.lastPositions[index]) == "undefined"){return pos;}
@@ -52,7 +30,7 @@ class ConstantTriangle {
 
           return this.lastPositions[index].lerp( pos , .05);
 
-          
+          return triangleUtils.LerpVector(this.lastPositions[index] , pos, this.positionAlphas[index] / 100);
         });
 
         //console.log(this.positions);
@@ -62,20 +40,23 @@ class ConstantTriangle {
         // });
 
         var geometry = triangleUtils.GetGeometry(this.positions,this.height)
-        var uniforms = triangleUtils.GetColor(this.triData.Color)
+        var uniforms = triangleUtils.GetColor(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
 
         //MeshBasicMaterial
 
-        const triMaterial = triangleUtils.getMaterial(uniforms);
+        this.triMaterial = triangleUtils.getMaterial(uniforms);
 
-        this.mesh.material = triMaterial;
+        this.mesh.material = this.triMaterial;
         this.mesh.geometry = geometry;
+
+        triangleUtils.UpdateMaterial(this.triMaterial,this.store,this.xr)
     }
 
     UpdateTriangleData(triData){
 
         this.triData = triData;
         var positions = triData.Positions;
+
 
         if (positions == null) {
           // this.xr.Scene.remove(this.mesh);
@@ -92,8 +73,11 @@ class ConstantTriangle {
         var newPos = triData.Positions.map((v)=>new Vector3(v.x,v.y,v.z));
         
         this.nextPositions = newPos;
-     
+        //console.log("triData.Positions" , newPos);
+
         this.lastPositions = this.lastPositions == null ? newPos : [...this.positions];
+
+
         
         //setzt die Alphawerte wieder auf 0
         //this.positionAlphas = this.nextPositions.map(()=> 0);

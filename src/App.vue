@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     sendInitData() {
-      console.log("INIT DATA",store.state.allThemes)
+      console.log("INIT DATA",this.initData,store.state.allThemes)
       var next = store.state.allThemes.find((t) => {
         return t.name == this.initData.next;
       });
@@ -38,7 +38,7 @@ export default {
 
       store.commit("setLastTheme", last);
       store.commit("setNextTheme", next);
-      store.commit("setThemeLerp", this.initData.lerpAlpha);
+      store.commit("setLerpDuration", this.initData.duration);
       store.commit("setSpeed", this.initData.speed);
       store.commit("setFrequency", this.initData.frequency);
       store.commit("setFogDistance", this.initData.fog);

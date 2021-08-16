@@ -67,7 +67,7 @@ class MaterialController {
       color: 0xff00ff,
       transparent: true,
       depthWrite: false,
-      side:FrontSide
+      side: FrontSide
 
     });
     var grid_floor = grid_floor_obj.material;
@@ -76,7 +76,7 @@ class MaterialController {
       color: 0x0000ff,
       transparent: true,
       depthWrite: false,
-      side:DoubleSide
+      side: DoubleSide
     });
     var guardian = guardian_obj.material;
     //Sun
@@ -84,7 +84,7 @@ class MaterialController {
       color: 0xff0000,
       transparent: true,
       depthWrite: false,
-      side:FrontSide
+      side: FrontSide
     });
     var sun = sun_obj.material
 
@@ -93,7 +93,7 @@ class MaterialController {
       color: 0xff0000,
       transparent: true,
       depthWrite: false,
-      side:FrontSide
+      side: FrontSide
     });
     var bg_back = bg_back_obj.material
 
@@ -102,7 +102,7 @@ class MaterialController {
       color: 0xffffff,
       transparent: true,
       depthWrite: false,
-      side:FrontSide
+      side: FrontSide
     });
     var bg_front = bg_front_obj.material
 
@@ -110,7 +110,7 @@ class MaterialController {
     var skybox_texture_obj = new LerpMaterial({
       color: 0x00ff00,
       transparent: true,
-      side:FrontSide
+      side: FrontSide
     })
     var skybox_texture = skybox_texture_obj.material;
 
@@ -138,38 +138,34 @@ class MaterialController {
       skybox_texture
 
     }
-    this.tex_guardian = new Guardian({xr:this.xr,store:this.store})
+    this.tex_guardian = new Guardian({ xr: this.xr, store: this.store })
     this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);
     this.tex_bg_front = new BGFrontTexture(this.xr);
     this.tex_bg_back = new BGBackTexture(this.xr);
     this.tex_sun = new Sun(this.xr);
 
-    this.tex_sun.SetMaterial("Sun",sun_obj)
+    this.tex_sun.SetMaterial("Sun", sun_obj)
     this.tex_skybox.SetMaterial("Sky", skybox_texture_obj);
     this.tex_floor.SetMaterial("Floor", grid_floor_obj);
     this.tex_guardian.SetMaterial("Guardian", guardian_obj);
     this.tex_bg_front.SetMaterial("BG_Front", bg_front_obj);
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
 
-
-    this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
-
-    this.store.watch(state => state.nextTheme, (newValue, oldViewMode) => {
-      console.log("Watch Theme Lerp ", this.store.state.lastTheme, this.store.state.nextTheme);
-      this.StartLerpThemes(this.store.state.lerpDuration);
-    });
-
+    //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
 
     this.xr.Events.addEventListener("OnTextureLoad", () => {
       //console.log("LERP ON TEXTURE LOAD");
-      this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
+      //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
     });
 
-    this.store.watch(state => state.fogDistance, (newValue)=>{
-      //console.log("MaterialController" , newValue);
+    this.store.watch(state => state.nextTheme, (newValue) => {
+      this.StartLerpThemes();
+    })
 
-      this.ChangeFogDistance(newValue );
+
+    this.store.watch(state => state.fogDistance, (newValue) => {
+      this.ChangeFogDistance(newValue);
     })
 
 
@@ -195,17 +191,19 @@ class MaterialController {
 
     return [h * 360, s * 100, l * 100]
   }
-  StartLerpThemes(duration) {
+  StartLerpThemes() {
+
     var lerpObject = { lerp: 0 };
     const tween = new TWEEN.Tween(lerpObject)
       .to(
         {
           lerp: 1,
         },
-        duration*1000
+        this.store.state.lerpDuration * 1000
       )
       .onUpdate((v) => {
-        this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme,v.lerp)
+        this.store.commit("setThemeLerp",v.lerp)
+        this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, v.lerp)
       })
       .start(); // Start
   }
@@ -213,10 +211,10 @@ class MaterialController {
   LerpThemes(themeA, themeB, alpha) {
     var final = ThemeFactory.Get();
 
-     if (themeA == null || themeB == null) {
-       if (themeA == null) { themeA = ThemeFactory.Get(); }
-       if (themeB == null) { themeB = ThemeFactory.Get(); }
-     }
+    if (themeA == null || themeB == null) {
+      if (themeA == null) { themeA = ThemeFactory.Get(); }
+      if (themeB == null) { themeB = ThemeFactory.Get(); }
+    }
     // console.log("themeA", themeA, "themeB", themeB);
 
     Object.keys(final).map((keyName) => {
@@ -246,30 +244,19 @@ class MaterialController {
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
 
 
-    //Update Fog Uniform Settings
-    Object.keys(this.materials).map((matName)=>{
-      if(this.materials[matName].hasOwnProperty("uniforms")){
-        if(this.materials[matName].uniforms.hasOwnProperty("fogColor")){
-          this.materials[matName].uniforms.fogColor.value = this.xr.Scene.fog.color;
-          this.materials[matName].uniforms.fogDensity.value = this.xr.Scene.fog.density;
-          this.materials[matName].uniforms.fogNear.value = this.xr.Camera.near;// ;
-          this.materials[matName].uniforms.fogFar.value = this.xr.Camera.far;
-          this.materials[matName].uniforms.fogDensity.value = this.store.state.fogDistance;
-        }
-      }
-    });
+    this.ChangeFogDistance();
 
   }
 
-  ChangeFogDistance(density){
-     //Update Fog Uniform Settings
-     Object.keys(this.materials).map((matName)=>{
-      if(this.materials[matName].hasOwnProperty("uniforms")){
-        if(this.materials[matName].uniforms.hasOwnProperty("fogColor")){
-          // this.materials[matName].uniforms.fogColor.value = this.xr.Scene.fog.color;
-          // this.materials[matName].uniforms.fogDensity.value = this.xr.Scene.fog.density;
-          this.materials[matName].uniforms.fogDensity.value = density * 1000;
-          //this.materials[matName].uniforms.fogNear.value = distNear;// this.xr.Camera.near;
+  ChangeFogDistance() {
+    //Update Fog Uniform Settings
+    Object.keys(this.materials).map((matName) => {
+      if (this.materials[matName].hasOwnProperty("uniforms")) {
+        if (this.materials[matName].uniforms.hasOwnProperty("fogColor")) {
+          this.materials[matName].uniforms.fogColor.value = this.xr.Scene.fog.color;
+          this.materials[matName].uniforms.fogNear.value = 0; //this.xr.Camera.near;
+          this.materials[matName].uniforms.fogFar.value = 20; //this.xr.Camera.far;
+          this.materials[matName].uniforms.fogDensity.value = this.store.state.fogDistance;
         }
       }
     });
