@@ -1,7 +1,7 @@
 const { Group, Vector3, MeshBasicMaterial, DoubleSide, Mesh, Color, Object3D, BoxGeometry, CylinderGeometry, SphereGeometry, Quaternion, MeshNormalMaterial } = require("three");
 import Ring from "../Model/player_cylinder.glb";
 import Utils from "../scripts/utils";
-import {Text} from 'troika-three-text'
+import { Text } from 'troika-three-text'
 
 
 class SingleFriend {
@@ -20,27 +20,27 @@ class SingleFriend {
   Init(data) {
 
     this.instance = this.Create(data);
-    this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1),  new MeshNormalMaterial());
-    this.lazyFollower.scale.set(0,0,0);
+    this.lazyFollower = new Mesh(new BoxGeometry(.1, .1, .1), new MeshNormalMaterial());
+    this.lazyFollower.scale.set(0, 0, 0);
     this.xr.Scene.add(this.lazyFollower);
 
   }
 
   Create(data) {
-    
+
     var group = new Object3D();
-        group.name = "Friend";
+    group.name = "Friend";
     this.xr.Scene.add(group);
 
-    this.head = new Mesh(new BoxGeometry(.1,.1,.1) , new MeshNormalMaterial());
-    this.head.scale.set(0,0,0);
+    this.head = new Mesh(new BoxGeometry(.1, .1, .1), new MeshNormalMaterial());
+    this.head.scale.set(0, 0, 0);
     this.xr.Scene.add(this.head);
 
     //var target = new Vector3(data.transform.headPosition.x, data.transform.headPosition.y, data.transform.headPosition.z);
     //var origin = new Vector3(0, 0, 0);
 
     for (var i = 0; i <= 15; i++) {
-      let scale = 0.005 * i * i ;
+      let scale = 0.005 * i * i;
       const geometry = new CylinderGeometry(scale, scale, .06, 64, 2, true);
       const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00 });
       const ring = new Mesh(geometry, material);
@@ -86,7 +86,7 @@ class SingleFriend {
     this.myText.text = data.id;
     this.myText.fontSize = 0.1
     this.myText.position.y = .5;
-    this.myText.anchorX ="center";
+    this.myText.anchorX = "center";
     this.myText.color = new Color(data.color);
 
 
@@ -108,16 +108,16 @@ class SingleFriend {
     this.instance.userData.lastPosition.y = this.head.position.y;
 
     this.instance.userData.lerpAlpha = 0;
-    if(typeof(this.store.state.lastTheme) == "undefined"){return}
+    if (typeof (this.store.state.lastTheme) == "undefined") { return }
+
     var hexColor = this.store.state.lastTheme.triangle_colors[idx];
     var rgbColor = Utils.hexToRgb(hexColor);
 
     this.instance.userData.color = rgbColor;
 
-
     this.myText.color = new Color(hexColor);
   }
-  
+
   LerpFloat(start, end, alpha) {
     return start * (1 - alpha) + end * alpha;
   }
@@ -135,13 +135,13 @@ class SingleFriend {
     //dann wird sie auf null gesetzt => ziel erreicht
     if (this.instance.userData.targetPosition == null) { return; }
 
-    this.instance.position.lerp(this.instance.userData.targetPosition , .1);
+    this.instance.position.lerp(this.instance.userData.targetPosition, .1);
     this.head.position.lerp(this.instance.userData.targetPosition, .1);// = this.instance.userData.targetPosition.clone();
-    
-    var lazyPos =this.instance.position.clone();
-        lazyPos.y = 0;
+
+    var lazyPos = this.instance.position.clone();
+    lazyPos.y = 0;
     this.lazyFollower.position.lerp(lazyPos, .05);
-    
+
     let color = new Color(this.instance.userData.color.r, this.instance.userData.color.g, this.instance.userData.color.b);
 
     var target = this.instance.position.clone();
@@ -150,9 +150,9 @@ class SingleFriend {
     this.rings.map((ring, index) => {
       var lerpAlpha = (1 / (this.rings.length - 1)) * index;
       var lerper = (target.clone()).lerp(origin, lerpAlpha);
-      ring.position.x  = lerper.x;
-      ring.position.y  = lerper.y;
-      ring.position.z  = lerper.z;
+      ring.position.x = lerper.x;
+      ring.position.y = lerper.y;
+      ring.position.z = lerper.z;
 
       //Ringfarbe lerpen
       ring.material.color = this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
@@ -165,7 +165,7 @@ class SingleFriend {
 
   delete = () => {
     this.xr.Scene.remove(this.instance);
-    this.rings.map((ring)=>{
+    this.rings.map((ring) => {
       this.xr.Scene.remove(ring);
     });
     this.xr.Scene.remove(this.head);

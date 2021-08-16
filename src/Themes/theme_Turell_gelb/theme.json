@@ -12,6 +12,7 @@
     "#4D3398",
     "#9A66CC"
   ],
+  "triangle_color_bottom":"#4152C0",
   "base_floor":[{
     "stop" : 0,
     "value" : "#ffcc00"}

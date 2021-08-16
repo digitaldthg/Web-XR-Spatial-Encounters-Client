@@ -304,6 +304,7 @@ export default {
       this.playerGroup.position.z += dir.z * this.speed;
     },
     EmitExplode() {
+      console.log("EXPLOSION");
       this.$socket.emit("client-player-explode", {
         position: this.playerGroup.position,
         color: {
@@ -323,6 +324,7 @@ export default {
       var target = this.transform.position.clone();
       var origin = this.lazyFollower.position.clone();
 
+      //TOP COLOR
       var colorLastHex =
         typeof this.$store.state.lastTheme == "undefined"
           ? "#623095"
@@ -335,27 +337,48 @@ export default {
           : this.$store.state.nextTheme.triangle_colors[
               this.$store.state.ownIdx
             ];
-
-      // var colorLastHex =
-      //   this.$store.state.lastTheme.triangle_colors[this.$store.state.ownIdx];
-      // var colorNextHex =
-      //   this.$store.state.nextTheme.triangle_colors[this.$store.state.ownIdx];
-
-      var lerpColor = Utils.lerpColor(
+      var colorTop = Utils.lerpColor(
         [{ value: colorLastHex }],
         [{ value: colorNextHex }],
         this.$store.state.themeLerp
       );
+
       let color = new Color();
       color.setHSL(
-        lerpColor[0].value[0] / 360,
-        lerpColor[0].value[1] / 100,
-        lerpColor[0].value[2] / 100
+        colorTop[0].value[0] / 360,
+        colorTop[0].value[1] / 100,
+        colorTop[0].value[2] / 100
       );
+
+      //BOTTOM COLOR
+      var colorLastHexBottom =
+        typeof this.$store.state.lastTheme == "undefined"
+          ? "#623095"
+          : this.$store.state.lastTheme.triangle_color_bottom;
+
+      var colorNextHexBottom =
+        typeof this.$store.state.nextTheme == "undefined"
+          ? "#623095"
+          : this.$store.state.nextTheme.triangle_color_bottom;
+
+      var colorBottom = Utils.lerpColor(
+        [{ value: colorLastHexBottom }],
+        [{ value: colorNextHexBottom }],
+        this.$store.state.themeLerp
+      );
+
+      let colorBottomHSL = new Color();
+      colorBottomHSL.setHSL(
+        colorBottom[0].value[0] / 360,
+        colorBottom[0].value[1] / 100,
+        colorBottom[0].value[2] / 100
+      );
+
+      
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
 
-      this.currentColor = this.bottomColor
+      this.currentColor = colorBottomHSL
         .clone()
         .lerp(
           color,
@@ -412,7 +435,6 @@ export default {
           if (this.timeout < this.maxTimeout) {
             this.timeout++;
           } else {
-            console.log("timer auslösen");
             this.timeout = 0;
             this.ResetCamera();
             this.thumb = false;
@@ -457,15 +479,17 @@ export default {
       this.delta += t.getDelta();
       this.ApplyData();
 
+
       if (
         !this.explosition &&
-        this.player.position.y < this.headHeight * this.explodingFactor
+        this.player.position.y < this.data.transform.headHeight * this.explodingFactor
       ) {
+        console.log("EXPLOION")
         this.EmitExplode();
         this.explosition = true;
       } else if (
         this.explosition &&
-        this.player.position.y > this.headHeight * this.explodingFactor
+        this.player.position.y > this.data.transform.headHeight * this.explodingFactor
       ) {
         this.explosition = false;
       }
@@ -494,7 +518,7 @@ export default {
 
       this.data = dataCopy;
 
-      //console.log("fps");
+
     },
     ReducedFPSCall() {
       this.$socket.emit("client-player", this.data);
