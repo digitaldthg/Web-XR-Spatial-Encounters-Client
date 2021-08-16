@@ -18,14 +18,16 @@ class SingleFriend {
   }
 
   Init(data) {
+
     this.instance = this.Create(data);
     this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1),  new MeshNormalMaterial());
     this.lazyFollower.scale.set(0,0,0);
     this.xr.Scene.add(this.lazyFollower);
-    console.log("created", this.instance);
+
   }
 
   Create(data) {
+    
     var group = new Object3D();
         group.name = "Friend";
     this.xr.Scene.add(group);
@@ -34,8 +36,8 @@ class SingleFriend {
     this.head.scale.set(0,0,0);
     this.xr.Scene.add(this.head);
 
-    var target = new Vector3(data.transform.position.x, data.transform.position.y, data.transform.position.z);
-    var origin = new Vector3(0, 0, 0);
+    //var target = new Vector3(data.transform.headPosition.x, data.transform.headPosition.y, data.transform.headPosition.z);
+    //var origin = new Vector3(0, 0, 0);
 
     for (var i = 0; i <= 15; i++) {
       let scale = 0.005 * i * i ;
@@ -45,18 +47,18 @@ class SingleFriend {
       this.xr.Scene.add(ring);
       this.rings.push(ring);
     }
-
+    console.log("creat", data.transform, data.transform.headPosition);
     group.userData.headHeight = data.transform.headHeight * this.headFactor;
     group.userData.targetPosition = new Vector3(
-      data.transform.position.x,
-      data.transform.position.y,
-      data.transform.position.z
+      data.transform.headPosition.x,
+      data.transform.headPosition.y,
+      data.transform.headPosition.z
     );
 
     group.userData.lastPosition = new Vector3(
-      data.transform.position.x,
-      data.transform.position.y,
-      data.transform.position.z
+      data.transform.headPosition.x,
+      data.transform.headPosition.y,
+      data.transform.headPosition.z
     );
 
     group.userData.lastRotation = new Quaternion(
@@ -97,9 +99,9 @@ class SingleFriend {
 
     this.instance.userData.headHeight = data.transform.headHeight * this.headFactor;
     this.instance.userData.targetPosition = new Vector3(
-      data.transform.position.x,
-      data.transform.position.y * this.headFactor,
-      data.transform.position.z
+      data.transform.headPosition.x,
+      data.transform.headPosition.y * this.headFactor,
+      data.transform.headPosition.z
     );
 
     this.instance.userData.lastPosition = this.instance.position.clone();
