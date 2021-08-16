@@ -17,7 +17,7 @@ export default new Vuex.Store({
     startThemeName: "",
     lastTheme: null,
     nextTheme: null,
-    lerpDuration: 1,
+    lerpDuration: 2,
     allThemes: null,
     materialController: null,
     fogDistance: 0.01,
