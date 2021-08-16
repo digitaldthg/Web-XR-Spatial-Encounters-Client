@@ -167,7 +167,7 @@ class MaterialController {
     });
 
     this.store.watch(state => state.fogDistance, (newValue)=>{
-      console.log("MaterialController" , newValue);
+      //console.log("MaterialController" , newValue);
 
       this.ChangeFogDistance(newValue );
     })

@@ -24,9 +24,6 @@ class ConstantTriangle {
     UpdateTriangle() {
 
 
-
-        console.log(this.nextPositions.length , this.lastPositions.length);
-
         //falls mehr Positionen zurückkommen als vorher
         // if(this.nextPositions.length > this.lastPositions.length){
         //   let nextPos = [...this.nextPositions];
@@ -55,7 +52,7 @@ class ConstantTriangle {
 
           return this.lastPositions[index].lerp( pos , .05);
 
-          return triangleUtils.LerpVector(this.lastPositions[index] , pos, this.positionAlphas[index] / 100);
+          
         });
 
         //console.log(this.positions);
@@ -95,8 +92,7 @@ class ConstantTriangle {
         var newPos = triData.Positions.map((v)=>new Vector3(v.x,v.y,v.z));
         
         this.nextPositions = newPos;
-        console.log("triData.Positions" , newPos);
-
+     
         this.lastPositions = this.lastPositions == null ? newPos : [...this.positions];
         
         //setzt die Alphawerte wieder auf 0
