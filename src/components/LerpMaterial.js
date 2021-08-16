@@ -70,7 +70,7 @@ class LerpMaterial {
 
       ].join("\n"),
       fragment_shader: [
-
+        "precision highp float;",
         "varying vec2 vUv;",
 
         "uniform sampler2D texture_1;",
@@ -89,6 +89,7 @@ class LerpMaterial {
         "uniform vec3 fogColor;",
         "uniform float fogNear;",
         "uniform float fogFar;",
+        "uniform float fogDensity;",
 
         "void main() {",
         "vec2 uv_1 = vec2(vUv.x*textureRepeat_1.x + textureOffset_1.x, vUv.y*textureRepeat_1.y+textureOffset_1.y);",
@@ -121,7 +122,7 @@ class LerpMaterial {
         "      float depth = gl_FragCoord.z / gl_FragCoord.w;",
         "  #endif",
         "  float fogFactor = smoothstep( fogNear, fogFar, depth );",
-        "  gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );",
+        "  gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogDensity * fogFactor );",
         "#endif",
 
 

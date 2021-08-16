@@ -100,6 +100,9 @@ export default {
       );
 
       this.xr.Scene.fog.color = color;
+      
+
+
     },
     InitFog() {
       // if (
@@ -161,6 +164,7 @@ export default {
         color: 0xFF10F0,
         side: FrontSide,
         transparent: true,
+        depthTest : false
       });
       const plane = new Mesh(planeGeometry, this.planeMaterial);
       plane.renderOrder = 16;

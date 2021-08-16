@@ -163,9 +163,16 @@ class MaterialController {
 
     this.xr.Events.addEventListener("OnTextureLoad", () => {
       //console.log("LERP ON TEXTURE LOAD");
+      this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
+    });
 
-      //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
+    this.store.watch(state => state.fogDistance, (newValue)=>{
+      console.log("MaterialController" , newValue);
+
+      this.ChangeFogDistance(newValue );
     })
+
+
   }
 
   hsv_to_hsl(arr) {
@@ -245,12 +252,27 @@ class MaterialController {
         if(this.materials[matName].uniforms.hasOwnProperty("fogColor")){
           this.materials[matName].uniforms.fogColor.value = this.xr.Scene.fog.color;
           this.materials[matName].uniforms.fogDensity.value = this.xr.Scene.fog.density;
+          this.materials[matName].uniforms.fogNear.value = this.xr.Camera.near;// ;
           this.materials[matName].uniforms.fogFar.value = this.xr.Camera.far;
-          this.materials[matName].uniforms.fogNear.value = this.xr.Camera.near;
+          this.materials[matName].uniforms.fogDensity.value = this.store.state.fogDistance;
         }
       }
     });
 
+  }
+
+  ChangeFogDistance(density){
+     //Update Fog Uniform Settings
+     Object.keys(this.materials).map((matName)=>{
+      if(this.materials[matName].hasOwnProperty("uniforms")){
+        if(this.materials[matName].uniforms.hasOwnProperty("fogColor")){
+          // this.materials[matName].uniforms.fogColor.value = this.xr.Scene.fog.color;
+          // this.materials[matName].uniforms.fogDensity.value = this.xr.Scene.fog.density;
+          this.materials[matName].uniforms.fogDensity.value = density * 1000;
+          //this.materials[matName].uniforms.fogNear.value = distNear;// this.xr.Camera.near;
+        }
+      }
+    });
   }
 
   GetHSLColor(hslArray) {
