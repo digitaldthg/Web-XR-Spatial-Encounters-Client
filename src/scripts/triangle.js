@@ -11,8 +11,8 @@ class Triangle {
         this.mesh = null;
         this.height = 0.06;
         this.time = 0;
-        this.maxTime = 3; //in Sekunden
-        this.maxHeight = 2;
+        this.maxTime = 30; //in Sekunden
+        this.maxHeight = 20;
         this.tween = null;
         this.Init();
     }
@@ -29,7 +29,7 @@ class Triangle {
             return;
         }
         var geometry = triangleUtils.GetGeometry(positions, this.height)
-        var uniforms = triangleUtils.GetUniforms(this.data.Color)
+        var uniforms = triangleUtils.GetUniforms(this.data.Color,{r:1,g:1,b:1}, 0, 20, 0.1, this.store.state.triangleOpacity)
 
         //MeshBasicMaterial
         this.material = triangleUtils.getMaterial(uniforms)
@@ -52,21 +52,21 @@ class Triangle {
         if (this.mesh != null) {
             var pos = this.mesh.position;
             this.mesh.position.set(pos.x, pos.y + this.store.state.speed / 10, pos.z);
-
+            this.time += time.elapsedTime;
             if (this.mesh.position.y > this.maxHeight) {
                 this.DeleteTriangle();
-            }
-
-            this.time += time.elapsedTime;
-            if (this.time >= this.maxTime * 10000) {
+            } else if (this.time >= this.maxTime * 10000) {
                 this.DeleteTriangle();
-            }
+            } 
+             
+
+
         }
     }
 
     DeleteTriangle = () => {
         if (this.tween != null) { return; }
-        var lerpObject = { lerp: 1.0 };
+        var lerpObject = { lerp:this.mesh.material.uniforms.alpha.value};
         this.tween = new TWEEN.Tween(lerpObject).to({
             lerp: 0.0
         },

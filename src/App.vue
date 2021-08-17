@@ -42,6 +42,7 @@ export default {
       store.commit("setSpeed", this.initData.speed);
       store.commit("setFrequency", this.initData.frequency);
       store.commit("setFogDistance", this.initData.fog);
+      store.commit("setTriangleOpacity",this.initData.opacity)
     },
   },
   sockets: {
