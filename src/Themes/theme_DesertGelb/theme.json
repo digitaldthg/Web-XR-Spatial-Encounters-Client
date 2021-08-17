@@ -2,15 +2,9 @@
   "name":"Desert Gelb",
   "fog_color":"#ffffff",
   "triangle_colors": [
-    "#3ba766",
-    "#3caa7a",
-    "#3cad8e",
-    "#3cafa4",
-    "#3caab2",
-    "#3c99b5",
-    "#3c86b8",
-    "#3c73bb",
-    "#3c5fbd"
+    "#892C0E",
+    "#F26126",
+    "#FF5232"
   ],
   "triangle_color_bottom":"#FF5232",
   "base_floor":[{

@@ -2,9 +2,11 @@
   "name":"Desert Sun",
   "fog_color":"#ffffff",
   "triangle_colors": [
-    "#F26126"
+    "#F26126",
+    "#FF5232",
+    "#FFFFFF"
   ],
-  "triangle_color_bottom":"#ffffff",
+  "triangle_color_bottom":"#ffb400",
   "gradient_sun" : [
     {
       "stop" : 0,
