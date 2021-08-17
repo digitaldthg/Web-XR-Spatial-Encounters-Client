@@ -28,11 +28,11 @@
     },
     {
       "stop" : 0.5,
-      "value" : "#e1e1e1"
+      "value" : "#f7d9d9"
     },
     {
       "stop" : 0.6,
-      "value" : "#e9ecf5"
+      "value" : "#cfd6ed"
     },
     {
       "stop" : 0.9,
