@@ -54,7 +54,7 @@ export default {
       thumb: false,
       rings: [],
       explosition: false,
-      explodingFactor: 0.8,
+      explodingFactor: 0.6,
       ringOffset: 0.15,
       bottomColor: new Color(0xff0000),
       keyArray: ["w", "a", "s", "d", "e"],
@@ -380,16 +380,17 @@ export default {
         colorBottom[0].value[1] / 100,
         colorBottom[0].value[2] / 100
       );
-
       
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
+
+var heightOffset = this.data.transform.headHeigh*this.explodingFactor;
 
       this.currentColor = colorBottomHSL
         .clone()
         .lerp(
           color,
-          Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
+          Math.min(1, Math.max(0, (currentY-heightOffset) / (this.data.transform.headHeight-heightOffset)))
         );
 
       var ring_pos = this.player.position.clone();
