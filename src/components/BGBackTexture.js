@@ -3,6 +3,7 @@ import Forrest from '../Model/environment/textures/background/Horizon_Forrest01.
 import Wolken from '../Model/environment/textures/background/Horizon_Wolken.png';
 import Mountains from '../Model/environment/textures/background/Horizon_Mountains01.png';
 import Black from '../Model/environment/textures/black.png';
+import WolkenBlur from '../Model/environment/textures/background/Horizon_Wolken_blur.png';
 import {ClampToEdgeWrapping} from 'three';
 
 class BGBackTexture extends TextureBackground{
@@ -21,6 +22,10 @@ class BGBackTexture extends TextureBackground{
     });
 
     this.Load("Wolken", Wolken).then((texture)=>{
+      texture.repeat.set( 5 , 1 );
+      texture.wrapT = ClampToEdgeWrapping;
+    });
+    this.Load("WolkenBlur", Wolken).then((texture)=>{
       texture.repeat.set( 5 , 1 );
       texture.wrapT = ClampToEdgeWrapping;
     });

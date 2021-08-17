@@ -2,17 +2,9 @@
   "name":"Desert Pistachio",
   "fog_color":"#ffffff",
   "triangle_colors": [
-    "#4152C0",
-    "#43B9C0",
-    "#A740BF",
-    "#C0BF43",
-    "#BE3F6D",
-    "#43C050",
-    "#C07443",
-    "#4D3398",
-    "#9A66CC"
+    "#F26126"
   ],
-  "triangle_color_bottom":"#4152C0",
+  "triangle_color_bottom":"#892C0E",
   "base_floor":[{
     "stop" : 0,
     "value" : "#ffcc00"}
@@ -93,7 +85,7 @@
       "value" : "#000000"
     }
   ],
-  "tex_floor" : "YellowDesert",
+  "tex_floor" : "NudeDesert",
   "tex_skybox" : null,
   "tex_bg_front" :"Black",
   "tex_bg_back" : "Black",
