@@ -2,6 +2,21 @@
   <div id="controls" :class="{ hidden: !config.showDevTools }">
     <div class="controls-inner" v-if="open">
       <div class="grid">
+        <div class="grid-1 flex info-panel">
+          
+          <div class="input-checkbox">
+              <input
+                id="auto-orbit"
+                class="invisible"
+                type="checkbox"
+                @input="ChangeAutoOrbit"
+              />
+              <label class="checkbox-label" for="auto-orbit"
+                ></label
+              >
+            </div>
+            <p>Autorotate Kamera</p>
+        </div>
         <div class="grid-1 info-panel">
           <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
           <div class="dev-info">Raum: {{ $store.state.room }}</div>
@@ -230,6 +245,11 @@ export default {
   methods: {
     Toggle() {
       this.open = !this.open;
+    },
+    ChangeAutoOrbit(e){
+      console.log(e.target.checked);
+
+      this.$store.commit("ToggleAutoOrbit", e.target.checked);
     },
     ChangeThemeLerpDuration(val){
       console.log(val);
@@ -494,7 +514,11 @@ input[type="number"] {
 }
 .input-checkbox {
   margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 input[type="checkbox"]:checked + .checkbox-label:after {
   background: #607d8b;

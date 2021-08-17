@@ -70,6 +70,19 @@ export default {
     },
   },
   watch: {
+    "$store.state.autoOrbit" : function(autoOrbit){
+      console.log("AutoOrbit", autoOrbit);
+
+      if(autoOrbit){
+         this.xr.Controls.Desktop.orbit.autoRotateSpeed = -1;
+        this.xr.Controls.Desktop.orbit.autoRotate = true;
+
+      }else{
+        
+        this.xr.Controls.Desktop.orbit.autoRotate = false;
+      }
+
+    },
     "$store.state.fogDistance": function (fogDistance) {
       this.xr.Scene.fog.density = fogDistance;
     },
@@ -293,6 +306,8 @@ export default {
     },
 
     RenderLoop() {
+      
+      
       this.GamePadLoop();
 
       const pos = this.particles.geometry.attributes.position.array;
@@ -376,10 +391,10 @@ export default {
 
 #vr-button {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
+  bottom: 3rem;
+  left: 3rem;
+  right: initial;
+  top: initial;
   margin: auto;
   width: 200px;
   height: 50px;
