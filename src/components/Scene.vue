@@ -2,9 +2,8 @@
   <div id="scene">
     <Player />
     <Friends />
-    <Environment />
-
-    <div id="vr-button" ref="vrButton"></div>
+    <Environment />    
+    <div id="vr-button" ref="vrButton" v-show="$store.state.uiVisible"></div>
   </div>
 </template>
 <script>
@@ -70,11 +69,14 @@ export default {
     },
   },
   watch: {
+    "$store.state.rotationSpeed" : function(newSpeed){
+      this.xr.Controls.Desktop.orbit.autoRotateSpeed = newSpeed;
+    },
     "$store.state.autoOrbit" : function(autoOrbit){
       console.log("AutoOrbit", autoOrbit);
 
       if(autoOrbit){
-         this.xr.Controls.Desktop.orbit.autoRotateSpeed = -1;
+         this.xr.Controls.Desktop.orbit.autoRotateSpeed = this.$store.state.rotationSpeed;
         this.xr.Controls.Desktop.orbit.autoRotate = true;
 
       }else{

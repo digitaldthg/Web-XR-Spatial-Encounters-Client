@@ -24,9 +24,16 @@ export default new Vuex.Store({
     playerPosition: null,
     startPosition:{x:0,y:0,z:7},
     autoOrbit : false,
-    triangleOpacity : 1.0
+    uiVisible : true,
+    rotationSpeed : -1
   },
   mutations: {
+    ChangeRotationSpeed(state,data){
+      state.rotationSpeed = data;
+    },
+    ToggleUI(state,data){
+      state.uiVisible = data;
+    },
     xr(state, data) {
       state.xr = data;
     },
