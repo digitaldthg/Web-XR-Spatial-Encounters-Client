@@ -19,6 +19,7 @@ class ConstantTriangle {
     }
     Init() {
         this.mesh = new THREE.Mesh();
+        this.mesh.renderOrder = 12;
     }
 
     UpdateTriangle() {
@@ -27,20 +28,11 @@ class ConstantTriangle {
           if(typeof(this.lastPositions[index]) == "undefined"){return pos;}
           if(typeof(pos) == "undefined"){return this.lastPositions[index];}
 
-
           return this.lastPositions[index].lerp( pos , .05);
-
-          return triangleUtils.LerpVector(this.lastPositions[index] , pos, this.positionAlphas[index] / 100);
         });
 
-        //console.log(this.positions);
-        
-        // this.positionAlphas = this.positionAlphas.map((p, index)=>{
-        //   return p > 100 ? null : p + 10;
-        // });
-
         var geometry = triangleUtils.GetGeometry(this.positions,this.height)
-        var uniforms = triangleUtils.GetColor(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
+        var uniforms = triangleUtils.GetUniforms(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
 
         //MeshBasicMaterial
 
@@ -76,11 +68,6 @@ class ConstantTriangle {
         //console.log("triData.Positions" , newPos);
 
         this.lastPositions = this.lastPositions == null ? newPos : [...this.positions];
-
-
-        
-        //setzt die Alphawerte wieder auf 0
-        //this.positionAlphas = this.nextPositions.map(()=> 0);
        
         
     }

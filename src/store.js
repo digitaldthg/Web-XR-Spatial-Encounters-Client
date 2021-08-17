@@ -23,7 +23,8 @@ export default new Vuex.Store({
     fogDistance: 0.2,
     playerPosition: null,
     startPosition:{x:0,y:0,z:7},
-    autoOrbit : false
+    autoOrbit : false,
+    triangleOpacity : 1.0
   },
   mutations: {
     xr(state, data) {

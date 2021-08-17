@@ -132,7 +132,7 @@ export default {
       this.textureSize = 32.0;
       const pointGeometry = new BufferGeometry();
       var verts = [];
-      this.particleNum = 5000;
+      this.particleNum = 1000;
       this.box = {
         x: 50,
         y: 100,
@@ -157,7 +157,7 @@ export default {
         // blending: THREE.AdditiveBlending,
         transparent: true,
         fog: true,
-        depthWrite: false,
+        depthWrite: true,
         depthTest: false
       });
 
@@ -170,7 +170,7 @@ export default {
       }
 
       this.particles = new Points(pointGeometry, pointMaterial);
-      //this.particles.renderOrder = 0;
+      this.particles.renderOrder = 20;
       this.particles.geometry.velocities = velocities;
       this.particles.visible = false;
       this.xr.Scene.add(this.particles);
