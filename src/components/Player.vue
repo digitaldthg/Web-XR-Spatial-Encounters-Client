@@ -154,6 +154,7 @@ export default {
         new BoxGeometry(0.1, 0.1, 0.1),
         new MeshNormalMaterial()
       );
+      this.dummyObject.visible = false;
       this.dummyObject.position = new Vector3(0, 0, 0);
       this.$store.state.xr.Scene.add(this.dummyObject);
 

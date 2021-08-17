@@ -7,7 +7,7 @@ class ConstantTriangle {
         this.xr = props.xr;
         this.store = props.store;
         this.mesh = null;
-        this.height = 0.1
+        this.height = 0.06
         this.Init();
         this.xr.Scene.add(this.mesh);
         
