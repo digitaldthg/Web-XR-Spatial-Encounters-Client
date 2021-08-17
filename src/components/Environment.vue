@@ -53,6 +53,10 @@ export default {
     "server-frequency-update": function (data) {
       this.$store.commit("setFrequency", data);
     },
+    "server-opacity-update": function (data) {
+      console.log("Op from Server ",data)
+      this.$store.commit("setTriangleOpacity", data);
+    },
     "server-theme-lerp": function (data) {
       //console.log("From Server lerp value ",data)
       console.log("SERVER START LERP ", data);

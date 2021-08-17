@@ -2,9 +2,11 @@
   "name":"Desert Pistachio",
   "fog_color":"#fff6f3",
   "triangle_colors": [
-    "#F26126"
+    "#892C0E",
+    "#F26126",
+    "#FF5232"
   ],
-  "triangle_color_bottom":"#892C0E",
+  "triangle_color_bottom":"#ffffff",
   "base_floor":[{
     "stop" : 0,
     "value" : "#ffffff"}

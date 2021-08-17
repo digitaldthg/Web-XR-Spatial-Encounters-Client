@@ -14,7 +14,7 @@ import {
   Raycaster,
   CircleGeometry,
   BackSide,
-  TorusGeometry
+  TorusGeometry,
 } from "three";
 import UserData from "../class/UserData";
 import Timer from "../Timer";
@@ -54,7 +54,7 @@ export default {
       thumb: false,
       rings: [],
       explosition: false,
-      explodingFactor: 0.8,
+      explodingFactor: 0.7,
       ringOffset: 0.15,
       bottomColor: new Color(0xff0000),
       keyArray: ["w", "a", "s", "d", "e"],
@@ -115,14 +115,14 @@ export default {
       var origin = new Vector3(0, 0, 0);*/
       var count = 10;
       for (var i = 0; i <= count; i++) {
-        let scale = 1 / (count + 1)  * (i + 1);
-        const geometry = new TorusGeometry( scale, .008, 6, 64);//new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
+        let scale = (1 / (count + 1)) * (i + 1);
+        const geometry = new TorusGeometry(scale, 0.008, 6, 64); //new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
         const material = new MeshBasicMaterial({
           side: DoubleSide,
           color: color,
         });
         const ring = new Mesh(geometry, material);
-              ring.rotation.x = 90 * Math.PI /180;
+        ring.rotation.x = (90 * Math.PI) / 180;
 
         this.$store.state.xr.Scene.add(ring);
         this.rings.push(ring);
@@ -329,20 +329,20 @@ export default {
       var origin = this.lazyFollower.position.clone();
 
       //TOP COLOR
-      var colorIdxLast = this.$store.state.ownIdx%this.$store.state.lastTheme.triangle_colors.length
+      var colorIdxLast =
+        this.$store.state.ownIdx %
+        this.$store.state.lastTheme.triangle_colors.length;
       var colorLastHex =
         typeof this.$store.state.lastTheme == "undefined"
           ? "#ffffff"
-          : this.$store.state.lastTheme.triangle_colors[
-              colorIdxLast
-            ];
-      var colorIdxNext =  this.$store.state.ownIdx%this.$store.state.nextTheme.triangle_colors.length    
+          : this.$store.state.lastTheme.triangle_colors[colorIdxLast];
+      var colorIdxNext =
+        this.$store.state.ownIdx %
+        this.$store.state.nextTheme.triangle_colors.length;
       var colorNextHex =
         typeof this.$store.state.nextTheme == "undefined"
           ? "#ffffff"
-          : this.$store.state.nextTheme.triangle_colors[
-              colorIdxNext
-            ];
+          : this.$store.state.nextTheme.triangle_colors[colorIdxNext];
 
       var colorTop = Utils.lerpColor(
         [{ value: colorLastHex }],
@@ -381,15 +381,24 @@ export default {
         colorBottom[0].value[2] / 100
       );
 
-      
       //Ringfarbe lerpen
       var currentY = target.y == 0 ? 0.01 : target.y;
+
+      var heightOffset = this.data.transform.headHeight * this.explodingFactor;
+      
 
       this.currentColor = colorBottomHSL
         .clone()
         .lerp(
           color,
-          Math.min(1, Math.max(0, currentY / this.data.transform.headHeight))
+          Math.min(
+            1,
+            Math.max(
+              0,
+              (currentY - heightOffset) /
+                (this.data.transform.headHeight - heightOffset)
+            )
+          )
         );
 
       var ring_pos = this.player.position.clone();
@@ -469,14 +478,15 @@ export default {
       );
 
       this.$store.commit("setPlayerPosition", this.head.position);
-            //Calculate forward playerDirectionVector für Camera um die Playerringe etwas nach hinten zu schieben
+      //Calculate forward playerDirectionVector für Camera um die Playerringe etwas nach hinten zu schieben
       this.playerDirectionVector = new Vector3();
-          this.$store.state.xr.Camera.instance.getWorldDirection( this.playerDirectionVector );          
-          this.playerDirectionVector.y = 0;    
-          this.playerDirectionVector.normalize();
-          
-      var fac = -0.2;
+      this.$store.state.xr.Camera.instance.getWorldDirection(
+        this.playerDirectionVector
+      );
+      this.playerDirectionVector.y = 0;
+      this.playerDirectionVector.normalize();
 
+      var fac = -0.2;
 
       this.rings.map((ring, index) => {
         var lerpAlpha = (1 / this.rings.length) * index;
@@ -486,10 +496,10 @@ export default {
         var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha);
         var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha);
 
-        ring.position.x = lerperPos.x + (this.playerDirectionVector.x * fac);
+        ring.position.x = lerperPos.x + this.playerDirectionVector.x * fac;
 
         ring.position.y = lerper.y;
-        ring.position.z = lerperPos.z + (this.playerDirectionVector.x * fac);
+        ring.position.z = lerperPos.z + this.playerDirectionVector.x * fac;
 
         ring.material.color = this.currentColor;
       });
@@ -497,17 +507,18 @@ export default {
       this.delta += t.getDelta();
       this.ApplyData();
 
-
       if (
         !this.explosition &&
-        this.player.position.y < this.data.transform.headHeight * this.explodingFactor
+        this.player.position.y <
+          this.data.transform.headHeight * this.explodingFactor
       ) {
-        console.log("EXPLOION")
+        console.log("EXPLOION");
         this.EmitExplode();
         this.explosition = true;
       } else if (
         this.explosition &&
-        this.player.position.y > this.data.transform.headHeight * this.explodingFactor
+        this.player.position.y >
+          this.data.transform.headHeight * this.explodingFactor
       ) {
         this.explosition = false;
       }
@@ -535,8 +546,6 @@ export default {
       };
 
       this.data = dataCopy;
-
-
     },
     ReducedFPSCall() {
       this.$socket.emit("client-player", this.data);

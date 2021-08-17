@@ -119,6 +119,23 @@
               />
             </div>
             <div class="slider">
+              <label for="opacity"
+                >Dreiecks Opacity: {{ this.$store.state.triangleOpacity }}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="frequence"
+                name="frequence"
+                min="0.0"
+                max="1.0"
+                step="0.01"
+                :value="this.$store.state.triangleOpacity"
+                @change="updateOpacitySlider"
+                @input="updateOpacitySlider"
+              />
+            </div>
+            <div class="slider">
               <label for="scale">Skalierung der Dreiecke: {{ this.scale }}</label>
               <input
                 class="slider"
@@ -178,7 +195,7 @@
                 id="fog"
                 name="fog"
                 min="0"
-                max="0.3"
+                max="0.8"
                 step="0.00001"
                 :value="this.$store.state.fogDistance"
                 @change="updateFog"
@@ -305,7 +322,6 @@ export default {
         fogData.duration
       )
       .onUpdate((v) => {
-        console.log(v);
 
         this.$store.commit("setFogDistance", v.fogDistance);
 
@@ -367,11 +383,9 @@ export default {
       this.$store.commit("ToggleAutoOrbit", e.target.checked);
     },
     ChangeThemeLerpDuration(val){
-      console.log(val);
       this.$store.commit("setLerpDuration" , parseFloat(val));
     },
     StartLerpTheme(nextTheme, time) {
-      console.log("THEME LERP START CLIENT");
 
       this.$socket.emit("client-theme-lerp", {
         duration: time,
@@ -394,6 +408,12 @@ export default {
     updateSlider(event) {
       this.$socket.emit("client-change-frequency", {
         frequency: parseFloat(event.target.value),
+      });
+    },
+    updateOpacitySlider(event) {
+      console.log("CHANGE OP ",event.target.value)
+      this.$socket.emit("client-change-opacity", {
+        opacity: parseFloat(event.target.value),
       });
     },
     AnimateFog(){

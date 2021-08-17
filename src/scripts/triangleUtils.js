@@ -12,7 +12,7 @@ const triangleUtils = {
             this.LerpFloat(start.z, end.z, alpha),
         )
     },
-    GetColor(colorData, fogColor={r:1,g:1,b:1}, fogNear= 0, fogFar=20, fogDensity=0.1) {
+    GetUniforms(colorData, fogColor={r:1,g:1,b:1}, fogNear= 0, fogFar=20, fogDensity=0.1, alpha=1.0) {
         var colors = colorData;
 
         if (colors.length == 2) {
@@ -26,7 +26,8 @@ const triangleUtils = {
             fogColor: { type: "c", value: new Color(fogColor.r,fogColor.g,fogColor.b) },
             fogNear: { type: "f", value: fogNear},
             fogFar: { type: "f", value: fogFar },
-            fogDensity: { type: "f", value: fogDensity }
+            fogDensity: { type: "f", value: fogDensity },
+            alpha: { type: "f", value: alpha },
         }
         return uniforms
     },
@@ -144,7 +145,9 @@ const triangleUtils = {
             vertexShader: this.vertexShader(),
             fragmentShader: this.fragmentShader(),
             side: DoubleSide,
-            fog: true
+            fog: true,
+            transparent: true,
+            depthWrite: false
         });
     },
 
@@ -170,15 +173,16 @@ const triangleUtils = {
             uniform float fogNear;
             uniform float fogFar;
             uniform float fogDensity;
+            uniform float alpha;
       
       
         void main() {
             if(vUv.x <0.33){
-                gl_FragColor = vec4(mix(colorA, colorB, vUv.x * 3.0), 1.0);
+                gl_FragColor = vec4(mix(colorA, colorB, vUv.x * 3.0), alpha);
             }else if(vUv.x <0.66){
-                gl_FragColor = vec4(mix(colorB, colorC, (vUv.x - 0.33) * 3.0), 1.0);
+                gl_FragColor = vec4(mix(colorB, colorC, (vUv.x - 0.33) * 3.0), alpha);
             }else{
-                gl_FragColor = vec4(mix(colorC, colorA, (vUv.x - 0.66) * 3.0), 1.0);
+                gl_FragColor = vec4(mix(colorC, colorA, (vUv.x - 0.66) * 3.0), alpha);
             }
 
             #ifdef USE_FOG
@@ -188,7 +192,7 @@ const triangleUtils = {
                   float depth = gl_FragCoord.z / gl_FragCoord.w;
               #endif
              float fogFactor = smoothstep( fogNear, fogFar, depth );
-              gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogDensity*fogFactor*10.0);
+              gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogDensity*fogFactor*10.0);
             #endif
           
         }
@@ -200,6 +204,8 @@ const triangleUtils = {
         material.uniforms.fogNear.value = 0; //this.xr.Camera.near;
         material.uniforms.fogFar.value = 20; //this.xr.Camera.far;
         material.uniforms.fogDensity.value = store.state.fogDistance;
+        material.uniforms.alpha.value = store.state.triangleOpacity;
+        material.uniformsNeedsUpdate = true;
     }
 
 

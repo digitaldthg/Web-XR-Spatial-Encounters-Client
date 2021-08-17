@@ -26,7 +26,8 @@ export default new Vuex.Store({
     autoOrbit : false,
     uiVisible : true,
     rotationSpeed : -1,
-    presentation : false
+    presentation : false,
+    triangleOpacity : 0.0
   },
   mutations: {
     ChangeRotationSpeed(state,data){
@@ -59,6 +60,9 @@ export default new Vuex.Store({
     },
     setFogDistance(state, data) {
       state.fogDistance = data
+    },
+    setTriangleOpacity(state, data) {
+      state.triangleOpacity = data
     },
     initKeyEvents(state, data) {
       state.keysInit = data;
