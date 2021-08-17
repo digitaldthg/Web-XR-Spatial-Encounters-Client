@@ -83,7 +83,7 @@ class SingleFriend {
     //group.userData.targetReached = true;
 
     this.myText = new Text()
-    group.add(this.myText)
+    group.add(this.myText);
 
     // Set properties to configure:
     this.myText.text = data.id;
@@ -91,6 +91,17 @@ class SingleFriend {
     this.myText.position.y = .5;
     this.myText.anchorX ="center";
     this.myText.color = new Color(data.color);
+    
+
+    this.xr.Events.addEventListener("OnChangeXRView", (xrMode)=>{
+      console.log("xrMode" , xrMode.xrMode);
+
+      if(xrMode.xrMode == "VR"){
+        group.remove(this.myText);
+
+        this.myText = null;
+      }
+    });
 
 
     return group;
@@ -98,7 +109,6 @@ class SingleFriend {
 
   updateData = (data, idx) => {
     if (typeof (data) == "undefined") { return; }
-
 
     this.instance.userData.headHeight = data.transform.headHeight * this.headFactor;
     this.instance.userData.targetPosition = new Vector3(
@@ -114,7 +124,9 @@ class SingleFriend {
     
     this.instance.userData.color = new Color(data.color.r,data.color.g,data.color.b);
     
-    this.myText.color = new Color(data.color.r,data.color.g,data.color.b);
+    if(this.myText != null){
+      this.myText.color = new Color(data.color.r,data.color.g,data.color.b);
+    }
   }
   
   LerpFloat(start, end, alpha) {
@@ -157,9 +169,11 @@ class SingleFriend {
       ring.material.color = color;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
 
-    this.myText.lookAt(this.xr.Controls.GetCameraPosition());
+    if(this.myText  != null){
+      this.myText.lookAt(this.xr.Controls.GetCameraPosition());
 
-    this.myText.sync();
+      this.myText.sync();
+    }
   }
 
   delete = () => {
