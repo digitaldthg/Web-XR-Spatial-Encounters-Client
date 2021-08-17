@@ -101,7 +101,7 @@
   ],
   "tex_floor" : "GridPink",
   "tex_skybox" : null,
-  "tex_bg_front" : "Mountains",
+  "tex_bg_front" : "Mountains4",
   "tex_bg_back" : "Wolken",
   "tex_guardian":"Grid",
   "tex_sun":"Sun"
