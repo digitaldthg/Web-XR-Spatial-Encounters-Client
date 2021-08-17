@@ -37,6 +37,7 @@ class Renderer {
       initialized : false
     };
     this.context.Events.registerEvent('OnAnimationLoop');
+    this.context.Events.registerEvent('OnAfterRenderLoop');
     
     this.instance = new THREE.WebGLRenderer({
       alpha : true,
@@ -202,33 +203,12 @@ class Renderer {
         }
       });
 
-      
-      var cams = this.instance.xr.getCamera();
-      // if(cams.cameras.length > 0){
-      //   this.instance.render(this.context.Scene, cams.cameras[0]);
-      //   this.instance.render(this.context.Scene, cams.cameras[1]);
-      // }
-      //console.log(cams.cameras[0]);
-      //this.postprocessing.composer.render();
-
-      // console.log(this.postprocessing.composer);
-      // console.log(this.context.Camera.instance);
-
-      //this.instance.clear();
-      this.instance.render(this.context.Scene, this.context.Camera.instance);
-      this.instance.setRenderTarget( this.postprocessing.composer.readBuffer );
-
-      console.log(cams.cameras[0],cams.cameras[1]);
-      
-      if(cams.cameras.length > 0){
-        this.instance.render(this.context.Scene, cams.cameras[0]);
-        this.instance.render(this.context.Scene, cams.cameras[1]);
-      }
-
       this.postprocessing.composer.render();
     }else{
       this.instance.render(this.context.Scene, this.context.Camera.instance);
     }
+
+    this.context.Events.dispatchEvent('OnAfterRenderLoop', this.clock);
   }
 
   Resize = () =>{

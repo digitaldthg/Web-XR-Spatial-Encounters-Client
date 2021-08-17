@@ -25,14 +25,22 @@ export default new Vuex.Store({
     startPosition:{x:0,y:0,z:7},
     autoOrbit : false,
     uiVisible : true,
-    rotationSpeed : -1
+    rotationSpeed : -1,
+    presentation : false
   },
   mutations: {
     ChangeRotationSpeed(state,data){
       state.rotationSpeed = data;
     },
+    TogglePresenterMode(state,data){
+      state.presentation = data;
+    },
     ToggleUI(state,data){
       state.uiVisible = data;
+
+      if(data){
+        state.presentation = false;
+      }
     },
     xr(state, data) {
       state.xr = data;
