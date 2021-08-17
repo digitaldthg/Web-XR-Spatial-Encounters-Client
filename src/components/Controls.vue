@@ -9,21 +9,29 @@
           <div class="grid-1 flex info-panel">
             <button class="cta-button" @click="e=>ToggleUI(false)">Hide User Interface</button>
           </div>
-          <div class="grid-1 flex info-panel">
+          <div class="grid-1 info-panel">
             
-            <div class="input-checkbox">
-                <input
-                  id="auto-orbit"
-                  class="invisible"
-                  type="checkbox"
-                  @input="ChangeAutoOrbit"
-                />
-                <label class="checkbox-label" for="auto-orbit"
-                  ></label
-                >
-              </div>
-              <p>Autorotate Kamera</p>
+            <div class="flex margin-bottom">
+              <div class="input-checkbox">
+                  <input
+                    id="auto-orbit"
+                    class="invisible"
+                    type="checkbox"
+                    @input="ChangeAutoOrbit"
+                  />
+                  <label class="checkbox-label" for="auto-orbit"
+                    ></label
+                  >
+                </div>
+                <p>Autorotate Kamera</p>
+            </div>
+            <div class="">
+              <input type="range" @input="ChangeAutoRotateSpeed" min="-3" max="3" step=".01"/>
+              <label>{{$store.state.rotationSpeed}} RotationSpeed</label>
+            </div>
           </div>
+          
+
           <div class="grid-1 info-panel">
             <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
             <div class="dev-info">Raum: {{ $store.state.room }}</div>
@@ -251,7 +259,7 @@ export default {
       config: config,
       friends: {},
       fogDuration : 2,
-      fogTarget : 0
+      fogTarget : 0,
     };
   },
   sockets:{
@@ -291,9 +299,13 @@ export default {
     this.InitEvents();
   },
   methods: {
-    ChangeFogDuration(e){
-      console.log(e.target.value);
+    ChangeAutoRotateSpeed(e){
+      var targetSpeed = parseFloat(e.target.value);
 
+      this.$store.commit("ChangeRotationSpeed", targetSpeed);
+    },
+    ChangeFogDuration(e){
+      
       this.fogDuration = e.target.value;
     },
     ChangeFogTarget(e){
@@ -306,8 +318,7 @@ export default {
       this.$store.commit("ToggleUI", boolean);
     }, 
     ChangeAutoOrbit(e){
-      console.log(e.target.checked);
-
+      
       this.$store.commit("ToggleAutoOrbit", e.target.checked);
     },
     ChangeThemeLerpDuration(val){

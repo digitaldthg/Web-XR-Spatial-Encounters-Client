@@ -69,11 +69,14 @@ export default {
     },
   },
   watch: {
+    "$store.state.rotationSpeed" : function(newSpeed){
+      this.xr.Controls.Desktop.orbit.autoRotateSpeed = newSpeed;
+    },
     "$store.state.autoOrbit" : function(autoOrbit){
       console.log("AutoOrbit", autoOrbit);
 
       if(autoOrbit){
-         this.xr.Controls.Desktop.orbit.autoRotateSpeed = -1;
+         this.xr.Controls.Desktop.orbit.autoRotateSpeed = this.$store.state.rotationSpeed;
         this.xr.Controls.Desktop.orbit.autoRotate = true;
 
       }else{
