@@ -139,6 +139,7 @@ export default {
       );
       this.lazyFollower.position = new Vector3(0, 0, 0);
       this.lazyFollower.scale.set(0, 0, 0);
+      this.lazyFollower.visible = false;
       this.$store.state.xr.Scene.add(this.lazyFollower);
 
       this.head = new Mesh(

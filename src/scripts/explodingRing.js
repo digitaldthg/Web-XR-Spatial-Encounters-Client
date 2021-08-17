@@ -83,7 +83,7 @@ class explodingRing {
                 //UPDATE VERTICAL
                 var positionY = this.verticalMesh.position.y + v.lerp * 1;
                 var verticalScale = this.verticalMesh.scale.y + v.lerp * 30;
-                var horizontalScale = this.verticalMesh.scale.x + v.lerp*0.2;
+                var horizontalScale = this.verticalMesh.scale.x + v.lerp**2 * 0.1;
 
                 this.verticalMesh.position.setY(positionY);
                 this.verticalMesh.scale.set(horizontalScale,verticalScale,horizontalScale);

@@ -1,10 +1,10 @@
 {
   "name":"Grid Dunkel",
-  "fog_color":"#ffffff",
+  "fog_color":"#000000",
   "triangle_colors": [
     "#ffffff"
   ],
-  "triangle_color_bottom":"#ffffff",
+  "triangle_color_bottom":"#ff0000",
   "base_floor":[{
     "stop" : 0,
     "value" : "#000000"}
@@ -57,11 +57,11 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.3,
+      "stop" : 0.5,
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.7,
+      "stop" : 0.5,
       "value" : "#ffffff"
     },
     {
