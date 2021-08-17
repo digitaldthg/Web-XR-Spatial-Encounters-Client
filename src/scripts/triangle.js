@@ -19,6 +19,9 @@ class Triangle {
         var positions = this.data.Positions;
         if (positions == null || Object.keys(positions).length < 2) {
             if (this.mesh != null) {
+
+                this.mesh.geometry.dispose();
+                this.mesh.material.dispose();
                 this.xr.Scene.remove(this.mesh);
             }
             return;
@@ -49,12 +52,16 @@ class Triangle {
             this.mesh.position.set(pos.x, pos.y + this.store.state.speed / 10, pos.z);
 
             if (this.mesh.position.y > this.maxHeight) {
+                this.mesh.geometry.dispose();
+                this.mesh.material.dispose();
                 this.xr.Scene.remove(this.mesh);
                 this.xr.Events.removeEventListener("OnAnimationLoop", this.AnimateTriangle);
             }
 
             this.time += time.elapsedTime;
             if(this.time >= this.maxTime*10000){
+                this.mesh.geometry.dispose();
+                this.mesh.material.dispose();
                 this.xr.Scene.remove(this.mesh);
                 this.xr.Events.removeEventListener("OnAnimationLoop", this.AnimateTriangle);
             }

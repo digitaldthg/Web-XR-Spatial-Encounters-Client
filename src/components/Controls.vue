@@ -239,7 +239,6 @@ export default {
   },
   sockets:{
     "server-fog-animate" : function(fogData){
-      console.log("fogData" , fogData);
       var start = {
         fogDistance : fogData.current,
       };
