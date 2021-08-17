@@ -157,7 +157,7 @@
           </div>
         </div>
       </div>
-      <div class="colorGradients" v-if="$store.state.lastTheme != null">
+      <!-- <div class="colorGradients" v-if="$store.state.lastTheme != null">
         <input
           :value="this.$store.state.lastTheme.gradient_skybox[3].value"
           type="color"
@@ -182,7 +182,7 @@
 
       <div class="">
         <button @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
-      </div>
+      </div> -->
     </div>
 
     <!-- <button class="toggle-button" @click="Toggle">open / close</button> -->
