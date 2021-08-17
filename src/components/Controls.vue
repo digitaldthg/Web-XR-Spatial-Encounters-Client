@@ -6,8 +6,13 @@
     <div id="controls" :class="{ hidden: !config.showDevTools || !$store.state.uiVisible }">
       <div class="controls-inner" v-if="open">
         <div class="grid">
+          
           <div class="grid-1 flex info-panel">
             <button class="cta-button" @click="e=>ToggleUI(false)">Hide User Interface</button>
+          </div>
+          <div class="grid-1 info-panel">
+            <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
+            <div class="dev-info">Raum: {{ $store.state.room }}</div>
           </div>
           <div class="grid-1 info-panel">
             
@@ -30,12 +35,30 @@
               <label>{{$store.state.rotationSpeed}} RotationSpeed</label>
             </div>
           </div>
-          
-
           <div class="grid-1 info-panel">
-            <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
-            <div class="dev-info">Raum: {{ $store.state.room }}</div>
+              <div class="flex">
+                <div class="flex margin-right">
+                  <div class="input-checkbox">
+                    <input
+                      class="invisible"
+                      :checked="recording"
+                      id="recording"
+                      type="checkbox"
+                      @input="(e) => ToggleRecording(e.target.checked)"
+                    />
+                    <label class="checkbox-label" for="recording"
+                      ><span>Recording</span></label
+                    >
+                  </div>
+                </div>
+                <div class="">
+                  <label for="sessionFileName">Filename</label>
+                  <input id="sessionFileName" type="text" :value="recordName" @input="ChangeRecordName" />
+                </div>
+              </div>
           </div>
+
+          
           <div class="grid-1">
             <div
               class="friend flex-between"
@@ -260,6 +283,9 @@ export default {
       friends: {},
       fogDuration : 2,
       fogTarget : 0,
+      recording : false,
+      recordName : "SessionFile",
+      id: null
     };
   },
   sockets:{
@@ -297,8 +323,18 @@ export default {
   },
   mounted() {
     this.InitEvents();
+    this.id = this._uid;
   },
   methods: {
+    ChangeRecordName(e){
+      this.recordName = e.target.value;
+    },
+    ToggleRecording(boolean){
+      this.$socket.emit("client-record", {
+        Record: boolean,
+        RecordName : this.recordName != "" ? this.recordName + this.id: "sessionFile_" + this.id,
+      });
+    },
     ChangeAutoRotateSpeed(e){
       var targetSpeed = parseFloat(e.target.value);
 
