@@ -128,13 +128,6 @@
             />
           </div>
           <div class="slider">
-            <div class="info-panel flex flex-between">
-              <div class="">
-                <input type="number" @input="ChangeFogDuration" :value="fogDuration" /> in sek
-              </div>
-              <button class="cta-button" @click="AnimateFog">Animate to zero</button>
-            </div>
-
             <label for="fog"
               >FogDistance: {{ this.$store.state.fogDistance }}</label
             >
@@ -150,6 +143,21 @@
               @change="updateFog"
               @input="updateFog"
             />
+          </div>
+        </div>
+
+        <div class="grid-1">
+          <div class="info-panel flex flex-between">
+            <div class="">
+              <input type="number" @input="ChangeFogDuration" :value="fogDuration" />
+              <label>in sek</label>
+            </div>
+            <button class="cta-button" @click="AnimateFog">Animate to</button>
+
+            <div class="">
+              <input type="number" @input="ChangeFogTarget" :value="fogTarget" />
+              <label>Target fogDistance</label>
+            </div>
           </div>
         </div>
 
@@ -234,7 +242,8 @@ export default {
       scale: 1.25,
       config: config,
       friends: {},
-      fogDuration : 2
+      fogDuration : 2,
+      fogTarget : 0
     };
   },
   sockets:{
@@ -278,7 +287,10 @@ export default {
       console.log(e.target.value);
 
       this.fogDuration = e.target.value;
-    },  
+    },
+    ChangeFogTarget(e){
+      this.fogTarget = e.target.value;
+    },
     Toggle() {
       this.open = !this.open;
     },
@@ -320,7 +332,7 @@ export default {
     AnimateFog(){
       this.$socket.emit("client-animate-fog", {
         current : this.$store.state.fogDistance,
-        target : 0,
+        target : this.fogTarget,
         duration : parseFloat(this.fogDuration) * 1000
       });
     },
