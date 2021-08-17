@@ -1,8 +1,9 @@
 {
-  "name":"Theme DunkelConcrete Morning",
-  "triangle_colors":[
-    "#43B9C0",
+  "name":"Desert Hell",
+  "fog_color":"#ffffff",
+  "triangle_colors": [
     "#4152C0",
+    "#43B9C0",
     "#A740BF",
     "#C0BF43",
     "#BE3F6D",
@@ -12,6 +13,10 @@
     "#9A66CC"
   ],
   "triangle_color_bottom":"#4152C0",
+  "base_floor":[{
+    "stop" : 0,
+    "value" : "#ffcc00"}
+  ],
   "gradient_sun" : [
     {
       "stop" : 0,
@@ -22,42 +27,36 @@
       "value" : "#F5A43B"
     }
   ],
-  "base_floor":[{
-    "stop" : 0,
-    "value" : "#000000"
-    }
-  ],
-  "fog_color":"#ff0000",
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : "#000000"
-    },
-    {
-      "stop" : 0,
-      "value" : "#000000"
+      "value" :"#000000"
     },
     {
       "stop" : 0.45,
       "value" : "#000000"
     },
     {
+      "stop" : 0.48,
+      "value" : "#ADFF2F"
+    },
+    {
       "stop" : 1,
-      "value" : "#4169E1"
+      "value" : "#FFE4C4"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#FF4500"
     },
     {
       "stop" : 0.5,
-      "value" : "#000000"
+      "value" : "#ff0000"
     },
     {
       "stop" : 1,
-      "value" : "#000000"
+      "value" : "#FF4500"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -81,7 +80,7 @@
     },
     {
       "stop" : 0.5,
-      "value" : "#ffffff"
+      "value" : "#000000"
     }
   ],
   "gradient_bg_back" : [
@@ -91,10 +90,10 @@
     },
     {
       "stop" : 1,
-      "value" : "#ffffff"
+      "value" : "#000000"
     }
   ],
-  "tex_floor" : "Concrete",
+  "tex_floor" : "YellowDesert",
   "tex_skybox" : null,
   "tex_bg_front" :"Black",
   "tex_bg_back" : "Black",

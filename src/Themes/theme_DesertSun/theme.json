@@ -1,0 +1,103 @@
+{
+  "name":"Desert Sun",
+  "fog_color":"#ffffff",
+  "triangle_colors": [
+    "#4152C0",
+    "#43B9C0",
+    "#A740BF",
+    "#C0BF43",
+    "#BE3F6D",
+    "#43C050",
+    "#C07443",
+    "#4D3398",
+    "#9A66CC"
+  ],
+  "triangle_color_bottom":"#4152C0",
+  "gradient_sun" : [
+    {
+      "stop" : 0,
+      "value" : "#F5A43B"
+    },
+    {
+      "stop" : 1,
+      "value" : "#F5A43B"
+    }
+  ],
+  "base_floor":[{
+    "stop" : 0,
+    "value" : "#3b1c00"
+  }
+  ],
+  "gradient_skybox": [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.45,
+      "value" : "#ff7800"
+    },
+    {
+      "stop" : 0.58,
+      "value" : "#ff7800"
+    },
+    {
+      "stop" : 1,
+      "value" : "#000000"
+    }
+  ],
+  "gradient_fogFloor" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.5,
+      "value" :"#d43511"
+    },
+    {
+      "stop" : 1,
+      "value" : "#000000"
+    }
+  ],
+  "gradient_fogFloorAlpha" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.5,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 0.9,
+      "value" : "#000000"
+    }
+  ],
+  "gradient_bg_front" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.5,
+      "value" : "#000000"
+    }
+  ],
+  "gradient_bg_back" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 1,
+      "value" : "#000000"
+    }
+  ],
+  "tex_floor" : "GridOrange",
+  "tex_skybox" : null,
+  "tex_bg_front" : "Black",
+  "tex_bg_back" : "Black",
+  "tex_guardian":"Grid",
+  "tex_sun":"Sun"
+}

@@ -1,6 +1,6 @@
 {
-  "name":"Theme ThueringerLandschaft",
-  "fog_color":"#ffffff",
+  "name": "Theme ThueringerLandschaft",
+  "fog_color": "#ffffff",
   "triangle_colors": [
     "#428931",
     "#338c31",
@@ -12,92 +12,93 @@
     "#329c99",
     "#328f9e"
   ],
-  "triangle_color_bottom":"#4152C0",
-  "gradient_sun" : [
+  "triangle_color_bottom": "#F26126",
+  "gradient_sun": [
     {
-      "stop" : 0,
-      "value" : "#F5A43B"
+      "stop": 0,
+      "value": "#F5A43B"
     },
     {
-      "stop" : 1,
-      "value" : "#F5A43B"
+      "stop": 1,
+      "value": "#F5A43B"
     }
   ],
-  "base_floor":[{
-    "stop" : 0,
-    "value" : "#FFFF00"
-  }
+  "base_floor": [
+    {
+      "stop": 0,
+      "value": "#FFFF00"
+    }
   ],
   "gradient_skybox": [
     {
-      "stop" : 0,
-      "value" : "#000000"
+      "stop": 0,
+      "value": "#000000"
     },
     {
-      "stop" : 0.45,
-      "value" : "#d0dfff"
+      "stop": 0.45,
+      "value": "#d0dfff"
     },
     {
-      "stop" : 0.55,
-      "value" : "#d0dfff"
+      "stop": 0.55,
+      "value": "#d0dfff"
     },
     {
-      "stop" : 1,
-      "value" : "#4974ff"
+      "stop": 1,
+      "value": "#4974ff"
     }
   ],
-  "gradient_fogFloor" : [
+  "gradient_fogFloor": [
     {
-      "stop" : 0,
-      "value" : "#cfc502"
+      "stop": 0,
+      "value": "#cfc502"
     },
     {
-      "stop" : 0.5,
-      "value" : "#cfc502"
+      "stop": 0.5,
+      "value": "#cfc502"
     },
     {
-      "stop" : 1,
-      "value" : "#cfc502"
+      "stop": 1,
+      "value": "#cfc502"
     }
   ],
-  "gradient_fogFloorAlpha" : [
+  "gradient_fogFloorAlpha": [
     {
-      "stop" : 0.45,
-      "value" : "#000000"
+      "stop": 0.45,
+      "value": "#000000"
     },
     {
-      "stop" : 0.5,
-      "value" : "#ffffff"
+      "stop": 0.5,
+      "value": "#ffffff"
     },
     {
-      "stop" : 0.9,
-      "value" : "#000000"
+      "stop": 0.9,
+      "value": "#000000"
     }
   ],
-  "gradient_bg_front" : [
+  "gradient_bg_front": [
     {
-      "stop" : 0,
-      "value" : "#083801"
+      "stop": 0,
+      "value": "#083801"
     },
     {
-      "stop" : 1,
-      "value" : "#083801"
+      "stop": 1,
+      "value": "#083801"
     }
   ],
-  "gradient_bg_back" : [
+  "gradient_bg_back": [
     {
-      "stop" : 0,
-      "value" : "#ffffff"
+      "stop": 0,
+      "value": "#ffffff"
     },
     {
-      "stop" : 1,
-      "value" : "#ffffff"
+      "stop": 1,
+      "value": "#ffffff"
     }
   ],
-  "tex_floor" : "Raps",
-  "tex_skybox" : null,
-  "tex_bg_front" : "Forrest",
-  "tex_bg_back" : "Wolken",
-  "tex_guardian":"Grid",
-  "tex_sun":"Black"
+  "tex_floor": "Raps",
+  "tex_skybox": null,
+  "tex_bg_front": "Forrest",
+  "tex_bg_back": "Wolken",
+  "tex_guardian": "Grid",
+  "tex_sun": "Black"
 }

@@ -1,5 +1,5 @@
 {
-  "name":"Theme Cyberpunk Sun",
+  "name":"Grid Dunkel",
   "fog_color":"#ffffff",
   "triangle_colors": [
     "#4152C0",
@@ -12,7 +12,11 @@
     "#4D3398",
     "#9A66CC"
   ],
-  "triangle_color_bottom":"#ff0000",
+  "triangle_color_bottom":"#4152C0",
+  "base_floor":[{
+    "stop" : 0,
+    "value" : "#000000"}
+  ],
   "gradient_sun" : [
     {
       "stop" : 0,
@@ -21,12 +25,6 @@
     {
       "stop" : 1,
       "value" : "#F5A43B"
-    }
-  ],
-  
-  "base_floor":[{
-    "stop" : 0,
-    "value" :  "#191970"
     }
   ],
   "gradient_skybox": [
@@ -40,17 +38,17 @@
     },
     {
       "stop" : 0.55,
-      "value" : "#9400D3"
+      "value" : "#333333"
     },
     {
-      "stop" : 1,
-      "value" : "#4B0082"
+      "stop" : 0.65,
+      "value" :"#000000"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#000000"
     },
     {
       "stop" : 0.5,
@@ -58,7 +56,7 @@
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#000000"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -71,7 +69,7 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 1,
       "value" : "#000000"
     }
   ],
@@ -88,17 +86,17 @@
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#ffffff"
+      "value" : "#999999"
     },
     {
       "stop" : 1,
-      "value" : "#ffffff"
+      "value" : "#999999"
     }
   ],
-  "tex_floor" : "GridPink",
+  "tex_floor" : "GridConcrete",
   "tex_skybox" : null,
-  "tex_bg_front" : "Mountains",
+  "tex_bg_front" : "Black",
   "tex_bg_back" : "Wolken",
   "tex_guardian":"Grid",
-  "tex_sun":"Sun"
+  "tex_sun":"Black"
 }

@@ -1,0 +1,103 @@
+{
+  "name":"Dunkel Concrete Morning",
+  "triangle_colors":[
+    "#43B9C0",
+    "#4152C0",
+    "#A740BF",
+    "#C0BF43",
+    "#BE3F6D",
+    "#43C050",
+    "#C07443",
+    "#4D3398",
+    "#9A66CC"
+  ],
+  "triangle_color_bottom":"#4152C0",
+  "gradient_sun" : [
+    {
+      "stop" : 0,
+      "value" : "#F5A43B"
+    },
+    {
+      "stop" : 1,
+      "value" : "#F5A43B"
+    }
+  ],
+  "base_floor":[{
+    "stop" : 0,
+    "value" : "#000000"
+    }
+  ],
+  "fog_color":"#ffffff",
+  "gradient_skybox": [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.45,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 1,
+      "value" : "#4169E1"
+    }
+  ],
+  "gradient_fogFloor" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.5,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 1,
+      "value" : "#000000"
+    }
+  ],
+  "gradient_fogFloorAlpha" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.5,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 0.8,
+      "value" : "#000000"
+    }
+  ],
+  "gradient_bg_front" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 0.5,
+      "value" : "#ffffff"
+    }
+  ],
+  "gradient_bg_back" : [
+    {
+      "stop" : 0,
+      "value" : "#000000"
+    },
+    {
+      "stop" : 1,
+      "value" : "#ffffff"
+    }
+  ],
+  "tex_floor" : "Concrete",
+  "tex_skybox" : null,
+  "tex_bg_front" :"Black",
+  "tex_bg_back" : "Black",
+  "tex_guardian":"Grid",
+  "tex_sun":"Black"
+}

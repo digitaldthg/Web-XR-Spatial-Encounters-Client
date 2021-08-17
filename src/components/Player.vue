@@ -327,18 +327,21 @@ export default {
       var origin = this.lazyFollower.position.clone();
 
       //TOP COLOR
+      var colorIdxLast = this.$store.state.ownIdx%this.$store.state.lastTheme.triangle_colors.length
       var colorLastHex =
         typeof this.$store.state.lastTheme == "undefined"
           ? "#ffffff"
           : this.$store.state.lastTheme.triangle_colors[
-              this.$store.state.ownIdx
+              colorIdxLast
             ];
+      var colorIdxNext =  this.$store.state.ownIdx%this.$store.state.nextTheme.triangle_colors.length    
       var colorNextHex =
         typeof this.$store.state.nextTheme == "undefined"
           ? "#ffffff"
           : this.$store.state.nextTheme.triangle_colors[
-              this.$store.state.ownIdx
+              colorIdxNext
             ];
+
       var colorTop = Utils.lerpColor(
         [{ value: colorLastHex }],
         [{ value: colorNextHex }],

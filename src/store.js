@@ -20,7 +20,7 @@ export default new Vuex.Store({
     lerpDuration: 2,
     allThemes: null,
     materialController: null,
-    fogDistance: 0.01,
+    fogDistance: 0.2,
     playerPosition: null,
     startPosition:{x:0,y:0,z:7}
   },

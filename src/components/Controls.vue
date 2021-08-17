@@ -57,7 +57,7 @@
               min="0.2"
               max="3"
               step="0.1"
-              value="1"
+              :value="this.$store.state.frequency"
               @change="updateSlider"
               @input="updateSlider"
             />
@@ -72,7 +72,7 @@
               min="0"
               max="2"
               step="0.05"
-              value="1.25"
+              :value="this.scale"
               @change="updateScale"
               @input="updateScale"
             />
@@ -107,7 +107,7 @@
               min="0"
               max="1"
               step="0.001"
-              value="0"
+              :value="this.$store.state.themeLerp"
               @change="updateThemeLerp"
               @input="updateThemeLerp"
             />
@@ -124,7 +124,7 @@
               min="0"
               max="0.3"
               step="0.00001"
-              value="0.01"
+              :value="this.$store.state.fogDistance"
               @change="updateFog"
               @input="updateFog"
             />

@@ -14,13 +14,18 @@ import BGGradientFront from "./BGGradientFront";
 import BGGradientBack from "./BGGradientBack";
 import ThemeFactory from "./ThemeFactory";
 
-import theme_DunkelConcrete from '../Themes/theme_DunkelConcrete/theme.json';
-import theme_DunkelConcrete_Morning from '../Themes/theme_DunkelConcrete_Morning/theme.json';
-import theme_ThueringerLandschaft from '../Themes/theme_ThueringerLandschaft/theme.json';
-import theme_Turell_gelb from '../Themes/theme_Turell_gelb/theme.json';
-import theme_Sun_Orange2 from '../Themes/theme_Sun_Orange2/theme.json';
-import theme_Cyberpunk_Sun from '../Themes/theme_Cyberpunk_Sun/theme.json';
-import theme_DunkelGrid from '../Themes/theme_DunkelGrid/theme.json';
+import DunkelConcrete from '../Themes/theme_DunkelConcrete/theme.json';
+import DunkelConcreteMorning from '../Themes/theme_DunkelConcreteMorning/theme.json';
+import ThueringerLandschaft from '../Themes/theme_ThueringerLandschaft/theme.json';
+import DesertGelb from '../Themes/theme_DesertGelb/theme.json';
+import DesertHell from '../Themes/theme_DesertHell/theme.json';
+import DesertPistachio from '../Themes/theme_DesertPistachio/theme.json';
+import DesertSun from '../Themes/theme_DesertSun/theme.json';
+import DesertSunDark from '../Themes/theme_DesertSunDark/theme.json';
+import CyberpunkSun from '../Themes/theme_CyberpunkSun/theme.json';
+import GridDunkelWolken from '../Themes/theme_GridDunkelWolken/theme.json';
+import GridDunkel from '../Themes/theme_GridDunkel/theme.json';
+import GridWhite from '../Themes/theme_GridWhite/theme.json';
 
 import LerpMaterial from './LerpMaterial';
 import Utils from "../scripts/utils";
@@ -32,7 +37,7 @@ class MaterialController {
     this.xr = xr;
     this.store = store;
 
-    this.store.commit("setAllThemes", [theme_DunkelConcrete, theme_DunkelConcrete_Morning, theme_ThueringerLandschaft, theme_Turell_gelb, theme_Sun_Orange2, theme_Cyberpunk_Sun, theme_DunkelGrid])
+    this.store.commit("setAllThemes", [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertSunDark,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite])
 
     this.store.commit("setMaterialController", this);
 

@@ -112,7 +112,7 @@ export default {
       // }
 
       //Init FOG
-      var fogColor = new Color(0, 0, 1);
+      var fogColor = new Color(1,1,1);
       var fogDensity = this.$store.state.fogDistance;
       this.xr.Scene.fog = new FogExp2(fogColor, fogDensity);
     },
