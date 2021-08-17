@@ -23,9 +23,13 @@ export default new Vuex.Store({
     fogDistance: 0.2,
     playerPosition: null,
     startPosition:{x:0,y:0,z:7},
-    autoOrbit : false
+    autoOrbit : false,
+    uiVisible : true
   },
   mutations: {
+    ToggleUI(state,data){
+      state.uiVisible = data;
+    },
     xr(state, data) {
       state.xr = data;
     },

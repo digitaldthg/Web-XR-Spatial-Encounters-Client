@@ -2,9 +2,8 @@
   <div id="scene">
     <Player />
     <Friends />
-    <Environment />
-
-    <div id="vr-button" ref="vrButton"></div>
+    <Environment />    
+    <div id="vr-button" ref="vrButton" v-show="$store.state.uiVisible"></div>
   </div>
 </template>
 <script>

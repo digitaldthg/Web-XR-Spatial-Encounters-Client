@@ -1,221 +1,229 @@
 <template>
-  <div id="controls" :class="{ hidden: !config.showDevTools }">
-    <div class="controls-inner" v-if="open">
-      <div class="grid">
-        <div class="grid-1 flex info-panel">
-          
-          <div class="input-checkbox">
-              <input
-                id="auto-orbit"
-                class="invisible"
-                type="checkbox"
-                @input="ChangeAutoOrbit"
-              />
-              <label class="checkbox-label" for="auto-orbit"
-                ></label
-              >
-            </div>
-            <p>Autorotate Kamera</p>
-        </div>
-        <div class="grid-1 info-panel">
-          <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
-          <div class="dev-info">Raum: {{ $store.state.room }}</div>
-        </div>
-        <div class="grid-1">
-          <div
-            class="friend flex-between"
-            :class="{ isMe: friend.id == $socket.id }"
-            v-for="friend in friends"
-            v-bind:key="friend.id"
-          >
-            <div
-              class="friend-color"
-              v-bind:style="{
-                background: `rgb(${friend.color.r * 255},${
-                  friend.color.g * 255
-                },${friend.color.b * 255})`,
-              }"
-            ></div>
-            <div class="input-checkbox">
-              <input
-                class="invisible"
-                :checked="friend.visible"
-                :id="friend.id"
-                type="checkbox"
-                @input="(e) => ToggleFriend(friend, e.target.checked)"
-              />
-              <label class="checkbox-label" :for="friend.id"
-                ><span>Visible</span></label
-              >
-            </div>
-
-            <div class="friend-id">{{ friend.id }}</div>
-
-            <template v-if="friend.id != $socket.id">
-              <button class="cta-button" @click="(e) => DeleteFriend(friend)">
-                x
-              </button>
-            </template>
-          </div>
-        </div>
-
-        <div class="grid-1">
-          <div class="slider">
-            <label for="frequence"
-              >Sek. zwischen Dreiecken: {{ this.$store.state.frequency }}</label
-            >
-            <input
-              class="slider"
-              type="range"
-              id="frequence"
-              name="frequence"
-              min="0.2"
-              max="3"
-              step="0.1"
-              :value="this.$store.state.frequency"
-              @change="updateSlider"
-              @input="updateSlider"
-            />
-          </div>
-          <div class="slider">
-            <label for="scale">Skalierung der Dreiecke: {{ this.scale }}</label>
-            <input
-              class="slider"
-              type="range"
-              id="frequence"
-              name="frequnence"
-              min="0"
-              max="2"
-              step="0.05"
-              :value="this.scale"
-              @change="updateScale"
-              @input="updateScale"
-            />
-          </div>
-          <div class="slider">
-            <label for="speed"
-              >Geschwindigkeit der Dreiecke:
-              {{ this.$store.state.speed }}</label
-            >
-            <input
-              class="slider"
-              type="range"
-              id="speed"
-              name="frequnence"
-              min="0.0001"
-              max="1"
-              step="0.001"
-              value="0.1"
-              @change="updateSpeed"
-              @input="updateSpeed"
-            />
-          </div>
-          <div class="slider">
-            <label for="theme"
-              >Theme Lerp: {{ this.$store.state.themeLerp }}</label
-            >
-            <input
-              class="slider"
-              type="range"
-              id="theme"
-              name="themee"
-              min="0"
-              max="1"
-              step="0.001"
-              :value="this.$store.state.themeLerp"
-              @change="updateThemeLerp"
-              @input="updateThemeLerp"
-            />
-          </div>
-          <div class="slider">
-            <label for="fog"
-              >FogDistance: {{ this.$store.state.fogDistance }}</label
-            >
-            <input
-              class="slider"
-              type="range"
-              id="fog"
-              name="fog"
-              min="0"
-              max="0.3"
-              step="0.00001"
-              :value="this.$store.state.fogDistance"
-              @change="updateFog"
-              @input="updateFog"
-            />
-          </div>
-        </div>
-
-        <div class="grid-1">
-          <div class="info-panel flex flex-between">
-            <div class="">
-              <input type="number" @input="ChangeFogDuration" :value="fogDuration" />
-              <label>in sek</label>
-            </div>
-            <button class="cta-button" @click="AnimateFog">Animate to</button>
-
-            <div class="">
-              <input type="number" @input="ChangeFogTarget" :value="fogTarget" />
-              <label>Target fogDistance</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-1">
-          <div class="themes">
-            <div class="">
-              Progress: {{($store.state.themeLerp * 100).toFixed(0)}}% <br />
-              InTransition: {{$store.state.themeLerp != 1}}
-            </div>
-            <div class="margin-bottom">
-              <label>Transitionzeit: {{$store.state.lerpDuration}}Sekunden</label>
-              <input type="range" :value="$store.state.lerpDuration" min="1" max="25" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
-            </div>
-            <div
-              class="theme flex flex-between flex-align-center"
-              v-for="theme in this.$store.state.allThemes"
-              v-bind:key="theme.name"
-            >
-              {{ theme.name }}
-              <button
-                class="cta-button"
-                @click="(e) => StartLerpTheme(theme, $store.state.lerpDuration)"
-              >
-                play
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="colorGradients" v-if="$store.state.lastTheme != null">
-        <input
-          :value="this.$store.state.lastTheme.gradient_skybox[3].value"
-          type="color"
-          @input="(e) => ChangeThemeColor(e, 3)"
-        />
-        <input
-          :value="this.$store.state.lastTheme.gradient_skybox[2].value"
-          type="color"
-          @input="(e) => ChangeThemeColor(e, 2)"
-        />
-        <input
-          :value="this.$store.state.lastTheme.gradient_skybox[1].value"
-          type="color"
-          @input="(e) => ChangeThemeColor(e, 1)"
-        />
-        <input
-          :value="this.$store.state.lastTheme.gradient_skybox[0].value"
-          type="color"
-          @input="(e) => ChangeThemeColor(e, 0)"
-        />
-      </div>
-
-      <div class="">
-        <button @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
-      </div> -->
+  <div class="">
+    <div class="hidden-button" :class="{ hidden: $store.state.uiVisible }">
+      <button class="cta-button" @click="e=>ToggleUI(true)">Show UI</button>
     </div>
+    <div id="controls" :class="{ hidden: !config.showDevTools || !$store.state.uiVisible }">
+      <div class="controls-inner" v-if="open">
+        <div class="grid">
+          <div class="grid-1 flex info-panel">
+            <button class="cta-button" @click="e=>ToggleUI(false)">Hide User Interface</button>
+          </div>
+          <div class="grid-1 flex info-panel">
+            
+            <div class="input-checkbox">
+                <input
+                  id="auto-orbit"
+                  class="invisible"
+                  type="checkbox"
+                  @input="ChangeAutoOrbit"
+                />
+                <label class="checkbox-label" for="auto-orbit"
+                  ></label
+                >
+              </div>
+              <p>Autorotate Kamera</p>
+          </div>
+          <div class="grid-1 info-panel">
+            <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
+            <div class="dev-info">Raum: {{ $store.state.room }}</div>
+          </div>
+          <div class="grid-1">
+            <div
+              class="friend flex-between"
+              :class="{ isMe: friend.id == $socket.id }"
+              v-for="friend in friends"
+              v-bind:key="friend.id"
+            >
+              <div
+                class="friend-color"
+                v-bind:style="{
+                  background: `rgb(${friend.color.r * 255},${
+                    friend.color.g * 255
+                  },${friend.color.b * 255})`,
+                }"
+              ></div>
+              <div class="input-checkbox">
+                <input
+                  class="invisible"
+                  :checked="friend.visible"
+                  :id="friend.id"
+                  type="checkbox"
+                  @input="(e) => ToggleFriend(friend, e.target.checked)"
+                />
+                <label class="checkbox-label" :for="friend.id"
+                  ><span>Visible</span></label
+                >
+              </div>
 
-    <!-- <button class="toggle-button" @click="Toggle">open / close</button> -->
+              <div class="friend-id">{{ friend.id }}</div>
+
+              <template v-if="friend.id != $socket.id">
+                <button class="cta-button" @click="(e) => DeleteFriend(friend)">
+                  x
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div class="grid-1">
+            <div class="slider">
+              <label for="frequence"
+                >Sek. zwischen Dreiecken: {{ this.$store.state.frequency }}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="frequence"
+                name="frequence"
+                min="0.2"
+                max="3"
+                step="0.1"
+                :value="this.$store.state.frequency"
+                @change="updateSlider"
+                @input="updateSlider"
+              />
+            </div>
+            <div class="slider">
+              <label for="scale">Skalierung der Dreiecke: {{ this.scale }}</label>
+              <input
+                class="slider"
+                type="range"
+                id="frequence"
+                name="frequnence"
+                min="0"
+                max="2"
+                step="0.05"
+                :value="this.scale"
+                @change="updateScale"
+                @input="updateScale"
+              />
+            </div>
+            <div class="slider">
+              <label for="speed"
+                >Geschwindigkeit der Dreiecke:
+                {{ this.$store.state.speed }}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="speed"
+                name="frequnence"
+                min="0.0001"
+                max="1"
+                step="0.001"
+                value="0.1"
+                @change="updateSpeed"
+                @input="updateSpeed"
+              />
+            </div>
+            <div class="slider">
+              <label for="theme"
+                >Theme Lerp: {{ this.$store.state.themeLerp }}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="theme"
+                name="themee"
+                min="0"
+                max="1"
+                step="0.001"
+                :value="this.$store.state.themeLerp"
+                @change="updateThemeLerp"
+                @input="updateThemeLerp"
+              />
+            </div>
+            <div class="slider">
+              <label for="fog"
+                >FogDistance: {{ this.$store.state.fogDistance }}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="fog"
+                name="fog"
+                min="0"
+                max="0.3"
+                step="0.00001"
+                :value="this.$store.state.fogDistance"
+                @change="updateFog"
+                @input="updateFog"
+              />
+            </div>
+          </div>
+
+          <div class="grid-1">
+            <div class="info-panel flex flex-between">
+              <div class="">
+                <input type="number" @input="ChangeFogDuration" :value="fogDuration" />
+                <label>in sek</label>
+              </div>
+              <button class="cta-button" @click="AnimateFog">Animate to</button>
+
+              <div class="">
+                <input type="number" @input="ChangeFogTarget" :value="fogTarget" />
+                <label>Target fogDistance</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-1">
+            <div class="themes">
+              <div class="">
+                Progress: {{($store.state.themeLerp * 100).toFixed(0)}}% <br />
+                InTransition: {{$store.state.themeLerp != 1}}
+              </div>
+              <div class="margin-bottom">
+                <label>Transitionzeit: {{$store.state.lerpDuration}}Sekunden</label>
+                <input type="range" :value="$store.state.lerpDuration" min="1" max="25" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
+              </div>
+              <div
+                class="theme flex flex-between flex-align-center"
+                v-for="theme in this.$store.state.allThemes"
+                v-bind:key="theme.name"
+              >
+                {{ theme.name }}
+                <button
+                  class="cta-button"
+                  @click="(e) => StartLerpTheme(theme, $store.state.lerpDuration)"
+                >
+                  play
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="colorGradients" v-if="$store.state.lastTheme != null">
+          <input
+            :value="this.$store.state.lastTheme.gradient_skybox[3].value"
+            type="color"
+            @input="(e) => ChangeThemeColor(e, 3)"
+          />
+          <input
+            :value="this.$store.state.lastTheme.gradient_skybox[2].value"
+            type="color"
+            @input="(e) => ChangeThemeColor(e, 2)"
+          />
+          <input
+            :value="this.$store.state.lastTheme.gradient_skybox[1].value"
+            type="color"
+            @input="(e) => ChangeThemeColor(e, 1)"
+          />
+          <input
+            :value="this.$store.state.lastTheme.gradient_skybox[0].value"
+            type="color"
+            @input="(e) => ChangeThemeColor(e, 0)"
+          />
+        </div>
+
+        <div class="">
+          <button @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
+        </div> -->
+      </div>
+
+      <!-- <button class="toggle-button" @click="Toggle">open / close</button> -->
+    </div>
   </div>
 </template>
 <script>
@@ -294,6 +302,9 @@ export default {
     Toggle() {
       this.open = !this.open;
     },
+    ToggleUI(boolean){
+      this.$store.commit("ToggleUI", boolean);
+    }, 
     ChangeAutoOrbit(e){
       console.log(e.target.checked);
 
@@ -372,6 +383,23 @@ export default {
 </script>
 
 <style  lang="css" >
+
+.hidden-button {
+  position: absolute;
+  z-index: 9;
+  right: 0;
+  width: 100px;
+  height: 100px;
+}
+
+.hidden-button button{
+  width:100%;
+  height:100%;
+  opacity: 0;
+}
+
+
+
 #controls {
   position: relative;
   text-align: left;
@@ -547,6 +575,7 @@ input[type="number"] {
   right: 0;
   bottom: 0;
   margin: auto;
+  box-shadow: 0 0 0 1px rgb(0 0 0);
 }
 
 .checkbox-label:before {
