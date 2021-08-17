@@ -8,7 +8,10 @@ class Triangle {
         this.store = props.store;
         this.data = props.data;
         this.mesh = null;
-        this.height = 0.1
+        this.height = 0.1;
+        this.time = 0;
+        this.maxTime = 20; //in Sekunden
+        this.maxHeight = 50;
         this.Init();
     }
 
@@ -33,7 +36,6 @@ class Triangle {
 
         this.xr.Scene.add(this.mesh);
         this.xr.Events.addEventListener("OnAnimationLoop", this.AnimateTriangle);
-        this.clock = new THREE.Clock();
 
         this.store.watch(state => state.themeLerp, (newValue) => {
             triangleUtils.UpdateMaterial(this.material,this.store,this.xr)
@@ -41,15 +43,22 @@ class Triangle {
     }
 
 
-    AnimateTriangle = () => {
+    AnimateTriangle = (time) => {
         if (this.mesh != null) {
             var pos = this.mesh.position;
             this.mesh.position.set(pos.x, pos.y + this.store.state.speed / 10, pos.z);
 
-            if (this.mesh.position.y > 30) {
+            if (this.mesh.position.y > this.maxHeight) {
                 this.xr.Scene.remove(this.mesh);
                 this.xr.Events.removeEventListener("OnAnimationLoop", this.AnimateTriangle);
             }
+
+            this.time += time.elapsedTime;
+            if(this.time >= this.maxTime*1000){
+                this.xr.Scene.remove(this.mesh);
+                this.xr.Events.removeEventListener("OnAnimationLoop", this.AnimateTriangle);
+            }
+
         }
     }
 

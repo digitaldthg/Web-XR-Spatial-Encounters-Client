@@ -329,13 +329,13 @@ export default {
       //TOP COLOR
       var colorLastHex =
         typeof this.$store.state.lastTheme == "undefined"
-          ? "#623095"
+          ? "#ffffff"
           : this.$store.state.lastTheme.triangle_colors[
               this.$store.state.ownIdx
             ];
       var colorNextHex =
         typeof this.$store.state.nextTheme == "undefined"
-          ? "#623095"
+          ? "#ffffff"
           : this.$store.state.nextTheme.triangle_colors[
               this.$store.state.ownIdx
             ];
