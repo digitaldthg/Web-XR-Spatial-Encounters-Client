@@ -89,7 +89,7 @@
       "value" : "#ffffff"
     }
   ],
-  "tex_floor" : "GridWhite",
+  "tex_floor" : "GridWhiteGrey",
   "tex_skybox" : null,
   "tex_bg_front" : "Black",
   "tex_bg_back" : "Black",

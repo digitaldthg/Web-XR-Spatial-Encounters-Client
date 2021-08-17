@@ -11,6 +11,7 @@ import white_desert from '../Model/environment/textures/floor/white_desert.png';
 import nude_desert from '../Model/environment/textures/floor/nude_desert.png';
 import brown_desert from '../Model/environment/textures/floor/brown_desert.png';
 import digital_desert from '../Model/environment/textures/floor/grid-digitzeddesert.png';
+import grid_white_grey from '../Model/environment/textures/floor/grid_02_whitegrey.png';
 
 import {
   NearestFilter,
@@ -59,6 +60,9 @@ class Floor extends TextureLerpBackground{
       texture.repeat.set( 100,100);
     });
     this.Load("GridPink", grid_pink).then((texture)=>{
+      texture.repeat.set( 100,100);
+    });
+    this.Load("GridWhiteGrey", grid_white_grey).then((texture)=>{
       texture.repeat.set( 100,100);
     });
   }

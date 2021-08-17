@@ -8,7 +8,7 @@ class Triangle {
         this.store = props.store;
         this.data = props.data;
         this.mesh = null;
-        this.height = 0.1;
+        this.height = 0.06;
         this.time = 0;
         this.maxTime = 6; //in Sekunden
         this.maxHeight = 50;
