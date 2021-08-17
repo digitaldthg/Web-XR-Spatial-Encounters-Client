@@ -11,7 +11,7 @@ class Triangle {
         this.mesh = null;
         this.height = 0.06;
         this.time = 0;
-        this.maxTime = 30; //in Sekunden
+        this.maxTime = 100; //in Sekunden
         this.maxHeight = 20;
         this.tween = null;
         this.Init();
