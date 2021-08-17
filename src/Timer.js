@@ -9,17 +9,18 @@ class Timer{
     this.instance = new Group();
     this.timer = new Mesh(new BoxGeometry(1,.2,.01), new MeshBasicMaterial({color: 0xff0000}));
     this.timer.renderOrder = 0;
-    this.timer.visible = false;
+    //this.timer.visible = false;
     this.instance.add(this.timer);
     
     this.timerProgress = new Mesh(new BoxGeometry(1.05,.25,.015), new MeshBasicMaterial({color: 0xffffff}));
     this.timerProgress.position.set(0,0,-.01);
     this.timerProgress.renderOrder = 1;
-    this.timerProgress.visible = false;
+    //this.timerProgress.visible = false;
     this.instance.add(this.timerProgress);
 
     this.instance.position.set(0,0,0);
-
+    
+    this.SetVisible(false);
     return this;
 
   }

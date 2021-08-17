@@ -1,4 +1,4 @@
-import {Color, Vector3, PerspectiveCamera} from "three";
+import {Color, Vector3, PerspectiveCamera, Group} from "three";
 class MultiCameraController{
   initialized = false;
   enabled = false;
@@ -15,6 +15,9 @@ class MultiCameraController{
       camera : null,
       lookAt: new Vector3(0,0,0),
       pos: new Vector3(25,15,25),
+      animate : true,
+      animationDirection : 1,
+      animationSpeed : .001,
       updateCamera: this.UpdateCamera
     },{
       left: 0.5,
@@ -26,6 +29,9 @@ class MultiCameraController{
       camera : null,
       lookAt: new Vector3(0,0,0),
       pos: new Vector3(0,20,0),
+      animate : false,
+      animationDirection : 1,
+      animationSpeed : .001,
       updateCamera: this.UpdateCamera
     },
     {
@@ -38,6 +44,9 @@ class MultiCameraController{
       camera : null,
       lookAt: new Vector3(0,0,0),
       pos: new Vector3(0,10,25),
+      animate : false,
+      animationDirection : 1,
+      animationSpeed : .001,
       updateCamera: this.UpdateCamera
     }
   ]
@@ -54,45 +63,52 @@ class MultiCameraController{
     );
 
     window.addEventListener("resize", this.Resize);
+
+    this.store.watch(state => state.presentation, (value)=>{
+      if(!value){
+        this.store.state.xr.Renderer.Resize();
+        this.store.state.xr.Renderer.instance.setScissorTest( false );
+      }
+    })
   }
 
   Resize = ()=>{
-    windowHeight = window.innerHeight;
-    windowWidth = window.innerWidth;
+    this.windowHeight = window.innerHeight;
+    this.windowWidth = window.innerWidth;
   }
 
   Init = () => { 
-    //console.log(this.store.state.xr.Controls, this.store.state.xr.Controls.Desktop.orbit.enabled);
-    // this.store.state.xr.Controls.Desktop.orbit.enabled = false;
-
     for(var i=0;i<this.views.length;i++){
+      var camGroup = new Group();
       var cam = new PerspectiveCamera( this.views[i].fov, window.innerWidth / window.innerHeight, 1, 10000 );
       cam.position.copy(this.views[i].pos);
 
       this.views[i].camera = cam;
-      this.store.state.xr.Scene.add(cam);
+          camGroup.add(cam);
+      this.store.state.xr.Scene.add(camGroup);
     }
 
     this.windowWidth = window.innerWidth;
     this.windowHeight = window.innerHeight;
     
   }
-  UpdateCamera(camera, scene, lookAt){
-		camera.lookAt( scene.position );
+  UpdateCamera(view){
+		view.camera.lookAt( view.lookAt );
+
+    if(view.animate){
+      view.camera.parent.rotation.y += (view.animationSpeed * view.animationDirection);
+    }
   }
 
   OnAfterRenderLoop = (clock) => {
 
     if(!this.enabled){return;}
-    console.log("OnAfterRenderLoop", clock);
-
-
     for ( let ii = 0; ii < this.views.length; ++ ii ) {
 
       const view = this.views[ ii ];
       const camera = view.camera;
 
-            view.updateCamera( camera, this.store.state.xr.Scene , view.lookAt);
+            view.updateCamera( view);
 
       const left = Math.floor( this.windowWidth * view.left );
       const bottom = Math.floor(this.windowHeight * view.bottom );

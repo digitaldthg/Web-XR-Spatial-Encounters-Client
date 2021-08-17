@@ -198,7 +198,17 @@ export default {
         new Vector3(0, 0, 10)
       );
 
-      this.data.transform.headHeight = this.data.transform.position.y;
+      var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera( this.$store.state.xr.Camera.instance );
+
+        vrCamera.matrixWorld.decompose(
+          this.transform.position,
+          this.transform.rotation,
+          this.transform.scale
+        );
+
+      this.data.transform.headHeight = this.transform.position.y;
+
+
     },
     ConvertPlayerToVR() {
       this.inVR = true;
