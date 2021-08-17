@@ -3,14 +3,14 @@
   "fog_color":"#ffffff",
   "triangle_colors": [
     "#06e9ec",
-    "#05c5f0",
-    "#05a0f3",
-    "#047af7",
     "#0452fa",
-    "#042afc",
-    "#0a06fd",
+    "#600bfe",
     "#3508fe",
-    "#600bfe"
+    "#05a0f3",
+    "#042afc",
+    "#05c5f0",
+    "#0a06fd",
+    "#047af7"   
   ],
   "triangle_color_bottom":"#ffffff",
   "gradient_sun" : [
