@@ -16,11 +16,11 @@
   "gradient_sun" : [
     {
       "stop" : 0,
-      "value" : "#F5A43B"
+      "value" : "#d43511"
     },
     {
-      "stop" : 1,
-      "value" : "#F5A43B"
+      "stop" : 0.7,
+      "value" : "#ffc000"
     }
   ],
   
@@ -31,34 +31,34 @@
   ],
   "gradient_skybox": [
     {
-      "stop" : 0,
-      "value" : "#000000"
+      "stop" : 0.5,
+      "value" : "#0f1336"
     },
     {
-      "stop" : 0.45,
-      "value" : "#000000"
+      "stop" : 0.6,
+      "value" : "#4200e9"
     },
     {
-      "stop" : 0.55,
-      "value" : "#9400D3"
+      "stop" : 0.8,
+      "value" : "#17082d"
     },
     {
-      "stop" : 1,
-      "value" : "#4B0082"
+      "stop" : 0.9,
+      "value" : "#0d041e"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#d500ff"
     },
     {
       "stop" : 0.5,
-      "value" : "#000000"
+      "value" : "#d500ff"
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#d500ff"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -71,33 +71,37 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 0.5,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 1,
       "value" : "#000000"
     }
   ],
   "gradient_bg_front" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#0d041e"
     },
     {
-      "stop" : 0.5,
-      "value" : "#000000"
+      "stop" : 1,
+      "value" : "#4200e9"
     }
   ],
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#ffffff"
+      "value" : "#d500ff"
     },
     {
       "stop" : 1,
-      "value" : "#ffffff"
+      "value" : "#d500ff"
     }
   ],
   "tex_floor" : "GridPink",
   "tex_skybox" : null,
-  "tex_bg_front" : "Black",
+  "tex_bg_front" : "Mountains",
   "tex_bg_back" : "Wolken",
   "tex_guardian":"Grid",
   "tex_sun":"Sun"

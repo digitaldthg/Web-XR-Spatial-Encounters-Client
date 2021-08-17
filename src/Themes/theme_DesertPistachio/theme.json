@@ -1,13 +1,13 @@
 {
   "name":"Desert Pistachio",
-  "fog_color":"#ffffff",
+  "fog_color":"#fff6f3",
   "triangle_colors": [
     "#F26126"
   ],
   "triangle_color_bottom":"#892C0E",
   "base_floor":[{
     "stop" : 0,
-    "value" : "#ffcc00"}
+    "value" : "#ffffff"}
   ],
   "gradient_sun" : [
     {
@@ -22,33 +22,33 @@
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" :"#000000"
+      "value" :"#e1e1e1"
     },
     {
-      "stop" : 0.45,
-      "value" : "#000000"
+      "stop" : 0.5,
+      "value" : "#e1e1e1"
     },
     {
-      "stop" : 0.48,
-      "value" : "#ADFF2F"
+      "stop" : 0.6,
+      "value" : "#c0d7bb"
     },
     {
-      "stop" : 1,
-      "value" : "#FFE4C4"
+      "stop" : 0.9,
+      "value" : "#a6c29f"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#fff6f3"
     },
     {
       "stop" : 0.5,
-      "value" : "#ff0000"
+      "value" : "#fff6f3"
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#fff6f3"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -57,11 +57,15 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.5,
+      "stop" : 0.3,
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 0.7,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 1,
       "value" : "#000000"
     }
   ],
@@ -78,17 +82,17 @@
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#ffffff"
     },
     {
       "stop" : 1,
-      "value" : "#000000"
+      "value" : "#ffffff"
     }
   ],
   "tex_floor" : "NudeDesert",
   "tex_skybox" : null,
   "tex_bg_front" :"Black",
-  "tex_bg_back" : "Black",
+  "tex_bg_back" : "Wolken",
   "tex_guardian":"Grid",
   "tex_sun":"Black"
 }

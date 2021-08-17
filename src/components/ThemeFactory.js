@@ -1,10 +1,10 @@
 const ThemeFactory = {
   Get() {
     return {
-      base_floor: [{
+      /*base_floor: [{
         stop: 0,
         value: "#000000"
-      }],
+      }],*/
       gradient_sun: [{
         stop: 0,
         value: "#000000"

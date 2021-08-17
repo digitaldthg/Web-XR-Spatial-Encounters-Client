@@ -30,19 +30,19 @@
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" :"#000000"
+      "value" :"#ffb400"
     },
     {
-      "stop" : 0.45,
-      "value" : "#000000"
+      "stop" : 0.5,
+      "value" : "#ffb400"
     },
     {
-      "stop" : 0.48,
-      "value" : "#ADFF2F"
+      "stop" : 0.6,
+      "value" : "#fffaeb"
     },
     {
       "stop" : 1,
-      "value" : "#FFE4C4"
+      "value" : "#ffffff"
     }
   ],
   "gradient_fogFloor" : [
@@ -65,11 +65,15 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.5,
+      "stop" : 0.3,
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 0.7,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 1,
       "value" : "#000000"
     }
   ],

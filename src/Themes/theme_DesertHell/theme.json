@@ -30,33 +30,33 @@
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" :"#000000"
+      "value" :"#e1e1e1"
     },
     {
-      "stop" : 0.45,
-      "value" : "#000000"
+      "stop" : 0.5,
+      "value" : "#e1e1e1"
     },
     {
-      "stop" : 0.48,
-      "value" : "#ADFF2F"
+      "stop" : 0.6,
+      "value" : "#e9ecf5"
     },
     {
-      "stop" : 1,
-      "value" : "#FFE4C4"
+      "stop" : 0.9,
+      "value" : "#f1f2f6"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#FF4500"
+      "value" : "#f3e4e4"
     },
     {
       "stop" : 0.5,
-      "value" : "#ff0000"
+      "value" : "#f3e4e4"
     },
     {
       "stop" : 1,
-      "value" : "#FF4500"
+      "value" : "#f3e4e4"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -65,32 +65,36 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.5,
+      "stop" : 0.3,
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 0.7,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 1,
       "value" : "#000000"
     }
   ],
   "gradient_bg_front" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#ffffff"
     },
     {
       "stop" : 0.5,
-      "value" : "#000000"
+      "value" : "#ffffff"
     }
   ],
   "gradient_bg_back" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#ffffff"
     },
     {
       "stop" : 1,
-      "value" : "#000000"
+      "value" : "#ffffff"
     }
   ],
   "tex_floor" : "WhiteDesert",

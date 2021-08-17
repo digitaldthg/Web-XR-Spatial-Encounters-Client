@@ -21,7 +21,6 @@ import DesertGelb from '../Themes/theme_DesertGelb/theme.json';
 import DesertHell from '../Themes/theme_DesertHell/theme.json';
 import DesertPistachio from '../Themes/theme_DesertPistachio/theme.json';
 import DesertSun from '../Themes/theme_DesertSun/theme.json';
-import DesertSunDark from '../Themes/theme_DesertSunDark/theme.json';
 import CyberpunkSun from '../Themes/theme_CyberpunkSun/theme.json';
 import GridDunkelWolken from '../Themes/theme_GridDunkelWolken/theme.json';
 import GridDunkel from '../Themes/theme_GridDunkel/theme.json';
@@ -37,7 +36,7 @@ class MaterialController {
     this.xr = xr;
     this.store = store;
 
-    this.store.commit("setAllThemes", [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertSunDark,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite])
+    this.store.commit("setAllThemes", [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite])
 
     this.store.commit("setMaterialController", this);
 
@@ -234,7 +233,7 @@ class MaterialController {
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
 
-    this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
+    //this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
 
     this.gradient_bg_front.SetGradient(final.gradient_bg_front);
     this.gradient_bg_back.SetGradient(final.gradient_bg_back);

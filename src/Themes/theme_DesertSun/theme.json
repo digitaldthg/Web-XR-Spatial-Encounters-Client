@@ -8,11 +8,11 @@
   "gradient_sun" : [
     {
       "stop" : 0,
-      "value" : "#F5A43B"
+      "value" : "#d43511"
     },
     {
-      "stop" : 1,
-      "value" : "#F5A43B"
+      "stop" : 0.7,
+      "value" : "#ffc000"
     }
   ],
   "base_floor":[{
@@ -22,26 +22,26 @@
   ],
   "gradient_skybox": [
     {
-      "stop" : 0,
-      "value" : "#000000"
-    },
-    {
-      "stop" : 0.45,
+      "stop" : 0.5,
       "value" : "#ff7800"
     },
     {
-      "stop" : 0.58,
+      "stop" : 0.6,
       "value" : "#ff7800"
     },
     {
-      "stop" : 1,
-      "value" : "#000000"
+      "stop" : 0.8,
+      "value" : "#a74f00"
+    },
+    {
+      "stop" : 0.9,
+      "value" : "#2a1603"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#d43511"
     },
     {
       "stop" : 0.5,
@@ -49,7 +49,7 @@
     },
     {
       "stop" : 1,
-      "value" : "#000000"
+      "value" : "#d43511"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -62,7 +62,11 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.9,
+      "stop" : 0.7,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 1,
       "value" : "#000000"
     }
   ],

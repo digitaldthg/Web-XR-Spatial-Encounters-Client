@@ -10,7 +10,7 @@ class Triangle {
         this.mesh = null;
         this.height = 0.1;
         this.time = 0;
-        this.maxTime = 20; //in Sekunden
+        this.maxTime = 6; //in Sekunden
         this.maxHeight = 50;
         this.Init();
     }
@@ -54,7 +54,7 @@ class Triangle {
             }
 
             this.time += time.elapsedTime;
-            if(this.time >= this.maxTime*1000){
+            if(this.time >= this.maxTime*10000){
                 this.xr.Scene.remove(this.mesh);
                 this.xr.Events.removeEventListener("OnAnimationLoop", this.AnimateTriangle);
             }

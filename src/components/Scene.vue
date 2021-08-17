@@ -22,6 +22,7 @@ import {
   PlaneGeometry,
   Mesh,
   FrontSide,
+  PointsMaterial, Points,
 } from "three";
 import envModel from "../Model/environment/environment.glb";
 
@@ -216,7 +217,7 @@ export default {
         if (child.name != "Scene") {
           var material = this.materialController.GetMaterial(child.name);
           child.material = material;
-          // console.log("CHILD Mat ", child.material)
+          //console.log("CHILD Mat ", child.material)
         }
 
         // console.log("CHILDREN ", child.name);
@@ -224,6 +225,7 @@ export default {
         switch (child.name) {
           case "base_floor":
             child.renderOrder = 0;
+            child.visible = false
             break;
           case "bg_back":
             child.renderOrder = 9;

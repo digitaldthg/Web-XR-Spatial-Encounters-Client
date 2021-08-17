@@ -25,7 +25,7 @@ class BGBackTexture extends TextureBackground{
       texture.repeat.set( 5 , 1 );
       texture.wrapT = ClampToEdgeWrapping;
     });
-    this.Load("WolkenBlur", Wolken).then((texture)=>{
+    this.Load("WolkenBlur", WolkenBlur).then((texture)=>{
       texture.repeat.set( 5 , 1 );
       texture.wrapT = ClampToEdgeWrapping;
     });

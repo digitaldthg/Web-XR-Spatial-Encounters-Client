@@ -61,18 +61,22 @@
       "value": "#cfc502"
     }
   ],
-  "gradient_fogFloorAlpha": [
+  "gradient_fogFloorAlpha" : [
     {
-      "stop": 0.45,
-      "value": "#000000"
+      "stop" : 0.48,
+      "value" : "#000000"
     },
     {
-      "stop": 0.5,
-      "value": "#ffffff"
+      "stop" : 0.48,
+      "value" : "#000000"
     },
     {
-      "stop": 0.9,
-      "value": "#000000"
+      "stop" : 0.5,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 0.52,
+      "value" : "#000000"
     }
   ],
   "gradient_bg_front": [

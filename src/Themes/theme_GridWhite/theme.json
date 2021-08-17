@@ -1,13 +1,13 @@
 {
   "name":"Grid White",
-  "fog_color":"#ffffff",
+  "fog_color":"#f4f4f4",
   "triangle_colors": [
     "#ff0000"
   ],
   "triangle_color_bottom":"#000000",
   "base_floor":[{
     "stop" : 0,
-    "value" : "#ffffff"}
+    "value" : "#f4f4f4"}
   ],
   "gradient_sun" : [
     {
@@ -22,33 +22,33 @@
   "gradient_skybox": [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#f4f4f4"
     },
     {
       "stop" : 0.45,
-      "value" : "#000000"
+      "value" : "#f4f4f4"
     },
     {
       "stop" : 0.55,
-      "value" : "#333333"
+      "value" : "#f4f4f4"
     },
     {
       "stop" : 0.65,
-      "value" :"#000000"
+      "value" :"#f4f4f4"
     }
   ],
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#f4f4f4"
     },
     {
       "stop" : 0.5,
-      "value" : "#000000"
+      "value" : "#f4f4f4"
     },
     {
       "stop" : 1,
-      "value" : "#000000"
+      "value" : "#f4f4f4"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -57,7 +57,11 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.5,
+      "stop" : 0.3,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 0.7,
       "value" : "#ffffff"
     },
     {

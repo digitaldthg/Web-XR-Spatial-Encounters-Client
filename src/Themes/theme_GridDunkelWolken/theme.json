@@ -57,7 +57,11 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.5,
+      "stop" : 0.3,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 0.7,
       "value" : "#ffffff"
     },
     {
