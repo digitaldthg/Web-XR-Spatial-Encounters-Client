@@ -38,6 +38,8 @@ import {
   UnrealBloomPass,
 } from "postprocessing";
 import MaterialController from "./MaterialController";
+import MultiCameraController from './MultiCameraController';
+
 
 export default {
   components: { Player, Friends, Environment },
@@ -49,10 +51,18 @@ export default {
       envModel: null,
       materialController: null,
       pressed: false,
+      views : null,
+      initViews : false
     };
   },
   mounted() {
     this.InitScene();
+
+    this.multiCamController = new MultiCameraController({
+      store : this.$store
+    });
+
+    this.multiCamController.Init();
 
     console.log("mount Scene");
   },
@@ -69,6 +79,9 @@ export default {
     },
   },
   watch: {
+    "$store.state.presentation" : function(presentation){
+      this.multiCamController.enabled = presentation;
+    },
     "$store.state.rotationSpeed" : function(newSpeed){
       this.xr.Controls.Desktop.orbit.autoRotateSpeed = newSpeed;
     },
@@ -240,7 +253,10 @@ export default {
         this.planeMaterial.alphaMap = map;
         this.xr.Scene.add(plane);
       });
+
+      
     },
+    
     GamePadLoop() {
       var gamepads = navigator.getGamepads
         ? navigator.getGamepads()
@@ -334,7 +350,6 @@ export default {
 
       this.particles.geometry.attributes.position.needsUpdate = true;
     },
-
     HandleXRView(xrMode) {
       console.log("session", xrMode);
     },

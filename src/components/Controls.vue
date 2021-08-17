@@ -10,6 +10,9 @@
           <div class="grid-1 flex info-panel">
             <button class="cta-button" @click="e=>ToggleUI(false)">Hide User Interface</button>
           </div>
+          <div class="grid-1 flex info-panel">
+            <button class="cta-button" @click="e=>TogglePresenter(true)">Präsentations Mode</button>
+          </div>
           <div class="grid-1 info-panel">
             <div class="dev-info">Eigene SocketID: {{ $socket.id }}</div>
             <div class="dev-info">Raum: {{ $store.state.room }}</div>
@@ -365,6 +368,12 @@ export default {
     },
     Toggle() {
       this.open = !this.open;
+    },
+    TogglePresenter(boolean){
+      if(boolean){
+        this.$store.commit("ToggleUI", false);
+        this.$store.commit("TogglePresenterMode" , boolean);
+      }
     },
     ToggleUI(boolean){
       this.$store.commit("ToggleUI", boolean);
