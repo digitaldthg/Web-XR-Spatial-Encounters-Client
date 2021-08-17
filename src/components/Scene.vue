@@ -328,6 +328,8 @@ export default {
       
       this.GamePadLoop();
 
+      return;
+
       const pos = this.particles.geometry.attributes.position.array;
       const velArr = this.particles.geometry.velocities;
 
