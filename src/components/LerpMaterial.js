@@ -1,8 +1,16 @@
 import * as THREE from 'three';
-import { Vector2 , Color} from 'three';
+import { Vector2, Color, OneMinusSrcAlphaFactor, CustomBlending, OneFactor,FrontSide } from 'three';
 
 class LerpMaterial {
   constructor(opts) {
+    opts = Object.assign({
+      color: 0xffffff,
+      transparent: true,
+      depthWrite: false,
+      side: FrontSide,
+      alphaBlend: false
+    }, opts)
+
     this.material = null;
 
     this.lerp_shader = {
@@ -36,28 +44,28 @@ class LerpMaterial {
         },
         "textureRepeat_1": {
           type: "vec2",
-          value: new Vector2(1,1)
+          value: new Vector2(1, 1)
         },
         "textureRepeat_2": {
           type: "vec2",
-          value: new Vector2(1,1)
-        } ,
+          value: new Vector2(1, 1)
+        },
         "textureOffset_1": {
           type: "vec2",
-          value: new Vector2(0,0)
+          value: new Vector2(0, 0)
         },
         "textureOffset_2": {
           type: "vec2",
-          value: new Vector2(0,0)
+          value: new Vector2(0, 0)
         },
-        "opacity":{
-          type:"float",
+        "opacity": {
+          type: "float",
           value: 1
         },
-        "fogColor":    { type: "c", value: new Color(0xffffff) },
-        "fogNear":     { type: "f", value: 0  },
-        "fogFar":      { type: "f", value: 20   },
-        "fogDensity" : { type: "f" , value : 2.0 }
+        "fogColor": { type: "c", value: new Color(0xffffff) },
+        "fogNear": { type: "f", value: 0 },
+        "fogFar": { type: "f", value: 20 },
+        "fogDensity": { type: "f", value: 2.0 }
       },
       vertex_shader: [
 
@@ -110,11 +118,10 @@ class LerpMaterial {
 
         "float a = mix(a_1,a_2,alpha);",
         "if(opacity<1.0){a=opacity*a;}",
-        
+
         "gl_FragColor = vec4(finalCol.rgb,a);",
 
-        
-        
+
         "#ifdef USE_FOG",
         "  #ifdef USE_LOGDEPTHBUF_EXT",
         "      float depth = gl_FragDepthEXT / gl_FragCoord.w;",
@@ -136,11 +143,18 @@ class LerpMaterial {
       uniforms: THREE.UniformsUtils.clone(this.lerp_shader.uniforms),
       vertexShader: this.lerp_shader.vertex_shader,
       fragmentShader: this.lerp_shader.fragment_shader,
-      fog: true
+      fog: true,
+
     });
     this.material.transparent = opts.transparent
     this.material.depthWrite = opts.depthWrite
     this.material.side = opts.side
+    if (opts.alphaBlend) {
+      this.material.blending = CustomBlending;
+      this.material.blednSrc = OneFactor;
+      this.material.blendDst = OneMinusSrcAlphaFactor;
+    }
+
   }
 }
 

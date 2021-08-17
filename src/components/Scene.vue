@@ -22,7 +22,12 @@ import {
   PlaneGeometry,
   Mesh,
   FrontSide,
-  PointsMaterial, Points,
+  PointsMaterial,
+  Points,
+  BufferGeometry,
+  BufferAttribute,
+  Texture,
+  FloatType,
 } from "three";
 import envModel from "../Model/environment/environment.glb";
 
@@ -65,6 +70,19 @@ export default {
     },
   },
   watch: {
+    "$store.state.autoOrbit" : function(autoOrbit){
+      console.log("AutoOrbit", autoOrbit);
+
+      if(autoOrbit){
+         this.xr.Controls.Desktop.orbit.autoRotateSpeed = -1;
+        this.xr.Controls.Desktop.orbit.autoRotate = true;
+
+      }else{
+        
+        this.xr.Controls.Desktop.orbit.autoRotate = false;
+      }
+
+    },
     "$store.state.fogDistance": function (fogDistance) {
       this.xr.Scene.fog.density = fogDistance;
     },
@@ -105,22 +123,63 @@ export default {
       this.xr.Scene.fog.color = color;
     },
     InitFog() {
-      // if (
-      //   this.$store.state.lastTheme == null ||
-      //   this.$store.state.nextTheme == null
-      // ) {
-      //   return;
-      // }
-
-      //Init FOG
-      var fogColor = new Color(1,1,1);
+      var fogColor = new Color(1, 1, 1);
       var fogDensity = this.$store.state.fogDistance;
       this.xr.Scene.fog = new FogExp2(fogColor, fogDensity);
+    },
+    InitParticles() {
+      console.log("INIT PARTICLES");
+      this.textureSize = 32.0;
+      const pointGeometry = new BufferGeometry();
+      var verts = [];
+      this.particleNum = 5000;
+      this.box = {
+        x: 50,
+        y: 100,
+        z: 50,
+      };
+      for (let i = 0; i < this.particleNum; i++) {
+        const x = -this.box.x + Math.floor(Math.random() * (this.box.x * 2));
+        const y = -this.box.y + Math.floor(Math.random() * (this.box.y * 2));
+        const z = -this.box.z + Math.floor(Math.random() * (this.box.z * 2));
+
+        verts.push(x, y, z);
+      }
+
+      var vertices = new Float32Array(verts);
+      pointGeometry.setAttribute("position", new BufferAttribute(vertices, 3));
+
+      const pointMaterial = new PointsMaterial({
+        size: 1,
+        color: 0xffffff,
+        vertexColors: false,
+        map: this.GetParticleTexture(),
+        // blending: THREE.AdditiveBlending,
+        transparent: true,
+        fog: true,
+        depthWrite: false,
+        depthTest: false
+      });
+
+      const velocities = [];
+      for (let i = 0; i < this.particleNum; i++) {
+        const x = Math.floor(Math.random() * 6 - 3) * 0.01;
+        const y = Math.floor(Math.random() * 10 + 3) * -0.05;
+        const z = Math.floor(Math.random() * 6 - 3) * 0.01;
+        velocities.push(x, y, z);
+      }
+
+      this.particles = new Points(pointGeometry, pointMaterial);
+      //this.particles.renderOrder = 0;
+      this.particles.geometry.velocities = velocities;
+      this.particles.visible = false;
+      this.xr.Scene.add(this.particles);
     },
     InitScene() {
       this.xr = new webXRScene("scene");
 
       this.InitFog();
+      this.InitParticles();
 
       this.materialController = new MaterialController(this.xr, this.$store);
 
@@ -205,9 +264,73 @@ export default {
         this.pressed = false;
       }
     },
-    RenderLoop() {
-      this.GamePadLoop();
+    GetParticleTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.setAttribute("data-name", "PARTICLE TEXTURE");
+      let container = document.getElementById("canvases");
+      container.appendChild(canvas);
+
+      const ctx = canvas.getContext("2d");
+
+      const diameter = this.textureSize;
+      canvas.width = diameter;
+      canvas.height = diameter;
+      const canvasRadius = diameter / 2;
+
+      /* gradation circle
+    ------------------------ */
+      this.drawRadialGradation(ctx, canvasRadius, canvas.width, canvas.height);
+
+      const texture = new Texture(canvas);
+      //texture.minFilter = THREE.NearestFilter;
+      texture.type = FloatType;
+      texture.needsUpdate = true;
+      return texture;
     },
+    drawRadialGradation(ctx, canvasRadius, canvasW, canvasH) {
+      ctx.save();
+      const gradient = ctx.createRadialGradient(
+        canvasRadius,
+        canvasRadius,
+        0,
+        canvasRadius,
+        canvasRadius,
+        canvasRadius
+      );
+      gradient.addColorStop(0, "rgba(255,255,255,1.0)");
+      gradient.addColorStop(0.5, "rgba(255,255,255,0.5)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+      ctx.restore();
+    },
+
+    RenderLoop() {
+      
+      
+      this.GamePadLoop();
+
+      const pos = this.particles.geometry.attributes.position.array;
+      const velArr = this.particles.geometry.velocities;
+
+      for (var i = 0; i < pos.length; i += 3) {
+        const velocity = {
+          x: velArr[i],
+          y: velArr[i + 1],
+          z: velArr[i + 2],
+        };
+
+        // y
+        pos[i + 1] += velocity.y;
+
+        if (pos[i + 1] < -this.box.y) {
+          pos[i + 1] = this.box.y;
+        }
+      }
+
+      this.particles.geometry.attributes.position.needsUpdate = true;
+    },
+
     HandleXRView(xrMode) {
       console.log("session", xrMode);
     },
@@ -225,7 +348,7 @@ export default {
         switch (child.name) {
           case "base_floor":
             child.renderOrder = 0;
-            child.visible = false
+            child.visible = false;
             break;
           case "bg_back":
             child.renderOrder = 9;
@@ -268,10 +391,10 @@ export default {
 
 #vr-button {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
+  bottom: 3rem;
+  left: 3rem;
+  right: initial;
+  top: initial;
   margin: auto;
   width: 200px;
   height: 50px;

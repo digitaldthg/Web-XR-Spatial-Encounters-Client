@@ -1,15 +1,15 @@
 {
   "name":"Dunkel Concrete Morning",
   "triangle_colors":[
-    "#97d5c3",
-"#001274",
-"#f594b7",
-"#8e2388",
-"#c1bd00",
-"#07a789",
-"#ffd500",
-"#fa0062",
-"#ff9700"
+    "#97D5C3",
+    "#001274",
+    "#F594B7",
+    "#FFD500",
+    "#FA0062",
+    "#FF9700",
+    "#8E2388",
+    "#C1BD00",
+    "#07A789"
   ],
   "triangle_color_bottom":"#ffffff",
   "gradient_sun" : [

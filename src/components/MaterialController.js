@@ -71,7 +71,8 @@ class MaterialController {
       color: 0xff00ff,
       transparent: true,
       depthWrite: false,
-      side: FrontSide
+      side: FrontSide,
+      alphaBlend: true
 
     });
     var grid_floor = grid_floor_obj.material;
