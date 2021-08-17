@@ -192,7 +192,7 @@
                 id="fog"
                 name="fog"
                 min="0"
-                max="0.3"
+                max="0.8"
                 step="0.00001"
                 :value="this.$store.state.fogDistance"
                 @change="updateFog"
