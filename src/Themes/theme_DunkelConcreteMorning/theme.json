@@ -49,15 +49,15 @@
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#000000"
+      "value" : "#090113"
     },
     {
       "stop" : 0.5,
-      "value" : "#000000"
+      "value" : "#090113"
     },
     {
       "stop" : 1,
-      "value" : "#000000"
+      "value" : "#090113"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -98,7 +98,7 @@
       "value" : "#ffffff"
     }
   ],
-  "tex_floor" : "Concrete",
+  "tex_floor" : "ConcretePuddles",
   "tex_skybox" : null,
   "tex_bg_front" :"Forrest",
   "tex_bg_back" : "Black",
