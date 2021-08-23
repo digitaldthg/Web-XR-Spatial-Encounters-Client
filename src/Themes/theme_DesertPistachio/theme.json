@@ -93,12 +93,12 @@
   ],
   "gradient_bg_moving": [
     {
-      "stop": 0.95,
+      "stop": 0.9,
       "value": "#C3AD9F"
     },
     {
       "stop": 1.0,
-      "value": "#E1B6A0"
+      "value": "#ffffff"
     }
   ],
   "tex_floor" : "NudeDesert",
