@@ -61,7 +61,7 @@ class Floor extends TextureLerpBackground{
       texture.repeat.set( 100,100);
     });
     this.Load("rapsmorning", rapsmorning).then((texture)=>{
-      texture.repeat.set( 100,100);
+      texture.repeat.set( 50,50);
     });
     this.Load("GridConcrete", grid_concrete).then((texture)=>{
       texture.repeat.set( 100,100);
