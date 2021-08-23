@@ -47,7 +47,7 @@ class SingleFriend {
       let scale = 1 / (count + 1)  * (i + 1);
 
       const geometry = new CylinderGeometry(scale, scale, .06, 64, 2, true);
-      const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00 });
+      const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00, transparent: true, alphaTest: 0.001 });
       const ring = new Mesh(geometry, material);
       this.xr.Scene.add(ring);
       this.rings.push(ring);

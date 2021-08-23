@@ -1,4 +1,4 @@
-import { CanvasTexture, Texture } from "three";
+import { CanvasTexture, Texture,LinearFilter } from "three";
 import config from "../../main.config";
 
 class Gradient{
@@ -31,6 +31,9 @@ class Gradient{
     //this.texture = new CanvasTexture(this.canvasElement);
     	
     this.texture = new Texture(this.canvasElement);
+    this.texture.premultiplyAlpha = true;
+    this.texture.minFilter = LinearFilter;
+    this.texture.anisotropy = 16;
     this.texture.needsUpdate = true;
 
   }
