@@ -10,6 +10,8 @@ class SingleFriend {
     this.xr = store.state.xr;
     this.rings = [];
     this.bottomColor = new Color(0xffffff);
+
+    this.mainColor = new Color(0xffffff);
     this.lazyFollower = null;
     this.speed = 1000;
 
@@ -90,7 +92,7 @@ class SingleFriend {
     this.myText.fontSize = 0.1
     this.myText.position.y = .5;
     this.myText.anchorX ="center";
-    this.myText.color = new Color(data.color);
+    this.myText.color = this.mainColor;
     
 
     this.xr.Events.addEventListener("OnChangeXRView", (xrMode)=>{
@@ -130,10 +132,12 @@ class SingleFriend {
 
     this.instance.userData.lerpAlpha = 0;
     
-    this.instance.userData.color = new Color(data.color.r,data.color.g,data.color.b);
+    this.mainColor.setRGB(data.color.r,data.color.g,data.color.b);
+    
+    this.instance.userData.color = this.mainColor; 
     
     if(this.myText != null){
-      this.myText.color = new Color(data.color.r,data.color.g,data.color.b);
+      this.myText.color = this.mainColor;
     }
   }
   
@@ -161,7 +165,7 @@ class SingleFriend {
         lazyPos.y = 0;
     this.lazyFollower.position.lerp(lazyPos, .05);
     
-    let color = new Color(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);
+    this.mainColor.setRGB(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);
 
     var target = this.instance.position.clone();
     var origin = this.lazyFollower.position.clone();
@@ -174,7 +178,7 @@ class SingleFriend {
       ring.position.z  = lerper.z;
 
       //Ringfarbe lerpen
-      ring.material.color = color;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
+      ring.material.color = this.mainColor;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
 
     if(this.myText  != null){
