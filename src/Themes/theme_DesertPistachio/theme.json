@@ -94,18 +94,18 @@
   "gradient_bg_moving": [
     {
       "stop": 0,
-      "value": "#000000"
+      "value": "#9B7462"
     },
     {
       "stop": 1,
-      "value": "#000000"
+      "value": "#9B7462"
     }
   ],
   "tex_floor" : "NudeDesert",
   "tex_skybox" : null,
   "tex_bg_front" :"Black",
   "tex_bg_back" : "Wolken",
-  "tex_bg_moving": "Black",
+  "tex_bg_moving": "Camels",
   "tex_guardian":"Grid",
   "tex_sun":"Black"
 }

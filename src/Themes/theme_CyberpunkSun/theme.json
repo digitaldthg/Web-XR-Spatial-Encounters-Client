@@ -113,7 +113,7 @@
   "tex_skybox" : null,
   "tex_bg_front" : "Mountains4",
   "tex_bg_back" : "Wolken",
-  "tex_bg_moving": "Wolken",
+  "tex_bg_moving": "Black",
   "tex_guardian":"Grid",
   "tex_sun":"Sun"
 }

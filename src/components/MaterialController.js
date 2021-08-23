@@ -127,9 +127,9 @@ class MaterialController {
     //BG Moving
     var bg_moving_obj = new LerpMaterial({
       color: 0xffffff,
-      transparent: true,
+      transparent: true, 
       depthWrite: false,
-      side: FrontSide
+      side: DoubleSide
     });
     var bg_moving = bg_moving_obj.material
 
