@@ -28,9 +28,9 @@ class SingleFriend {
 
   Create(data) {
     
-    var group = new Object3D();
-        group.name = "Friend";
-    this.xr.Scene.add(group);
+    this.group = new Object3D();
+    this.group.name = "Friend";
+    this.xr.Scene.add(this.group);
 
     this.head = new Mesh(new BoxGeometry(.1,.1,.1) , new MeshNormalMaterial());
     this.head.scale.set(0,0,0);
@@ -51,39 +51,39 @@ class SingleFriend {
       this.rings.push(ring);
     }
     console.log("creat", data.transform, data.transform.headPosition);
-    group.userData.headHeight = data.transform.headHeight * this.headFactor;
-    group.userData.targetPosition = new Vector3(
+    this.group.userData.headHeight = data.transform.headHeight * this.headFactor;
+    this.group.userData.targetPosition = new Vector3(
       data.transform.headPosition.x,
       data.transform.headPosition.y,
       data.transform.headPosition.z
     );
 
-    group.userData.lastPosition = new Vector3(
+    this.group.userData.lastPosition = new Vector3(
       data.transform.headPosition.x,
       data.transform.headPosition.y,
       data.transform.headPosition.z
     );
 
-    group.userData.lastRotation = new Quaternion(
+    this.group.userData.lastRotation = new Quaternion(
       data.transform.rotation.x,
       data.transform.rotation.y,
       data.transform.rotation.z,
       data.transform.rotation.w,
     );
 
-    group.userData.targetRotation = new Quaternion(
+    this.group.userData.targetRotation = new Quaternion(
       data.transform.rotation.x,
       data.transform.rotation.y,
       data.transform.rotation.z,
       data.transform.rotation.w,
     );
 
-    group.userData.lerpAlpha = 0;
-    group.userData.color = Object.assign({}, data.color);
+    this.group.userData.lerpAlpha = 0;
+    this.group.userData.color = Object.assign({}, data.color);
     //group.userData.targetReached = true;
 
     this.myText = new Text()
-    group.add(this.myText);
+    this.group.add(this.myText);
 
     // Set properties to configure:
     this.myText.text = data.id;
@@ -97,14 +97,22 @@ class SingleFriend {
       console.log("xrMode" , xrMode.xrMode);
 
       if(xrMode.xrMode == "VR"){
-        group.remove(this.myText);
-
-        this.myText = null;
+        this.HideText(true);
       }
     });
 
+    this.store.watch(state => state.presentation, (bool)=>{
+      this.HideText(bool);
+    });
 
-    return group;
+
+    return this.group;
+  }
+
+  HideText(boolean){
+    console.log("text" , this.myText);
+
+      this.myText.visible = !boolean;
   }
 
   updateData = (data, idx) => {
