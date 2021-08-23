@@ -17,6 +17,7 @@ class Guardian extends TextureLerpBackground {
     this.store = props.store
     this.tween = null
     this.isVisible = true;
+    this.canFade = true;
     this.boundinBox = {
       x: {
         min: -6.5,
@@ -34,6 +35,8 @@ class Guardian extends TextureLerpBackground {
 
     this.store.watch(state => state.playerPosition, (newValue, oldViewMode) => {
       var isOutside = (newValue.x < this.boundinBox.x.min || newValue.x > this.boundinBox.x.max || newValue.z < this.boundinBox.z.min || newValue.z > this.boundinBox.z.max)
+      
+      if(!this.canFade){return;}
       if (!this.isVisible && isOutside) {
         this.isVisible = true;
         this.Fade(true)
@@ -41,8 +44,18 @@ class Guardian extends TextureLerpBackground {
         this.isVisible = false;
         this.Fade(false)
       }
-
     });
+
+
+    this.store.watch(state => state.presentation, (boolean)=>{
+
+      this.canFade = !boolean;
+
+      if(boolean){
+        this.isVisible = false;
+        this.Fade(false);
+      }
+    })
 
 
   }

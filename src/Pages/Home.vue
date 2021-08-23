@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="entry">
+    <div class="entry" v-if="!autoload">
       <div class="error-message" v-if="this.errorMsg != null">
         {{this.errorMsg}}
       </div>
@@ -30,6 +30,8 @@ export default {
       currentNumber : 0,
       canJoin :false,
       canCreate:false,
+      autoload: true,
+      autoRoomNumber : 1111,
       errorMsg:null,
       room : {
         0 : null,
@@ -40,24 +42,33 @@ export default {
     }
   },
   mounted(){
-    this.$refs["no"+ this.currentNumber].focus();
+
+    if(this.autoload){
+      setTimeout(()=>{
+        this.Submit();
+      },400);
+    }else{
+      this.$refs["no"+ this.currentNumber].focus();
+    }
   },
   sockets:{
     "room-success" : function(d){
       this.$store.commit("room" , d.room);
       this.$router.push("/room/"+  d.room);
 
-
+      console.log("weiterleitung zum Raum");
+      
     },
     "room-error" : function(d){
       console.log("error data",  d);
-
       this.errorMsg = d.message;
+
+      this.Join();
     }
   },
   methods:{
     Join(){
-      var roomNumber = this.GetRoomNumber();
+      var roomNumber = this.autoload ? this.autoRoomNumber : this.GetRoomNumber();
       this.$socket.emit("join-room", {
         id: this.$socket.id,
         room : roomNumber
@@ -65,7 +76,7 @@ export default {
 
     },
     Submit(){
-      var roomNumber = this.GetRoomNumber();
+      var roomNumber = this.autoload ? this.autoRoomNumber : this.GetRoomNumber();
       this.$socket.emit("create-room", {
         id: this.$socket.id,
         room : roomNumber
@@ -76,8 +87,6 @@ export default {
     GetRoomNumber(){
       var roomID = Object.values(this.room).reduce((a,b) => a +""+ b);
       console.log("roomID " , roomID);
-
-      
       return roomID; 
     },
     ChangeCurrentRoomNumber(number){
