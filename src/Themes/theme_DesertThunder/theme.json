@@ -2,15 +2,9 @@
   "name":"Desert Thunder",
   "fog_color":"#201E24",
   "triangle_colors": [
-    "#06e9ec",
-    "#0452fa",
-    "#600bfe",
-    "#3508fe",
-    "#05a0f3",
-    "#042afc",
-    "#05c5f0",
-    "#0a06fd",
-    "#047af7"
+    "#191228",
+    "#231F21",
+    "#21202D"
   ],
   "triangle_color_bottom":"#ffffff",
   "gradient_sun" : [
