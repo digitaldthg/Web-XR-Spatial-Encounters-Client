@@ -1,6 +1,7 @@
 import TextureLerpBackground from "./TextureLerpBackground";
 import grid from '../Model/environment/textures/floor/Grid.png';
 import concrete from '../Model/environment/textures/floor/SeamlessConcrete_dark.png';
+import concretepuddles from '../Model/environment/textures/floor/SeamlessConcrete_dark_puddles.png';
 import rapsmorning from '../Model/environment/textures/floor/RapsMorning.png';
 import grid_white_grey from '../Model/environment/textures/floor/grid_02_whitegrey.png';
 import raps from '../Model/environment/textures/floor/Raps.png';
