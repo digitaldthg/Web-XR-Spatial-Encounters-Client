@@ -178,7 +178,7 @@ class SingleFriend {
       ring.position.z  = lerper.z;
 
       //Ringfarbe lerpen
-      ring.material.color = this.mainColor;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
+      ring.material.color.setRGB(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);// = this.mainColor;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
 
     if(this.myText  != null){
