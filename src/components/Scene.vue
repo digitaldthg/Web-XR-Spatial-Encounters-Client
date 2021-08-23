@@ -235,7 +235,7 @@ export default {
       //CALIBRATION PLANE
       const planeGeometry = new PlaneGeometry(1, 1);
       this.planeMaterial = new MeshBasicMaterial({
-        color: 0xff10f0,
+        color: 0xffffff,
         side: FrontSide,
         transparent: true,
         depthTest: false,

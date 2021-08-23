@@ -1,7 +1,8 @@
 import TextureLerpBackground from "./TextureLerpBackground";
 import grid from '../Model/environment/textures/floor/Grid.png';
 import concrete from '../Model/environment/textures/floor/SeamlessConcrete_dark.png';
-import concretepuddles from '../Model/environment/textures/floor/SeamlessConcrete_dark_puddles.png';
+import rapsmorning from '../Model/environment/textures/floor/RapsMorning.png';
+import grid_white_grey from '../Model/environment/textures/floor/grid_02_whitegrey.png';
 import raps from '../Model/environment/textures/floor/Raps.png';
 import grid_concrete from '../Model/environment/textures/floor/grid_02_concrete-black.png';
 import grid_orange from '../Model/environment/textures/floor/grid_02_orange.png';
@@ -57,6 +58,9 @@ class Floor extends TextureLerpBackground{
       texture.repeat.set( 100,100);
     });
     this.Load("Raps", raps).then((texture)=>{
+      texture.repeat.set( 100,100);
+    });
+    this.Load("rapsmorning", rapsmorning).then((texture)=>{
       texture.repeat.set( 100,100);
     });
     this.Load("GridConcrete", grid_concrete).then((texture)=>{

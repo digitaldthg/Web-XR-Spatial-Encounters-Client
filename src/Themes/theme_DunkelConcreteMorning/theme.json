@@ -1,17 +1,11 @@
 {
   "name":"Dunkel Concrete Morning",
   "triangle_colors":[
-    "#97D5C3",
-    "#001274",
-    "#F594B7",
-    "#FFD500",
-    "#FA0062",
-    "#EE50FF",
-    "#8E2388",
-    "#C1BD00",
-    "#07A789"
+    "#2F426B",
+    "#303C60",
+    "#3E445B"
   ],
-  "triangle_color_bottom":"#ffffff",
+  "triangle_color_bottom":"#FF5232",
   "gradient_sun" : [
     {
       "stop" : 0,
@@ -98,7 +92,7 @@
       "value" : "#ffffff"
     }
   ],
-  "tex_floor" : "ConcretePuddles",
+  "tex_floor" : "rapsmorning",
   "tex_skybox" : null,
   "tex_bg_front" :"Forrest",
   "tex_bg_back" : "Black",
