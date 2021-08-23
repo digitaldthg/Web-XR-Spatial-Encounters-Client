@@ -234,6 +234,8 @@
                 v-for="theme in this.$store.state.allThemes"
                 v-bind:key="theme.name"
               >
+
+                <div class="" :ref="theme.name"></div>
                 {{ theme.name }}
                 <button
                   class="cta-button"
@@ -288,6 +290,7 @@ import Debug from "../Mixins/Debug";
 
 import TWEEN from "@tweenjs/tween.js";
 
+
 export default {
   name: "Controls",
   mixins: [Debug],
@@ -339,6 +342,15 @@ export default {
     "$store.state.serverFriends": function (friends) {
       this.friends = friends;
     },
+    "$store.state.previews" : function(previews){
+
+      this.$nextTick().then(()=>{
+
+        Object.keys(previews).map((pName) => {
+          this.$refs[pName][0].appendChild(previews[pName]);
+        });
+      })
+    }
   },
   mounted() {
     this.InitEvents();

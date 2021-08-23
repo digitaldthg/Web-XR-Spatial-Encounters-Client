@@ -31,12 +31,20 @@ import Utils from "../scripts/utils";
 import SunGradient from "./SunGradient";
 import TWEEN from "@tweenjs/tween.js";
 
+import ThemePreviewGenerator from "./ThemePreviewGenerator";
+
 class MaterialController {
   constructor(xr, store) {
     this.xr = xr;
     this.store = store;
+    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
 
-    this.store.commit("setAllThemes", [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite])
+    var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
+    
+    this.store.commit("setAllThemes", allThemes);
+
+
+
 
     this.store.commit("setMaterialController", this);
 
