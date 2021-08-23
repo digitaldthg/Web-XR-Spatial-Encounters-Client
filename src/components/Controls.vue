@@ -320,7 +320,7 @@ export default {
 
       new TWEEN.Tween(start).to(end,
         fogData.duration
-      )
+      ).easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate((v) => {
 
         this.$store.commit("setFogDistance", v.fogDistance);
