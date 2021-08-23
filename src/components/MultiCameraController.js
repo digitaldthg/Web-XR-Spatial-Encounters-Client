@@ -28,8 +28,8 @@ class MultiCameraController{
       fov: 45,
       camera : null,
       lookAt: new Vector3(0,0,0),
-      pos: new Vector3(0,20,0),
-      animate : false,
+      pos: new Vector3(0,15,0),
+      animate : true,
       animationDirection : 1,
       animationSpeed : .001,
       updateCamera: this.UpdateCamera
