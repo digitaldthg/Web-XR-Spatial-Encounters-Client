@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import ThemePreviewGenerator from '../src/components/ThemePreviewGenerator';
 
 Vue.use(Vuex)
 
