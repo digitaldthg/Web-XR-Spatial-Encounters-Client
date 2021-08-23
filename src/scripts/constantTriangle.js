@@ -35,7 +35,8 @@ class ConstantTriangle {
           return this.lastPositions[index].lerp( pos , .05);
         });
 
-        this.triGeometry = triangleUtils.GetGeometry(this.positions,this.height)
+        console.log("triGeometry" , this.triGeometry);
+        this.triGeometry = triangleUtils.GetGeometry(this.positions,this.height, this.triGeometry);
         this.triUniforms = triangleUtils.GetUniforms(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
 
         //MeshBasicMaterial

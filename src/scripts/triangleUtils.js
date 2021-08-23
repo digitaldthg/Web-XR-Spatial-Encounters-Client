@@ -31,8 +31,12 @@ const triangleUtils = {
         }
         return uniforms
     },
-    GetGeometry(positions, height) {
-        var geometry = new THREE.BufferGeometry();
+    GetGeometry(positions, height, geometry) {
+
+      if(geometry == null){
+        geometry = new THREE.BufferGeometry();
+      }
+        //var geometry = new THREE.BufferGeometry();
         var vertices = null;
         var uvs = null;
         var r = null;
