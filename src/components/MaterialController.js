@@ -20,6 +20,7 @@ import ThueringerLandschaft from '../Themes/theme_ThueringerLandschaft/theme.jso
 import DesertGelb from '../Themes/theme_DesertGelb/theme.json';
 import DesertHell from '../Themes/theme_DesertHell/theme.json';
 import DesertPistachio from '../Themes/theme_DesertPistachio/theme.json';
+import DesertThunder from '../Themes/theme_DesertThunder/theme.json';
 import DesertSun from '../Themes/theme_DesertSun/theme.json';
 import CyberpunkSun from '../Themes/theme_CyberpunkSun/theme.json';
 import GridDunkelWolken from '../Themes/theme_GridDunkelWolken/theme.json';
@@ -37,14 +38,11 @@ class MaterialController {
   constructor(xr, store) {
     this.xr = xr;
     this.store = store;
-    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
+    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertThunder,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
 
     var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
     
     this.store.commit("setAllThemes", allThemes);
-
-
-
 
     this.store.commit("setMaterialController", this);
 
