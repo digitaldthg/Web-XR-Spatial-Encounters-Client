@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 Vue.use(Vuex)
 
@@ -19,6 +19,8 @@ export default new Vuex.Store({
     nextTheme: null,
     lerpDuration: 2,
     allThemes: null,
+    previews : null,
+    themePreview : null,
     materialController: null,
     fogDistance: 0.2,
     playerPosition: null,
@@ -78,7 +80,6 @@ export default new Vuex.Store({
       state.speed = data
     },
     setFrequency(state, frequ) {
-      console.log("store frequ ",frequ)
       state.frequency = frequ
     },
     setThemeLerp(state, alpha) {
@@ -86,18 +87,18 @@ export default new Vuex.Store({
       state.themeLerp = alpha
     },
     setLastTheme(state, theme) {
-      console.log("SET LAST THEME",theme)
       state.lastTheme = theme
     },
     setNextTheme(state, theme) {
-      console.log("SET NEXT THEME",theme)
-      state.nextTheme = theme
-
+       state.nextTheme = theme
     },
     setAllThemes(state, themes) {
       if(state.allThemes == null){
-        state.allThemes = themes
+        state.allThemes = themes;
       }  
+    },
+    SetPreviews(state,previews){
+      state.previews = previews;      
     },
     setPlayerPosition(state,position){
       state.playerPosition = position
