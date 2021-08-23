@@ -69,10 +69,21 @@ const ThemeFactory = {
           value: "#000000"
         }
       ],
+      gradient_bg_moving: [
+        {
+          stop: 0,
+          value: "#000000"
+        },
+        {
+          stop: 1,
+          value: "#000000"
+        }
+      ],
       tex_floor: "Grid",
       tex_skybox: "",
-      tex_bg_front: "",
-      tex_bg_back: "",
+      tex_bg_front: "Black",
+      tex_bg_back: "Black",
+      tex_bg_moving: "Black",
       tex_guradian: "",
       tex_sun: "",
     }

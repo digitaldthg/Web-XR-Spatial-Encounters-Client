@@ -362,7 +362,7 @@ export default {
           //console.log("CHILD Mat ", child.material)
         }
 
-        // console.log("CHILDREN ", child.name);
+         console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":
@@ -374,6 +374,9 @@ export default {
             break;
           case "bg_front":
             child.renderOrder = 10;
+            break;
+          case "bg_moving":
+            child.renderOrder = 12;
             break;
           case "fog_floor":
             child.renderOrder = 11;
