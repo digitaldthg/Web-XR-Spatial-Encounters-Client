@@ -135,7 +135,7 @@
                 @input="updateOpacitySlider"
               />
             </div>
-            <div class="slider">
+            <!--<div class="slider">
               <label for="scale">Skalierung der Dreiecke: {{ this.scale }}</label>
               <input
                 class="slider"
@@ -149,7 +149,7 @@
                 @change="updateScale"
                 @input="updateScale"
               />
-            </div>
+            </div>-->
             <div class="slider">
               <label for="speed"
                 >Geschwindigkeit der Dreiecke:
@@ -163,12 +163,12 @@
                 min="0.0001"
                 max="1"
                 step="0.001"
-                value="0.1"
+                :value="this.$store.state.speed"
                 @change="updateSpeed"
                 @input="updateSpeed"
               />
             </div>
-            <div class="slider">
+            <!--<div class="slider">
               <label for="theme"
                 >Theme Lerp: {{ this.$store.state.themeLerp }}</label
               >
@@ -184,7 +184,7 @@
                 @change="updateThemeLerp"
                 @input="updateThemeLerp"
               />
-            </div>
+            </div>-->
             <div class="slider">
               <label for="fog"
                 >FogDistance: {{ this.$store.state.fogDistance }}</label
