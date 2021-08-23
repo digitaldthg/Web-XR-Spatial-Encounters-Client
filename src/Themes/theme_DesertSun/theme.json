@@ -92,10 +92,22 @@
       "value" : "#000000"
     }
   ],
+  "gradient_bg_moving": [
+    {
+      "stop": 0,
+      "value": "#000000"
+    },
+    {
+      "stop": 1,
+      "value": "#000000"
+    }
+  ],
   "tex_floor" : "BrownDesert",
   "tex_skybox" : null,
   "tex_bg_front" : "Black",
   "tex_bg_back" : "Black",
+  "tex_bg_moving": "Black",
+  
   "tex_guardian":"Grid",
   "tex_sun":"Sun"
 }
