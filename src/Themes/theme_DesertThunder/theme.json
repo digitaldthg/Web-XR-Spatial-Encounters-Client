@@ -66,15 +66,15 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.5,
-      "value" : "#ffffff"
-    },
-    {
-      "stop" : 0.6,
+      "stop" : 0.4,
       "value" : "#ffffff"
     },
     {
       "stop" : 0.7,
+      "value" : "#ffffff"
+    },
+    {
+      "stop" : 0.8,
       "value" : "#000000"
     }
   ],
@@ -90,12 +90,12 @@
   ],
   "gradient_bg_back" : [
     {
-      "stop" : 0.18,
-      "value" : "#514C5A"
+      "stop" : 0.1,
+      "value" : "#0B001F"
     },
     {
-      "stop" : 0.9,
-      "value" : "#0B001F"
+      "stop" : 0.82,
+      "value" : "514C5A"
     }
   ],
   "tex_floor" : "DarkDesert",
