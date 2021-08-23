@@ -411,7 +411,7 @@ export default {
       });
     },
     updateOpacitySlider(event) {
-      console.log("CHANGE OP ",event.target.value)
+      //console.log("CHANGE OP ",event.target.value)
       this.$socket.emit("client-change-opacity", {
         opacity: parseFloat(event.target.value),
       });

@@ -16,6 +16,10 @@ class ConstantTriangle {
         this.lastPositions = null;
         this.nextPositions = null;
         this.positionAlphas = null;
+
+        this.triMaterial = null;
+        this.triGeometry = null;
+        this.triUniforms = null;
     }
     Init() {
         this.mesh = new THREE.Mesh();
@@ -31,15 +35,15 @@ class ConstantTriangle {
           return this.lastPositions[index].lerp( pos , .05);
         });
 
-        var geometry = triangleUtils.GetGeometry(this.positions,this.height)
-        var uniforms = triangleUtils.GetUniforms(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
+        this.triGeometry = triangleUtils.GetGeometry(this.positions,this.height)
+        this.triUniforms = triangleUtils.GetUniforms(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
 
         //MeshBasicMaterial
 
-        this.triMaterial = triangleUtils.getMaterial(uniforms);
+        this.triMaterial = triangleUtils.getMaterial(this.triUniforms);
 
         this.mesh.material = this.triMaterial;
-        this.mesh.geometry = geometry;
+        this.mesh.geometry = this.triGeometry;
 
         triangleUtils.UpdateMaterial(this.triMaterial,this.store,this.xr)
     }

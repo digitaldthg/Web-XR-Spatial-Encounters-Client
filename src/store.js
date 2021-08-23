@@ -78,7 +78,7 @@ export default new Vuex.Store({
       state.speed = data
     },
     setFrequency(state, frequ) {
-
+      console.log("store frequ ",frequ)
       state.frequency = frequ
     },
     setThemeLerp(state, alpha) {
