@@ -15,7 +15,6 @@ import nude_desert from '../Model/environment/textures/floor/nude_desert.png';
 import brown_desert from '../Model/environment/textures/floor/brown_desert.png';
 import dark_desert from '../Model/environment/textures/floor/dark_desert.png';
 import digital_desert from '../Model/environment/textures/floor/grid-digitzeddesert.png';
-import grid_white_grey from '../Model/environment/textures/floor/grid_02_whitegrey.png';
 
 
 import {

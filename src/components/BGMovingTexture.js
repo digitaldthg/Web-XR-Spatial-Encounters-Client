@@ -7,7 +7,7 @@ import GewitterBlitze from '../Model/environment/textures/background/Horizon_Gew
 import Black from '../Model/environment/textures/black.png';
 import {ClampToEdgeWrapping} from 'three';
 
-class BGBackTexture extends TextureBackground{
+class BGMovingTexture extends TextureBackground{
 
   constructor(props){
     super(props);
@@ -43,5 +43,5 @@ class BGBackTexture extends TextureBackground{
 
 }
 
-export default BGBackTexture;
+export default BGMovingTexture;
 
