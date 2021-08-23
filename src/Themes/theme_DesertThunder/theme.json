@@ -31,7 +31,7 @@
   "gradient_skybox": [
     {
       "stop" : 0.5,
-      "value" : "#1E1C23"
+      "value" : "#221d1f"
     },
     {
       "stop" : 0.6,
@@ -49,15 +49,15 @@
   "gradient_fogFloor" : [
     {
       "stop" : 0,
-      "value" : "#201E24"
+      "value" : "#221d1f"
     },
     {
       "stop" : 0.5,
-      "value" :"#201E24"
+      "value" :"#221d1f"
     },
     {
       "stop" : 1,
-      "value" : "#201E24"
+      "value" : "#221d1f"
     }
   ],
   "gradient_fogFloorAlpha" : [
@@ -66,7 +66,7 @@
       "value" : "#000000"
     },
     {
-      "stop" : 0.4,
+      "stop" : 0.501,
       "value" : "#ffffff"
     },
     {
@@ -74,7 +74,7 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 0.8,
+      "stop" : 1,
       "value" : "#000000"
     }
   ],
@@ -103,5 +103,5 @@
   "tex_bg_front" : "GewitterBlitze",
   "tex_bg_back" : "WolkenGewitter",
   "tex_guardian":"Grid",
-  "tex_sun":"Sun"
+  "tex_sun":"Black"
 }
