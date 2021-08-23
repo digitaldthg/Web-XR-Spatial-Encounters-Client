@@ -12,6 +12,8 @@ import BGFrontTexture from "./BGFrontTexture";
 import BGBackTexture from "./BGBackTexture";
 import BGGradientFront from "./BGGradientFront";
 import BGGradientBack from "./BGGradientBack";
+import BGMovingTexture from "./BGMovingTexture";
+import BGGradientMoving from "./BGGradientMoving";
 import ThemeFactory from "./ThemeFactory";
 
 import DunkelConcrete from '../Themes/theme_DunkelConcrete/theme.json';
@@ -71,6 +73,11 @@ class MaterialController {
         name: "bg_back"
       }
     );
+    this.gradient_bg_moving = new BGGradientMoving(
+      {
+        name: "bg_moving"
+      }
+    );
 
     //LERP TEXUTRE OBJECTS
     var grid_floor_obj = new LerpMaterial({
@@ -117,6 +124,15 @@ class MaterialController {
     });
     var bg_front = bg_front_obj.material
 
+    //BG Moving
+    var bg_moving_obj = new LerpMaterial({
+      color: 0xffffff,
+      transparent: true,
+      depthWrite: false,
+      side: FrontSide
+    });
+    var bg_moving = bg_moving_obj.material
+
     //Sky Texture
     var skybox_texture_obj = new LerpMaterial({
       color: 0x00ff00,
@@ -146,6 +162,7 @@ class MaterialController {
       sun,
       bg_back,
       bg_front,
+      bg_moving,
       skybox_texture
 
     }
@@ -153,6 +170,7 @@ class MaterialController {
     this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);
     this.tex_bg_front = new BGFrontTexture(this.xr);
+    this.tex_bg_moving = new BGMovingTexture(this.xr);
     this.tex_bg_back = new BGBackTexture(this.xr);
     this.tex_sun = new Sun(this.xr);
 
@@ -162,6 +180,7 @@ class MaterialController {
     this.tex_guardian.SetMaterial("Guardian", guardian_obj);
     this.tex_bg_front.SetMaterial("BG_Front", bg_front_obj);
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
+    this.tex_bg_moving.SetMaterial("BG_Moving", bg_moving_obj);
 
     //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
 
@@ -244,6 +263,7 @@ class MaterialController {
 
     this.gradient_bg_front.SetGradient(final.gradient_bg_front);
     this.gradient_bg_back.SetGradient(final.gradient_bg_back);
+    this.gradient_bg_moving.SetGradient(final.gradient_bg_moving);
 
     this.gradient_sun.SetGradient(final.gradient_sun);
 
@@ -254,6 +274,8 @@ class MaterialController {
     this.tex_sun.lerpMaterial(this.gradient_sun.GetTexture(), this.gradient_sun.GetTexture(), alpha, themeA.tex_sun, themeB.tex_sun)
     this.tex_bg_front.lerpMaterial(this.gradient_bg_front.GetTexture(), this.gradient_bg_front.GetTexture(), alpha, themeA.tex_bg_front, themeB.tex_bg_front);
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
+    this.tex_bg_moving.lerpMaterial(this.gradient_bg_moving.GetTexture(), this.gradient_bg_moving.GetTexture(), alpha, themeA.tex_bg_moving, themeB.tex_bg_moving);
+
 
 
     this.ChangeFogDistance();

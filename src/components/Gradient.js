@@ -59,7 +59,7 @@ class Gradient{
     for(var i=0;i<gradientArray.length;i++){
       let gradientItem = gradientArray[i];
       let g = gradientArray[i].value;
-      //console.log("SET GRADIENT ",this.gradient, gradientItem)
+      //console.log("SET GRADIENT ",this.gradient, gradientItem,g)
       if(isNaN(gradientItem.stop)){
         gradientItem.stop = 0
       }

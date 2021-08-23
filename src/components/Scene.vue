@@ -375,6 +375,9 @@ export default {
           case "bg_front":
             child.renderOrder = 10;
             break;
+            case "bg_moving":
+            child.renderOrder = 12;
+            break;
           case "fog_floor":
             child.renderOrder = 11;
             break;
