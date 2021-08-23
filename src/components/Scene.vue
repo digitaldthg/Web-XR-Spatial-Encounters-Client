@@ -13,6 +13,7 @@ import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
 import CalibrationTex from "../Model/environment/textures/calibrationcorner.png";
+import RotatingObj from "./RotatingObj"
 import {
   Color,
   FogExp2,
@@ -376,6 +377,7 @@ export default {
             child.renderOrder = 10;
             break;
           case "bg_moving":
+            new RotatingObj(this.xr,child);
             child.renderOrder = 12;
             break;
           case "fog_floor":
