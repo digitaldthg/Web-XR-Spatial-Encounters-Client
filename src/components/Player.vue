@@ -195,7 +195,7 @@ export default {
           this.$store.state.startPosition.y,
           this.$store.state.startPosition.z
         ),
-        new Vector3(0, 0, 10)
+        new Vector3(0, 0, 7)
       );
 
       var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera( this.$store.state.xr.Camera.instance );

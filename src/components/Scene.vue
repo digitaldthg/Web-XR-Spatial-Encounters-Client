@@ -203,6 +203,7 @@ export default {
       this.xr.Camera.instance.far = 1000;
       this.xr.Camera.instance.updateProjectionMatrix();
 
+
       this.xr.Loader.load({
         name: "EnvironmentModel",
         onprogress: () => {},
@@ -215,7 +216,8 @@ export default {
         this.materialController.StartLerpThemes();
       });
 
-      this.xr.Controls.SetPosition(0, 5, 10);
+      this.xr.Controls.SetPosition(-7, 20, 15);
+      this.xr.Controls.Desktop.orbit.target.set(-7,0,-7);
 
       this.$store.commit("xr", this.xr);
       this.clock = new Clock();

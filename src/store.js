@@ -24,7 +24,7 @@ export default new Vuex.Store({
     materialController: null,
     fogDistance: 0.2,
     playerPosition: null,
-    startPosition:{x:0,y:0,z:7},
+    startPosition:{x:0,y:0,z:-6},
     autoOrbit : false,
     uiVisible : true,
     rotationSpeed : -1,
