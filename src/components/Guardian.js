@@ -20,12 +20,12 @@ class Guardian extends TextureLerpBackground {
     this.canFade = true;
     this.boundinBox = {
       x: {
-        min: -6.5,
-        max: 6.5
+        min: -11,
+        max: -3
       },
       z: {
-        min: -4,
-        max: 4
+        min: -15,
+        max: -1
       }
     }
 

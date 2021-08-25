@@ -53,6 +53,9 @@ export default {
     "server-frequency-update": function (data) {
       this.$store.commit("setFrequency", data);
     },
+    "server-teppich-update": function (data) {
+      this.$store.commit("setTeppichOpacity", data);
+    },
     "server-opacity-update": function (data) {
       console.log("Op from Server ",data)
       this.$store.commit("setTriangleOpacity", data);

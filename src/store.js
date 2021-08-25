@@ -1,3 +1,4 @@
+import { StaticCopyUsage } from 'three';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -29,7 +30,8 @@ export default new Vuex.Store({
     uiVisible : true,
     rotationSpeed : -1,
     presentation : false,
-    triangleOpacity : 0.0
+    triangleOpacity : 0.0,
+    teppichOpacity: 1
   },
   mutations: {
     ChangeRotationSpeed(state,data){
@@ -105,6 +107,9 @@ export default new Vuex.Store({
     },
     ToggleAutoOrbit(state,autoOrbit){
       state.autoOrbit = autoOrbit;
+    },
+    setTeppichOpacity(state,op){
+      state.teppichOpacity = op;
     }
 
   },

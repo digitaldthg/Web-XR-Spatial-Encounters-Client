@@ -8,7 +8,8 @@ class LerpMaterial {
       transparent: true,
       depthWrite: false,
       side: FrontSide,
-      alphaBlend: false
+      alphaBlend: false,
+      depthTest: true
     }, opts)
 
     this.material = null;
@@ -144,7 +145,7 @@ class LerpMaterial {
       vertexShader: this.lerp_shader.vertex_shader,
       fragmentShader: this.lerp_shader.fragment_shader,
       fog: true,
-
+      depthTest: true
     });
     this.material.transparent = opts.transparent
     this.material.depthWrite = opts.depthWrite
