@@ -13,7 +13,7 @@ class MultiCameraController{
       up: [ 0, 1, 0 ],
       fov: 30,
       camera : null,
-      lookAt: new Vector3(0,0,0),
+      lookAt: new Vector3(-7,0,-7),
       pos: new Vector3(25,15,25),
       animate : true,
       animationDirection : 1,
@@ -27,7 +27,7 @@ class MultiCameraController{
       up: [ 0, 0, 1 ],
       fov: 45,
       camera : null,
-      lookAt: new Vector3(0,0,0),
+      lookAt: new Vector3(-7,0,-7),
       pos: new Vector3(0,15,0),
       animate : true,
       animationDirection : 1,
@@ -42,7 +42,7 @@ class MultiCameraController{
       up: [ 0, 1, 0 ],
       fov: 60,
       camera : null,
-      lookAt: new Vector3(0,0,0),
+      lookAt: new Vector3(-7,0,-7),
       pos: new Vector3(0,10,25),
       animate : false,
       animationDirection : 1,
@@ -86,6 +86,8 @@ class MultiCameraController{
       this.views[i].camera = cam;
           camGroup.add(cam);
       this.store.state.xr.Scene.add(camGroup);
+      
+      camGroup.position.set(-7,0,-7);
     }
 
     this.windowWidth = window.innerWidth;
