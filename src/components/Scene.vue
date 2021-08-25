@@ -13,6 +13,7 @@ import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
 import CalibrationTex from "../Model/environment/textures/calibrationcorner.png";
+import TeppichTex from "../Model/environment/textures/floor/grain_tape.png";
 import RotatingObj from "./RotatingObj";
 import {
   Color,
@@ -248,11 +249,11 @@ export default {
       //teppich.renderOrder = 9;
       this.teppich.position.set(-7, 0.1, -8);
       this.teppich.rotation.set(Math.PI * -0.5, 0, 0);
-      this.xr.Scene.add(this.teppich);
-      /*this.xr.CustomTextureLoader.load(CalibrationTex).then((map) => {
-        this.planeMaterial.alphaMap = map;
-        this.xr.Scene.add(plane);
-      });*/
+      //this.xr.Scene.add(this.teppich);
+      this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
+        this.teppichMaterial.map = map;
+        this.xr.Scene.add(this.teppich);
+      });
 
       //CALIBRATION PLANE
       const planeGeometry = new PlaneGeometry(1, 1);
