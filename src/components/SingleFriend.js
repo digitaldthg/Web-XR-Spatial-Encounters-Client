@@ -96,7 +96,7 @@ class SingleFriend {
     
 
     this.xr.Events.addEventListener("OnChangeXRView", (xrMode)=>{
-      console.log("xrMode" , xrMode.xrMode);
+      //console.log("xrMode" , xrMode.xrMode);
 
       if(xrMode.xrMode == "VR"){
         this.HideText(true);
@@ -112,7 +112,7 @@ class SingleFriend {
   }
 
   HideText(boolean){
-    console.log("text" , this.myText);
+    //console.log("text" , this.myText);
 
       this.myText.visible = !boolean;
   }
