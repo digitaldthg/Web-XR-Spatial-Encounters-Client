@@ -34,6 +34,8 @@ export default new Vuex.Store({
     teppichOpacity: 1,
     canCalibrate : true,
     audioController : null,
+    mute : false
+
   },
   mutations: {
     SetAudioController(state, value) {

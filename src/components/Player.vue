@@ -50,8 +50,8 @@ export default {
       ready: false,
       timer: null,
       timerTimeout: false,
-      maxTimeout: 500, //Ladezeit
-      timerTimeoutTime: 1000, //Zeit bis zum naechsten Reset
+      maxTimeout: 100, //Ladezeit
+      timerTimeoutTime: 3000, //Zeit bis zum naechsten Reset
       timeout: 0,
       thumb: false,
       rings: [],
@@ -195,6 +195,7 @@ export default {
     },
 
     ResetCamera() {
+      this.AudioController.PlaySound("menu.click");
       this.$store.state.xr.Controls.SetPositionAndRotation(
         new Vector3(
           this.$store.state.startPosition.x,
