@@ -112,9 +112,7 @@ class SingleFriend {
   }
 
   HideText(boolean){
-    //console.log("text" , this.myText);
-
-      this.myText.visible = !boolean;
+    this.myText.visible = !boolean;
   }
 
   updateData = (data, idx) => {

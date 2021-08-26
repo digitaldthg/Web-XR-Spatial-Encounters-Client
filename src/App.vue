@@ -26,6 +26,9 @@ export default {
       initData: null,
     };
   },
+  mounted(){
+    window.console.log = ()=>{}
+  },
   methods: {
     sendInitData() {
       console.log("INIT DATA",this.initData,store.state.allThemes)

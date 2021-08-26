@@ -260,7 +260,7 @@
               </div>
               <div class="margin-bottom">
                 <label>Transitionzeit: {{$store.state.lerpDuration}}Sekunden</label>
-                <input type="range" :value="$store.state.lerpDuration" min="1" max="25" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
+                <input type="range" :value="$store.state.lerpDuration" min="1" max="60" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
               </div>
               <div
                 class="theme flex flex-between flex-align-center"
