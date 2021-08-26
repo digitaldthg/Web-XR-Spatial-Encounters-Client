@@ -252,7 +252,7 @@ export default {
       //this.xr.Scene.add(this.teppich);
       this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
         this.teppichMaterial.map = map;
-        this.xr.Scene.add(this.teppich);
+        //this.xr.Scene.add(this.teppich);
       });
 
       //CALIBRATION PLANE
