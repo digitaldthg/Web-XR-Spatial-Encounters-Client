@@ -252,12 +252,13 @@ export default {
       });
       this.teppich = new Mesh(teppichGeometry, this.teppichMaterial);
       this.teppich.renderOrder = 9;
-      this.teppich.position.set(-7, 0.1, -8);
+      this.teppich.position.set(-7, 0.01, -8);
       this.teppich.rotation.set(Math.PI * -0.5, 0, 0);
       //this.xr.Scene.add(this.teppich);
       this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
         this.teppichMaterial.map = map;
-        //this.xr.Scene.add(this.teppich);
+        this.teppichMaterial.opacity = this.$store.state.teppichOpacity;
+        this.xr.Scene.add(this.teppich);
       });
 
       //CALIBRATION PLANE
