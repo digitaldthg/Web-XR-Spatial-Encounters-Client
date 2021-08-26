@@ -30,6 +30,7 @@ import {
   BufferAttribute,
   Texture,
   FloatType,
+  OneMinusSrcAlphaFactor, CustomBlending, OneFactor
 } from "three";
 import envModel from "../Model/environment/environment.glb";
 
@@ -43,7 +44,7 @@ import {
 import MaterialController from "./MaterialController";
 import MultiCameraController from "./MultiCameraController";
 
-import Scheune from '../Model/environment/scheune.glb';
+import Scheune from "../Model/environment/scheune.glb";
 
 export default {
   components: { Player, Friends, Environment },
@@ -59,10 +60,10 @@ export default {
       views: null,
       initViews: false,
       scheunenMaterial: new MeshBasicMaterial({
-        color : 0x333333,
-        transparent:true,
+        color: 0x333333,
+        transparent: true,
         opacity: 1,
-      })
+      }),
     };
   },
   mounted() {
@@ -123,7 +124,7 @@ export default {
     },
   },
   methods: {
-    ChangeScheune(){
+    ChangeScheune() {
       this.scheunenMaterial.opacity = this.$store.state.teppichOpacity;
     },
     ChangeTeppich() {
@@ -244,19 +245,20 @@ export default {
         onprogress: () => {},
         url: Scheune,
       }).then((model) => {
-        
-        console.log("SCheune " , model);
+        console.log("SCheune ", model);
         // console.log("loaded", model);
         this.scheunenModel = model.scene;
-        this.scheunenModel.position.set(-7,0,-8);
-        this.scheunenModel.traverse((child)=>{
+        this.scheunenModel.position.set(-7, 0, -8);
+        this.scheunenModel.traverse((child) => {
           console.log(child);
 
-          if(child.hasOwnProperty("material")){
+          if (child.hasOwnProperty("material")) {
             child.material = this.scheunenMaterial;
+                    child.material.blending = CustomBlending;
+        child.material.blednSrc = OneFactor;
+        child.material.blendDst = OneMinusSrcAlphaFactor;
+            this.scheunenMaterial.opacity = this.$store.state.teppichOpacity;
           }
-
-
         });
 
         this.scheunenModel.renderOrder = 9;
@@ -264,10 +266,6 @@ export default {
         // this.SetEnvironmentModel();
         // this.materialController.StartLerpThemes();
       });
-
-      
-
-
 
       this.$store.commit("xr", this.xr);
       this.clock = new Clock();
@@ -278,7 +276,7 @@ export default {
 
       var btn = this.$store.state.xr.Controls.GetVRButton();
 
-      btn.addEventListener("click", ()=>{
+      btn.addEventListener("click", () => {
         console.log(this.$store.state.audioController);
         this.$store.state.audioController.EnableSounds();
       });
@@ -299,11 +297,14 @@ export default {
       });
       this.teppich = new Mesh(teppichGeometry, this.teppichMaterial);
       this.teppich.renderOrder = 9;
-      this.teppich.position.set(-7, 0.01, -8);
+      this.teppich.position.set(-7, 0.02, -8);
       this.teppich.rotation.set(Math.PI * -0.5, 0, 0);
       //this.xr.Scene.add(this.teppich);
       this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
         this.teppichMaterial.map = map;
+        this.teppichMaterial.blending = CustomBlending;
+        this.teppichMaterial.blednSrc = OneFactor;
+        this.teppichMaterial.blendDst = OneMinusSrcAlphaFactor;
         this.teppichMaterial.opacity = this.$store.state.teppichOpacity;
         this.xr.Scene.add(this.teppich);
       });
@@ -318,11 +319,7 @@ export default {
       });
       const plane = new Mesh(planeGeometry, this.planeMaterial);
       plane.renderOrder = 16;
-      plane.position.set(
-        -0.65,
-        0.01,
-        -6
-      );
+      plane.position.set(-0.65, 0.01, -6);
       plane.rotation.set(Math.PI * -0.5, 0, Math.PI * 0.25);
 
       this.xr.CustomTextureLoader.load(CalibrationTex).then((map) => {
@@ -458,7 +455,7 @@ export default {
             child.renderOrder = 3;
             break;
           case "skybox_texture":
-          child.renderOrder = 4;
+            child.renderOrder = 4;
           case "grid_floor":
             child.renderOrder = 7;
             break;

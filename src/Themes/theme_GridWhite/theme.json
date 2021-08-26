@@ -65,7 +65,7 @@
       "value" : "#ffffff"
     },
     {
-      "stop" : 1,
+      "stop" : 0.95,
       "value" : "#000000"
     }
   ],
