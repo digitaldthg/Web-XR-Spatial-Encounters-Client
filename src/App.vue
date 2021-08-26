@@ -27,7 +27,7 @@ export default {
     };
   },
   mounted(){
-    window.console.log = ()=>{}
+    //window.console.log = ()=>{}
   },
   methods: {
     sendInitData() {
