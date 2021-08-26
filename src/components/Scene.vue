@@ -13,7 +13,9 @@ import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
 import CalibrationTex from "../Model/environment/textures/calibrationcorner.png";
-import RotatingObj from "./RotatingObj"
+import RotatingObj from "./RotatingObj";
+
+
 import {
   Color,
   FogExp2,
