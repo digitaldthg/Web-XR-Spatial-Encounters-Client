@@ -9,7 +9,7 @@ class MultiCameraController{
       left: 0,
       bottom: 0,
       width: 0.5,
-      height: 1.0,
+      height: 0.5,
       up: [ 0, 1, 0 ],
       fov: 30,
       camera : null,
@@ -19,6 +19,20 @@ class MultiCameraController{
       animationDirection : 1,
       animationSpeed : .001,
       updateCamera: this.UpdateCamera
+    },{
+      left: 0,
+      bottom: .5,
+      width: 0.5,
+      height: 0.5,
+      up: [ 0, 1, 0 ],
+      fov: 30,
+      camera : null,
+      lookAt: new Vector3(-7,0,-7),
+      pos: new Vector3(3,1.8,3),
+      animate : true,
+      animationDirection : 1,
+      animationSpeed : .003,
+      updateCamera: (v)=>this.FollowPlayer(v)
     },{
       left: 0.5,
       bottom: 0,
@@ -56,6 +70,7 @@ class MultiCameraController{
     this.scene = store.state.xr.Scene;
     this.store = store;
 
+    this.FollowPlayer = this.FollowPlayer.bind(this);
 
     this.store.state.xr.Events.addEventListener(
       "OnAfterRenderLoop",
@@ -101,6 +116,17 @@ class MultiCameraController{
       view.camera.parent.rotation.y += (view.animationSpeed * view.animationDirection);
     }
   }
+  FollowPlayer = (view)=>{
+
+    view.camera.parent.position.set(this.store.state.playerPosition.x,0,this.store.state.playerPosition.z);
+    view.camera.parent.rotation.y += (view.animationSpeed * view.animationDirection);
+    view.camera.lookAt(this.store.state.playerPosition.x,this.store.state.playerPosition.y / 1.25,this.store.state.playerPosition.z);
+
+    console.log(this.store.state.playerPosition)
+
+
+  }
+
 
   OnAfterRenderLoop = (clock) => {
 
