@@ -3,6 +3,7 @@
     <Player />
     <Friends />
     <Environment />
+
     <div id="vr-button" ref="vrButton" v-show="$store.state.uiVisible"></div>
   </div>
 </template>
@@ -42,6 +43,8 @@ import {
 import MaterialController from "./MaterialController";
 import MultiCameraController from "./MultiCameraController";
 
+import Scheune from '../Model/environment/scheune.glb';
+
 export default {
   components: { Player, Friends, Environment },
   name: "Scene",
@@ -50,10 +53,16 @@ export default {
       xr: null,
       reset: false,
       envModel: null,
+      scheunenModel: null,
       materialController: null,
       pressed: false,
       views: null,
       initViews: false,
+      scheunenMaterial: new MeshBasicMaterial({
+        color : 0xaaaaaa,
+        transparent:true,
+        opacity: 1,
+      })
     };
   },
   mounted() {
@@ -105,6 +114,7 @@ export default {
     },
     "$store.state.teppichOpacity": function (lerpValue) {
       this.ChangeTeppich();
+      this.ChangeScheune();
     },
     "$store.state.lastTheme": function (lerpValue) {
       if (this.xr.Scene.fog == null) {
@@ -113,6 +123,9 @@ export default {
     },
   },
   methods: {
+    ChangeScheune(){
+      this.scheunenMaterial.opacity = this.$store.state.teppichOpacity;
+    },
     ChangeTeppich() {
       this.teppich.material.opacity = this.$store.state.teppichOpacity;
     },
@@ -221,6 +234,40 @@ export default {
 
       this.xr.Controls.SetPosition(-7, 20, 15);
       this.xr.Controls.Desktop.orbit.target.set(-7, 0, -7);
+
+      /**
+       *  Scheuene
+       */
+
+      this.xr.Loader.load({
+        name: "Scheune",
+        onprogress: () => {},
+        url: Scheune,
+      }).then((model) => {
+        
+        console.log("SCheune " , model);
+        // console.log("loaded", model);
+        this.scheunenModel = model.scene;
+        this.scheunenModel.position.set(-7,0,-7);
+        this.scheunenModel.traverse((child)=>{
+          console.log(child);
+
+          if(child.hasOwnProperty("material")){
+            child.material = this.scheunenMaterial;
+          }
+
+
+        });
+
+        this.scheunenModel.renderOrder = 9;
+        this.xr.Scene.add(this.scheunenModel);
+        // this.SetEnvironmentModel();
+        // this.materialController.StartLerpThemes();
+      });
+
+      
+
+
 
       this.$store.commit("xr", this.xr);
       this.clock = new Clock();
