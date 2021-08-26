@@ -35,7 +35,7 @@ class Triangle {
         this.material = triangleUtils.getMaterial(uniforms)
 
         this.mesh = new THREE.Mesh(geometry, this.material);
-        this.mesh.renderOrder = 12;
+        this.mesh.renderOrder = 17;
         var pos = this.mesh.position;
         this.mesh.position.set(pos.x, pos.y + this.data.idx * this.height, pos.z);
 
