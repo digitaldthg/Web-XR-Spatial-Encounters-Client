@@ -5,30 +5,17 @@ class MultiCameraController{
   windowHeight = window.innerHeight;
   windowWidth = window.innerWidth;
   views = [
+    
     {
-      left: 0,
-      bottom: 0,
+      left: 0.5,
+      bottom: 0.33,
       width: 0.5,
-      height: 0.5,
+      height: 0.336,
       up: [ 0, 1, 0 ],
       fov: 30,
       camera : null,
       lookAt: new Vector3(-7,0,-7),
-      pos: new Vector3(25,15,25),
-      animate : true,
-      animationDirection : 1,
-      animationSpeed : .001,
-      updateCamera: this.UpdateCamera
-    },{
-      left: 0,
-      bottom: .5,
-      width: 0.5,
-      height: 0.5,
-      up: [ 0, 1, 0 ],
-      fov: 30,
-      camera : null,
-      lookAt: new Vector3(-7,0,-7),
-      pos: new Vector3(3,1.8,3),
+      pos: new Vector3(5.5,1.8,5.5),
       animate : true,
       animationDirection : 1,
       animationSpeed : .003,
@@ -37,7 +24,7 @@ class MultiCameraController{
       left: 0.5,
       bottom: 0,
       width: 0.5,
-      height: 0.5,
+      height: 0.336,
       up: [ 0, 0, 1 ],
       fov: 45,
       camera : null,
@@ -49,10 +36,10 @@ class MultiCameraController{
       updateCamera: this.UpdateCamera
     },
     {
-      left: 0.5,
-      bottom: 0.5,
+      left: 0,
+      bottom: 0,
       width: 0.5,
-      height: 0.5,
+      height: 1.0,
       up: [ 0, 1, 0 ],
       fov: 60,
       camera : null,
@@ -62,7 +49,22 @@ class MultiCameraController{
       animationDirection : 1,
       animationSpeed : .001,
       updateCamera: this.UpdateCamera
-    }
+    },
+    {
+      left: 0.5,
+      bottom: 0.66,
+      width: 0.5,
+      height: 0.336,
+      up: [ 0, 1, 0 ],
+      fov: 30,
+      camera : null,
+      lookAt: new Vector3(-7,0,-7),
+      pos: new Vector3(25,15,25),
+      animate : true,
+      animationDirection : 1,
+      animationSpeed : .001,
+      updateCamera: this.UpdateCamera
+    },
   ]
   constructor(opts){
     var {store} = opts;
