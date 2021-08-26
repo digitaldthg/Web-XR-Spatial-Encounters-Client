@@ -248,7 +248,7 @@ export default {
         console.log("SCheune " , model);
         // console.log("loaded", model);
         this.scheunenModel = model.scene;
-        this.scheunenModel.position.set(-7,0,-7);
+        this.scheunenModel.position.set(-7,0,-8);
         this.scheunenModel.traverse((child)=>{
           console.log(child);
 
