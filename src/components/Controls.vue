@@ -429,10 +429,16 @@ export default {
       if(boolean){
         this.$store.commit("ToggleUI", false);
         this.$store.commit("TogglePresenterMode" , boolean);
+
+        document.body.requestFullscreen();
       }
     },
     ToggleUI(boolean){
       this.$store.commit("ToggleUI", boolean);
+
+      if(boolean && document.fullscreenElement){
+        document.exitFullscreen();
+      }
     }, 
     ChangeAutoOrbit(e){
       
