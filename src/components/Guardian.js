@@ -20,15 +20,14 @@ class Guardian extends TextureLerpBackground {
     this.canFade = true;
     this.boundinBox = {
       x: {
-        min: -11,
-        max: -3
+        min: -10,
+        max: -4
       },
       z: {
-        min: -15,
-        max: -1
+        min: -14,
+        max: -2
       }
     }
-    //origin: -7,0,-8
 
     this.Load("Grid", grid).then((texture) => {
       texture.repeat.set(20, 8);
@@ -69,7 +68,7 @@ class Guardian extends TextureLerpBackground {
         {
           lerp: fadeIn ? 1 : 0,
         },
-        500
+        1500
       )
       .onUpdate((v) => {
         this.SetOpacity(v.lerp)
