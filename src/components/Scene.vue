@@ -252,11 +252,11 @@ export default {
       //this.xr.Scene.add(this.teppich);
       this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
         this.teppichMaterial.map = map;
-        this.xr.Scene.add(this.teppich);
+        //this.xr.Scene.add(this.teppich);
       });
 
       //CALIBRATION PLANE
-      const planeGeometry = new PlaneGeometry(1, 1);
+      const planeGeometry = new PlaneGeometry(0.5, 0.5);
       this.planeMaterial = new MeshBasicMaterial({
         color: 0xffffff,
         side: FrontSide,
@@ -264,11 +264,11 @@ export default {
         depthTest: false,
       });
       const plane = new Mesh(planeGeometry, this.planeMaterial);
-      //plane.renderOrder = 16;
+      plane.renderOrder = 16;
       plane.position.set(
-        this.$store.state.startPosition.x,
-        this.$store.state.startPosition.y,
-        this.$store.state.startPosition.z
+        -0.65,
+        0.01,
+        -6
       );
       plane.rotation.set(Math.PI * -0.5, 0, Math.PI * 0.25);
 
@@ -385,35 +385,35 @@ export default {
 
         switch (child.name) {
           case "base_floor":
-            //child.renderOrder = 0;
+            child.renderOrder = 0;
             child.visible = false;
             break;
           case "bg_back":
-            //child.renderOrder = 9;
+            child.renderOrder = 9;
             break;
           case "bg_front":
-            //child.renderOrder = 10;
+            child.renderOrder = 10;
             break;
           case "bg_moving":
             new RotatingObj(this.xr, child);
-            //child.renderOrder = 12;
+            child.renderOrder = 12;
             break;
           case "fog_floor":
-            //child.renderOrder = 11;
+            child.renderOrder = 11;
             break;
           case "skybox_gradient":
-            //child.renderOrder = 3;
+            child.renderOrder = 3;
             break;
           case "skybox_texture":
-          //child.renderOrder = 4;
+          child.renderOrder = 4;
           case "grid_floor":
-            //child.renderOrder = 7;
+            child.renderOrder = 7;
             break;
           case "guardian":
-            child.renderOrder = 1;
+            child.renderOrder = 13;
             break;
           case "sun":
-            //child.renderOrder = 8;
+            child.renderOrder = 8;
             break;
         }
       });
