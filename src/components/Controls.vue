@@ -102,6 +102,23 @@
 
           <div class="grid-1">
             <div class="slider">
+              <label for="teppichOpacity"
+                >Teppich Opacity: {{ this.$store.state.teppichOpacity}}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="teppichOpacity"
+                name="teppichOpacity"
+                min="0"
+                max="1"
+                step="0.01"
+                :value="this.$store.state.teppichOpacity"
+                @change="updateSliderTeppich"
+                @input="updateSliderTeppich"
+              />
+            </div>
+            <div class="slider">
               <label for="frequence"
                 >Sek. zwischen Dreiecken: {{ this.$store.state.frequency }}</label
               >
@@ -425,6 +442,12 @@ export default {
     updateOpacitySlider(event) {
       //console.log("CHANGE OP ",event.target.value)
       this.$socket.emit("client-change-opacity", {
+        opacity: parseFloat(event.target.value),
+      });
+    },
+    updateSliderTeppich(event) {
+      //console.log("CHANGE OP ",event.target.value)
+      this.$socket.emit("client-change-teppich", {
         opacity: parseFloat(event.target.value),
       });
     },

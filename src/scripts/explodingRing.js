@@ -114,7 +114,7 @@ class explodingRing {
 
         var mesh = new Mesh(geometry, material);
         mesh.position.set(this.position.x, this.position.y, this.position.z)
-        mesh.renderOrder = 15
+        //mesh.renderOrder = 15
         this.xr.Scene.add(mesh);
         return mesh;
     }

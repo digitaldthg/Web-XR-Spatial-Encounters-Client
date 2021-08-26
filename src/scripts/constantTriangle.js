@@ -23,7 +23,7 @@ class ConstantTriangle {
     }
     Init() {
         this.mesh = new THREE.Mesh();
-        this.mesh.renderOrder = 12;
+        //this.mesh.renderOrder = 12;
     }
 
     UpdateTriangle() {

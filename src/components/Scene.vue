@@ -2,7 +2,7 @@
   <div id="scene">
     <Player />
     <Friends />
-    <Environment />    
+    <Environment />
     <div id="vr-button" ref="vrButton" v-show="$store.state.uiVisible"></div>
   </div>
 </template>
@@ -13,9 +13,8 @@ import Friends from "./Friends.vue";
 import Player from "./Player.vue";
 import Utils from "../scripts/utils";
 import CalibrationTex from "../Model/environment/textures/calibrationcorner.png";
+import TeppichTex from "../Model/environment/textures/floor/grain_tape.png";
 import RotatingObj from "./RotatingObj";
-
-
 import {
   Color,
   FogExp2,
@@ -41,8 +40,7 @@ import {
   UnrealBloomPass,
 } from "postprocessing";
 import MaterialController from "./MaterialController";
-import MultiCameraController from './MultiCameraController';
-
+import MultiCameraController from "./MultiCameraController";
 
 export default {
   components: { Player, Friends, Environment },
@@ -54,15 +52,15 @@ export default {
       envModel: null,
       materialController: null,
       pressed: false,
-      views : null,
-      initViews : false
+      views: null,
+      initViews: false,
     };
   },
   mounted() {
     this.InitScene();
 
     this.multiCamController = new MultiCameraController({
-      store : this.$store
+      store: this.$store,
     });
 
     this.multiCamController.Init();
@@ -82,30 +80,31 @@ export default {
     },
   },
   watch: {
-    "$store.state.presentation" : function(presentation){
+    "$store.state.presentation": function (presentation) {
       this.multiCamController.enabled = presentation;
     },
-    "$store.state.rotationSpeed" : function(newSpeed){
+    "$store.state.rotationSpeed": function (newSpeed) {
       this.xr.Controls.Desktop.orbit.autoRotateSpeed = newSpeed;
     },
-    "$store.state.autoOrbit" : function(autoOrbit){
+    "$store.state.autoOrbit": function (autoOrbit) {
       console.log("AutoOrbit", autoOrbit);
 
-      if(autoOrbit){
-         this.xr.Controls.Desktop.orbit.autoRotateSpeed = this.$store.state.rotationSpeed;
+      if (autoOrbit) {
+        this.xr.Controls.Desktop.orbit.autoRotateSpeed =
+          this.$store.state.rotationSpeed;
         this.xr.Controls.Desktop.orbit.autoRotate = true;
-
-      }else{
-        
+      } else {
         this.xr.Controls.Desktop.orbit.autoRotate = false;
       }
-
     },
     "$store.state.fogDistance": function (fogDistance) {
       this.xr.Scene.fog.density = fogDistance;
     },
     "$store.state.themeLerp": function (lerpValue) {
       this.ChangeFogColor();
+    },
+    "$store.state.teppichOpacity": function (lerpValue) {
+      this.ChangeTeppich();
     },
     "$store.state.lastTheme": function (lerpValue) {
       if (this.xr.Scene.fog == null) {
@@ -114,6 +113,9 @@ export default {
     },
   },
   methods: {
+    ChangeTeppich() {
+      this.teppich.material.opacity = this.$store.state.teppichOpacity;
+    },
     ChangeFogColor() {
       if (
         typeof this.$store.state.lastTheme == "undefined" ||
@@ -176,7 +178,7 @@ export default {
         transparent: true,
         fog: true,
         depthWrite: true,
-        depthTest: false
+        depthTest: false,
       });
 
       const velocities = [];
@@ -188,7 +190,7 @@ export default {
       }
 
       this.particles = new Points(pointGeometry, pointMaterial);
-      this.particles.renderOrder = 20;
+      //this.particles.renderOrder = 20;
       this.particles.geometry.velocities = velocities;
       this.particles.visible = false;
       this.xr.Scene.add(this.particles);
@@ -205,7 +207,6 @@ export default {
       this.xr.Camera.instance.far = 1000;
       this.xr.Camera.instance.updateProjectionMatrix();
 
-
       this.xr.Loader.load({
         name: "EnvironmentModel",
         onprogress: () => {},
@@ -219,7 +220,7 @@ export default {
       });
 
       this.xr.Controls.SetPosition(-7, 20, 15);
-      this.xr.Controls.Desktop.orbit.target.set(-7,0,-7);
+      this.xr.Controls.Desktop.orbit.target.set(-7, 0, -7);
 
       this.$store.commit("xr", this.xr);
       this.clock = new Clock();
@@ -237,6 +238,23 @@ export default {
         this.HandleXRView
       );
 
+      //SCHEUNEN BODEN
+      const teppichGeometry = new PlaneGeometry(10.1, 16.1);
+      this.teppichMaterial = new MeshBasicMaterial({
+        color: 0x607d8b,
+        side: FrontSide,
+        transparent: true,
+      });
+      this.teppich = new Mesh(teppichGeometry, this.teppichMaterial);
+      //teppich.renderOrder = 9;
+      this.teppich.position.set(-7, 0.1, -8);
+      this.teppich.rotation.set(Math.PI * -0.5, 0, 0);
+      //this.xr.Scene.add(this.teppich);
+      this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
+        this.teppichMaterial.map = map;
+        this.xr.Scene.add(this.teppich);
+      });
+
       //CALIBRATION PLANE
       const planeGeometry = new PlaneGeometry(1, 1);
       this.planeMaterial = new MeshBasicMaterial({
@@ -246,7 +264,7 @@ export default {
         depthTest: false,
       });
       const plane = new Mesh(planeGeometry, this.planeMaterial);
-      plane.renderOrder = 16;
+      //plane.renderOrder = 16;
       plane.position.set(
         this.$store.state.startPosition.x,
         this.$store.state.startPosition.y,
@@ -258,10 +276,8 @@ export default {
         this.planeMaterial.alphaMap = map;
         this.xr.Scene.add(plane);
       });
-
-      
     },
-    
+
     GamePadLoop() {
       var gamepads = navigator.getGamepads
         ? navigator.getGamepads()
@@ -329,8 +345,6 @@ export default {
     },
 
     RenderLoop() {
-      
-      
       this.GamePadLoop();
 
       return;
@@ -367,39 +381,39 @@ export default {
           //console.log("CHILD Mat ", child.material)
         }
 
-         console.log("CHILDREN ", child.name);
+        console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":
-            child.renderOrder = 0;
+            //child.renderOrder = 0;
             child.visible = false;
             break;
           case "bg_back":
-            child.renderOrder = 9;
+            //child.renderOrder = 9;
             break;
           case "bg_front":
-            child.renderOrder = 10;
+            //child.renderOrder = 10;
             break;
           case "bg_moving":
-            new RotatingObj(this.xr,child);
-            child.renderOrder = 12;
+            new RotatingObj(this.xr, child);
+            //child.renderOrder = 12;
             break;
           case "fog_floor":
-            child.renderOrder = 11;
+            //child.renderOrder = 11;
             break;
           case "skybox_gradient":
-            child.renderOrder = 3;
+            //child.renderOrder = 3;
             break;
           case "skybox_texture":
-            child.renderOrder = 4;
+          //child.renderOrder = 4;
           case "grid_floor":
-            child.renderOrder = 7;
+            //child.renderOrder = 7;
             break;
           case "guardian":
-            child.renderOrder = 12;
+            child.renderOrder = 1;
             break;
           case "sun":
-            child.renderOrder = 8;
+            //child.renderOrder = 8;
             break;
         }
       });

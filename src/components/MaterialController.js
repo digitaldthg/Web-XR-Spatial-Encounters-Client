@@ -94,7 +94,8 @@ class MaterialController {
       color: 0x0000ff,
       transparent: true,
       depthWrite: false,
-      side: DoubleSide
+      side: DoubleSide,
+      depthTest: false
     });
     var guardian = guardian_obj.material;
     //Sun
