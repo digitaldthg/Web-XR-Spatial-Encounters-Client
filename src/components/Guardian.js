@@ -30,7 +30,7 @@ class Guardian extends TextureLerpBackground {
     }
 
     this.Load("Grid", grid).then((texture) => {
-      texture.repeat.set(20, 8);
+      texture.repeat.set(10, 10);
     });
 
     this.store.watch(state => state.playerPosition, (newValue, oldViewMode) => {
