@@ -231,6 +231,11 @@ export default {
 
       var btn = this.$store.state.xr.Controls.GetVRButton();
 
+      btn.addEventListener("click", ()=>{
+        console.log(this.$store.state.audioController);
+        this.$store.state.audioController.EnableSounds();
+      });
+
       this.$refs.vrButton.appendChild(btn);
 
       this.$store.state.xr.Events.addEventListener(

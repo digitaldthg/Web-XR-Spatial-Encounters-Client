@@ -85,7 +85,7 @@ class SingleFriend {
     //group.userData.targetReached = true;
 
     this.myText = new Text()
-    this.group.add(this.myText);
+    //this.group.add(this.myText);
 
     // Set properties to configure:
     this.myText.text = data.id;

@@ -195,6 +195,7 @@ export default {
     },
 
     ResetCamera() {
+      this.AudioController.PlaySound("menu.click");
       this.$store.state.xr.Controls.SetPositionAndRotation(
         new Vector3(
           this.$store.state.startPosition.x,
