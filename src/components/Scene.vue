@@ -254,9 +254,6 @@ export default {
 
           if (child.hasOwnProperty("material")) {
             child.material = this.scheunenMaterial;
-                    child.material.blending = CustomBlending;
-        child.material.blednSrc = OneFactor;
-        child.material.blendDst = OneMinusSrcAlphaFactor;
             this.scheunenMaterial.opacity = this.$store.state.teppichOpacity;
           }
         });
@@ -302,9 +299,6 @@ export default {
       //this.xr.Scene.add(this.teppich);
       this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
         this.teppichMaterial.map = map;
-        this.teppichMaterial.blending = CustomBlending;
-        this.teppichMaterial.blednSrc = OneFactor;
-        this.teppichMaterial.blendDst = OneMinusSrcAlphaFactor;
         this.teppichMaterial.opacity = this.$store.state.teppichOpacity;
         this.xr.Scene.add(this.teppich);
       });
