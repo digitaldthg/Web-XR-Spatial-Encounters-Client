@@ -59,7 +59,7 @@ export default {
       views: null,
       initViews: false,
       scheunenMaterial: new MeshBasicMaterial({
-        color : 0xaaaaaa,
+        color : 0x333333,
         transparent:true,
         opacity: 1,
       })
