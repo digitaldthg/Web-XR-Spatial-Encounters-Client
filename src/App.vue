@@ -57,6 +57,8 @@ export default {
       console.log("on connection", d, store.state.allThemes);
       this.initData = d;
 
+      this.$store.commit("ChangeCalibrate" ,d.canCalibrate);
+
       if (store.state.allThemes != null) {
         this.sendInitData();
       }

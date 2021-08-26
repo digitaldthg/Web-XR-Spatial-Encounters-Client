@@ -49,7 +49,7 @@ export default {
       timer: null,
       timerTimeout: false,
       maxTimeout: 500, //Ladezeit
-      timerTimeoutTime: 4000, //Zeit bis zum naechsten Reset
+      timerTimeoutTime: 1000, //Zeit bis zum naechsten Reset
       timeout: 0,
       thumb: false,
       rings: [],
@@ -444,38 +444,44 @@ export default {
         );
 
         //RESET INTERSECTION CHECK
-        var pos = new Vector3();
-        var dir = new Vector3();
-        vrCamera.getWorldPosition(pos);
-        vrCamera.getWorldDirection(dir);
-        this.raycaster.set(pos, dir);
-        var intersection = this.raycaster.intersectObjects(
-          [this.playerFloor],
-          true
-        );
 
-        ring_pos = pos.clone();
+        if(this.$store.state.canCalibrate){
 
-        if (intersection.length > 0 && !this.timerTimeout) {
-          this.timer.SetVisible(true);
-          if (this.timeout < this.maxTimeout) {
-            this.timeout++;
+          console.log("canCalibrate");
+
+          var pos = new Vector3();
+          var dir = new Vector3();
+          vrCamera.getWorldPosition(pos);
+          vrCamera.getWorldDirection(dir);
+          this.raycaster.set(pos, dir);
+          var intersection = this.raycaster.intersectObjects(
+            [this.playerFloor],
+            true
+          );
+
+          ring_pos = pos.clone();
+
+          if (intersection.length > 0 && !this.timerTimeout) {
+            this.timer.SetVisible(true);
+            if (this.timeout < this.maxTimeout) {
+              this.timeout++;
+            } else {
+              this.timeout = 0;
+              this.ResetCamera();
+              this.thumb = false;
+              this.timer.SetVisible(false);
+              this.timerTimeout = true;
+
+              setTimeout(() => {
+                this.timerTimeout = false;
+              }, this.timerTimeoutTime);
+            }
+
+            this.timer.Progress(this.timeout, this.maxTimeout);
+            this.reset = true;
           } else {
-            this.timeout = 0;
-            this.ResetCamera();
-            this.thumb = false;
             this.timer.SetVisible(false);
-            this.timerTimeout = true;
-
-            setTimeout(() => {
-              this.timerTimeout = false;
-            }, this.timerTimeoutTime);
           }
-
-          this.timer.Progress(this.timeout, this.maxTimeout);
-          this.reset = true;
-        } else {
-          this.timer.SetVisible(false);
         }
       } // end of only VR
 

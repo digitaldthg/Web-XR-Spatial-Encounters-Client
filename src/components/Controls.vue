@@ -6,7 +6,23 @@
     <div id="controls" :class="{ hidden: !config.showDevTools || !$store.state.uiVisible }">
       <div class="controls-inner" v-if="open">
         <div class="grid">
-          
+          <div class="grid-1 flex info-panel">
+            <div class="flex margin-bottom">
+              <div class="input-checkbox">
+                  <input
+                    id="can-calibrate"
+                    class="invisible"
+                    type="checkbox"
+                    :checked="$store.state.canCalibrate"
+                    @input="ToggleCanCalibrate"
+                  />
+                  <label class="checkbox-label" for="can-calibrate"
+                    ></label
+                  >
+                </div>
+                <p>Kalibrierung</p>
+            </div>
+          </div>          
           <div class="grid-1 flex info-panel">
             <button class="cta-button" @click="e=>ToggleUI(false)">Hide User Interface</button>
           </div>
@@ -329,6 +345,11 @@ export default {
     };
   },
   sockets:{
+    "server-change-calibration" : function(d){
+      console.log("canCalibrate " ,d.canCalibrate);
+
+      this.$store.commit("ChangeCalibrate", d.canCalibrate);
+    },
     "server-fog-animate" : function(fogData){
       var start = {
         fogDistance : fogData.current,
@@ -374,6 +395,12 @@ export default {
     this.id = this._uid;
   },
   methods: {
+    ToggleCanCalibrate(e){
+      console.log("Calibrate" , e.target.checked);
+      this.$socket.emit("client-change-calibration", {
+        canCalibrate : e.target.checked
+      });
+    },
     ChangeRecordName(e){
       this.recordName = e.target.value;
     },

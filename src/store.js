@@ -31,9 +31,13 @@ export default new Vuex.Store({
     rotationSpeed : -1,
     presentation : false,
     triangleOpacity : 0.0,
-    teppichOpacity: 1
+    teppichOpacity: 1,
+    canCalibrate : true
   },
   mutations: {
+    ChangeCalibrate(state, data){
+      state.canCalibrate = data;
+    },
     ChangeRotationSpeed(state,data){
       state.rotationSpeed = data;
     },

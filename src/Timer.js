@@ -21,6 +21,16 @@ class Timer{
     this.instance.position.set(0,0,0);
     
     this.SetVisible(false);
+    
+    
+    this.store.watch(state => state.canCalibrate, (boolean)=>{
+      console.log("Timer canCalibrate");
+      if(!boolean){
+        this.SetVisible(false);
+        this.Progress(0);
+      }
+    })
+
     return this;
 
   }
