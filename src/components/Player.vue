@@ -22,6 +22,8 @@ import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
 import triangleUtils from "../scripts/triangleUtils";
 
+import AudioController from './Audio/AudioController';
+
 function ease(x) {
   const c1 = 5.70158;
   const c3 = c1 + 1;
@@ -70,6 +72,8 @@ export default {
       lazyFollower: null,
       dummyObject: null,
       inVR: false,
+      AudioController : null,
+
       currentColor: new Color(0x0000ff),
       key: {
         w: 0,
@@ -90,7 +94,9 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() {
+    this.AudioController = new AudioController(this.$store);
+  },
   methods: {
     InitPlayer() {
       this.$store.state.xr.Events.addEventListener(

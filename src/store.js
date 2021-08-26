@@ -32,9 +32,13 @@ export default new Vuex.Store({
     presentation : false,
     triangleOpacity : 0.0,
     teppichOpacity: 1,
-    canCalibrate : true
+    canCalibrate : true,
+    audioController : null,
   },
   mutations: {
+    SetAudioController(state, value) {
+      state.audioController = value;
+    },
     ChangeCalibrate(state, data){
       state.canCalibrate = data;
     },
