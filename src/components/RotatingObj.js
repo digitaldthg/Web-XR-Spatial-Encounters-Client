@@ -14,7 +14,7 @@ class RotatingObj {
     }
 
     updateFunction = (clock)=>{
-        this.mesh.rotation.set(this.mesh.rotation.x, this.mesh.rotation.y+=0.00004,this.mesh.rotation.z)
+        this.mesh.rotation.set(this.mesh.rotation.x, this.mesh.rotation.y+=0.0001,this.mesh.rotation.z)
     }
 
   }
