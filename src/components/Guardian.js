@@ -28,6 +28,7 @@ class Guardian extends TextureLerpBackground {
         max: -1
       }
     }
+    //origin: -7,0,-8
 
     this.Load("Grid", grid).then((texture) => {
       texture.repeat.set(20, 8);
