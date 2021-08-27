@@ -57,6 +57,7 @@ export default {
       timeout: 0,
       thumb: false,
       rings: [],
+      ringScales: [],
       explosition: false,
       explodingFactor: 0.7,
       ringOffset: 0.15,
@@ -76,6 +77,7 @@ export default {
       inVR: false,
       AudioController: null,
       jumpOffset: 0,
+      jumpFollowOffset: 0,
       jump: false,
 
       currentColor: new Color(0x0000ff),
@@ -130,6 +132,7 @@ export default {
         ring.rotation.x = (90 * Math.PI) / 180;
 
         this.$store.state.xr.Scene.add(ring);
+        this.ringScales.push(scale);
         this.rings.push(ring);
       }
 
@@ -321,7 +324,7 @@ export default {
 
       this.player.position.x += dir.x * this.speed;
       this.player.position.z += dir.z * this.speed;
-      this.player.position.y = 1.75// + this.jumpOffset;
+      this.player.position.y = 1.75; // + this.jumpOffset;
 
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
@@ -343,12 +346,7 @@ export default {
       console.log("JUMP");
       this.Jump();
       this.$socket.emit("client-player-jump", {
-        position: this.playerGroup.position,
-        color: {
-          r: this.currentColor.r,
-          g: this.currentColor.g,
-          b: this.currentColor.b,
-        },
+        id: this.store.state.socketID
       });
     },
 
@@ -356,11 +354,9 @@ export default {
       var start = {
         offset: 0,
       };
-
       var end = {
         offset: 10,
       };
-
       new TWEEN.Tween(start)
         .to(end, 200)
         .easing(TWEEN.Easing.Quadratic.InOut)
@@ -385,7 +381,37 @@ export default {
             .start();
         });
 
-      
+      var startFollow = {
+        offset: 0,
+      };
+      var endFollow = {
+        offset: 15,
+      };
+
+      new TWEEN.Tween(startFollow)
+        .to(endFollow, 2000)
+        .easing(TWEEN.Easing.Cubic.InOut)
+        .onUpdate((v) => {
+          this.jumpFollowOffset = v.offset;
+        })
+        .start()
+        .onComplete(() => {
+          new TWEEN.Tween({
+            offset: 15,
+          })
+            .to(
+              {
+                offset: 0,
+              },
+              6000
+            )
+            .easing(TWEEN.Easing.
+Cubic.InOut)
+            .onUpdate((v) => {
+              this.jumpFollowOffset = v.offset;
+            })
+            .start();
+        });
     },
 
     Animate(t) {
@@ -545,7 +571,7 @@ export default {
         }
       } // end of only VR
 
-      this.head.position = ring_pos.clone(); 
+      this.head.position = ring_pos.clone();
       this.head.rotation.copy(this.$store.state.xr.Camera.instance.rotation);
 
       this.lazyFollower.position.lerp(
@@ -565,9 +591,11 @@ export default {
       var fac = -0.2;
 
       this.rings.map((ring, index) => {
+        var scale = this.ringScales[index]*(1+this.jumpFollowOffset*0.2)
+        ring.scale.set(scale,scale,scale)
         var lerpAlpha = (1 / this.rings.length) * index;
         var _origin = this.lazyFollower.position.clone();
-        _origin.y = this.jumpOffset * 1.3;
+        _origin.y = this.jumpFollowOffset;
         var _target = ring_pos.clone();
         _target.y *= 0.78;
         _target.y += this.jumpOffset;
@@ -603,13 +631,13 @@ export default {
 
       if (
         !this.jump &&
-        this.player.position.y > this.data.transform.headHeight * 1.2
+        this.player.position.y > this.data.transform.headHeight * 1.1
       ) {
         this.EmitJump();
         this.jump = true;
       } else if (
         this.jump &&
-        this.player.position.y < this.data.transform.headHeight * 0.8
+        this.player.position.y < this.data.transform.headHeight * 0.9
       ) {
         this.jump = false;
       }
