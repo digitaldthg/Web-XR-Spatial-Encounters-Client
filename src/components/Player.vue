@@ -384,7 +384,7 @@ export default {
               {
                 offset: 0,
               },
-              6000
+              8000
             )
             .easing(TWEEN.Easing.Quartic.InOut)
             .onUpdate((v) => {
@@ -420,7 +420,7 @@ export default {
               {
                 offset: 0,
               },
-              6000
+              8000
             )
             .easing(TWEEN.Easing.
 Cubic.InOut)
