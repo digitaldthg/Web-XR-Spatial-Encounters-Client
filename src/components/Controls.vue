@@ -245,7 +245,7 @@
                 type="range"
                 id="teppichOpacity"
                 name="teppichOpacity"
-                min="0"
+                min="-.01"
                 max=".01"
                 step="0.0001"
                 :value="this.$store.state.triangleRotationSpeed"
