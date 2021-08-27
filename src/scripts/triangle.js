@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import triangleUtils from './triangleUtils';
 import TWEEN from "@tweenjs/tween.js";
+import { Vector3 } from 'three';
 
 class Triangle {
 
@@ -19,6 +20,7 @@ class Triangle {
 
     Init() {
         var positions = this.data.Positions;
+        
         if (positions == null || Object.keys(positions).length < 2) {
             if (this.mesh != null) {
 
@@ -36,6 +38,10 @@ class Triangle {
 
         this.mesh = new THREE.Mesh(geometry, this.material);
         this.mesh.renderOrder = 17;
+        this.mesh.userData.origins = [...positions];
+        this.mesh.userData.center = positions.reduce((a,b) => { return  {x : a.x + b.x , y : a.y + b.y , z : a.z + b.z} });
+        this.mesh.userData.center = new Vector3(this.mesh.userData.center.x / 3,this.mesh.userData.center.y / 3,this.mesh.userData.center.z / 3);
+
         var pos = this.mesh.position;
         this.mesh.position.set(pos.x, pos.y + this.data.idx * this.height, pos.z);
 
@@ -53,14 +59,24 @@ class Triangle {
             var pos = this.mesh.position;
             this.mesh.position.set(pos.x, pos.y + this.store.state.speed / 10, pos.z);
             this.time += time.elapsedTime;
+
+            
+            //Rotate Triangle around Origin
+            this.mesh.translateX(this.mesh.userData.center.x);
+            this.mesh.translateZ(this.mesh.userData.center.z);
+
+            this.mesh.rotateY(this.store.state.triangleRotationSpeed);
+
+            this.mesh.translateX(-this.mesh.userData.center.x);
+            this.mesh.translateZ(-this.mesh.userData.center.z);
+
+
+            // Delete
             if (this.mesh.position.y > this.maxHeight) {
                 this.DeleteTriangle();
             } else if (this.time >= this.maxTime * 10000) {
                 this.DeleteTriangle();
-            } 
-             
-
-
+            }
         }
     }
 

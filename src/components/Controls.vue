@@ -235,6 +235,25 @@
                 @input="updateFog"
               />
             </div>
+
+            <div class="slider">
+              <label for="teppichOpacity"
+                >Triangle Rotation Speed: {{ this.$store.state.triangleRotationSpeed}}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="teppichOpacity"
+                name="teppichOpacity"
+                min="0"
+                max=".01"
+                step="0.0001"
+                :value="this.$store.state.triangleRotationSpeed"
+                @change="ChangeTriangleRotationSpeed"
+                @input="ChangeTriangleRotationSpeed"
+              />
+            </div>
+
           </div>
 
           <div class="grid-1">
@@ -350,6 +369,9 @@ export default {
     };
   },
   sockets:{
+    "server-change-triangleRotationSpeed" : function(d){
+      this.$store.commit("ChangeTriangleRotationSpeed" , d.triangleRotationSpeed);
+    },
     "server-change-calibration" : function(d){
       console.log("canCalibrate " ,d.canCalibrate);
 
@@ -400,6 +422,17 @@ export default {
     this.id = this._uid;
   },
   methods: {
+
+    ChangeTriangleRotationSpeed(e){
+      console.log(e.target.value);
+
+      var speed = parseFloat(e.target.value);
+      this.$store.commit("ChangeTriangleRotationSpeed", speed );
+
+      this.$socket.emit("client-change-triangleRotationSpeed", {
+        triangleRotationSpeed : speed
+      })
+    },
     ToggleCanCalibrate(e){
       console.log("Calibrate" , e.target.checked);
       this.$socket.emit("client-change-calibration", {

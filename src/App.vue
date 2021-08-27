@@ -61,6 +61,9 @@ export default {
       this.initData = d;
 
       this.$store.commit("ChangeCalibrate" ,d.canCalibrate);
+      this.$store.commit("ChangeTriangleRotationSpeed" ,d.triangleRotationSpeed);
+
+      console.log("triangleRotationSpeed" , d.triangleRotationSpeed);
 
       if (store.state.allThemes != null) {
         this.sendInitData();

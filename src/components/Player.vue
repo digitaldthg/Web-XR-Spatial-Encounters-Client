@@ -49,6 +49,11 @@ export default {
       delta: 0,
       fps: 0.1,
       player: null,
+      playerMaterial : new MeshBasicMaterial({
+          side: DoubleSide,
+          transparent:false,
+          opacity :1
+      }),
       ready: false,
       timer: null,
       timerTimeout: false,
@@ -90,6 +95,16 @@ export default {
     };
   },
   watch: {
+    "$store.state.presentation" : function(boolean){
+      this.player.visible = !boolean;
+
+      console.log("presentation " , boolean);
+
+      this.rings.map((r)=>{
+        r.visible = !boolean;
+      })
+    
+    },
     "$store.state.xr": function (state) {
       console.log("state player", state);
       this.ready = true;
@@ -124,11 +139,8 @@ export default {
       for (var i = 0; i <= count; i++) {
         let scale = (1 / (count + 1)) * (i + 1);
         const geometry = new TorusGeometry(scale, 0.008, 6, 64); //new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
-        const material = new MeshBasicMaterial({
-          side: DoubleSide,
-          color: color,
-        });
-        const ring = new Mesh(geometry, material);
+        const ring = new Mesh(geometry, this.playerMaterial);
+        this.playerMaterial.color = color;
         ring.rotation.x = (90 * Math.PI) / 180;
 
         this.$store.state.xr.Scene.add(ring);

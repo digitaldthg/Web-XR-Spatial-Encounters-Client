@@ -19,6 +19,7 @@ export default new Vuex.Store({
     lastTheme: null,
     nextTheme: null,
     lerpDuration: 2,
+    triangleRotationSpeed : .001,
     allThemes: null,
     previews : null,
     themePreview : null,
@@ -120,6 +121,9 @@ export default new Vuex.Store({
     },
     setTeppichOpacity(state,op){
       state.teppichOpacity = op;
+    },
+    ChangeTriangleRotationSpeed(state,value){
+      state.triangleRotationSpeed = value;
     }
 
   },
