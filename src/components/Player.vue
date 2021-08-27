@@ -409,7 +409,7 @@ export default {
         .start()
         .onComplete(() => {
            var particlePosition =  this.player.position.clone();
-          particlePosition.y =  15;
+          particlePosition.y =  10;
           console.log("PART POS ",particlePosition)
           new Particles(this.$store, particlePosition);
 
@@ -648,7 +648,7 @@ Cubic.InOut)
 
       if (
         !this.jump &&
-        this.player.position.y > this.data.transform.headHeight * 1.1
+        this.player.position.y > this.data.transform.headHeight * 1.2
       ) {
         this.EmitJump();
         this.jump = true;

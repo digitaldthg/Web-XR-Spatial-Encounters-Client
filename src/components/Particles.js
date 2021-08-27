@@ -34,9 +34,9 @@ class Particles {
         this.particleNum = 1000;
 
         for (let i = 0; i < this.particleNum; i++) {
-            const x = this.position.x + Math.random() * 0.2;
-            const y = this.position.y + Math.random() * 0.2;
-            const z = this.position.z + Math.random() * 0.2;
+            const x = this.position.x + (Math.random() - .5) * 1.2;
+            const y = this.position.y + (Math.random() - .5) * 1.2;
+            const z = this.position.z + (Math.random() - .5) * 1.2;
 
             verts.push(x, y, z);
         }
@@ -49,7 +49,7 @@ class Particles {
         console.log(colorHSL);
 
         const pointMaterial = new PointsMaterial({
-            size: 0.2,
+            size: 0.05,
             color: colorHSL,
             vertexColors: false,
             map: this.GetParticleTexture(),
@@ -70,6 +70,7 @@ class Particles {
         this.particles.renderOrder = 12;
         this.particles.geometry.velocities = velocities;
         this.particles.visible = true;
+        this.particles.frustumCulled = false;
         this.xr.Scene.add(this.particles);
 
         this.store.state.xr.Events.addEventListener(
@@ -80,7 +81,7 @@ class Particles {
 
     RenderLoop = (clock) => {
         this.timer += clock.elapsedTime;
-        if (this.timer >= 6000) {
+        if (this.timer >= 25000) {
             this.xr.Scene.remove(this.particles);
             this.store.state.xr.Events.removeEventListener(
                 "OnAnimationLoop",
@@ -119,9 +120,18 @@ class Particles {
         canvas.height = diameter;
         const canvasRadius = diameter / 2;
 
+
+        ctx.beginPath();
+        ctx.moveTo(diameter / 2, 0);
+        ctx.lineTo(0, diameter);
+        ctx.lineTo(diameter, diameter);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+
         /* gradation circle
       ------------------------ */
-        this.drawRadialGradation(ctx, canvasRadius, canvas.width, canvas.height);
+        //this.drawRadialGradation(ctx, canvasRadius, canvas.width, canvas.height);
 
         const texture = new Texture(canvas);
         //texture.minFilter = THREE.NearestFilter;

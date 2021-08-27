@@ -39,7 +39,8 @@ class explodingRing {
             color: color,
             opacity: 1,
             transparent: true,
-            alphaMap: null
+            alphaMap: null,
+            depthWrite: false
         });
 
         var Prom1 = new Promise((resolve) => {
