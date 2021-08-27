@@ -246,7 +246,7 @@
                 id="teppichOpacity"
                 name="teppichOpacity"
                 min="0"
-                max=".003"
+                max=".01"
                 step="0.0001"
                 :value="this.$store.state.triangleRotationSpeed"
                 @change="ChangeTriangleRotationSpeed"
