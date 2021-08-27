@@ -243,12 +243,17 @@
                 <input type="number" @input="ChangeFogDuration" :value="fogDuration" />
                 <label>in sek</label>
               </div>
-              <button class="cta-button" @click="AnimateFog">Animate to</button>
-
+              
               <div class="">
-                <input type="number" @input="ChangeFogTarget" :value="fogTarget" />
+                <input type="number" @input="e => ChangeFogTarget(e.target.value)" :value="fogTarget" />
                 <label>Target fogDistance</label>
               </div>
+              <button class="cta-button" @click="e => ChangeFogTarget(0)">0</button>
+              <button class="cta-button" @click="e => ChangeFogTarget(0.5)">0.5</button>
+            </div>
+            <div class="info-panel flex flex-between">
+
+              <button class="cta-button --large" @click="AnimateFog">Animate to</button>
             </div>
           </div>
 
@@ -337,7 +342,7 @@ export default {
       scale: 1.25,
       config: config,
       friends: {},
-      fogDuration : 2,
+      fogDuration : 30,
       fogTarget : 0,
       recording : false,
       recordName : "SessionFile",
@@ -419,8 +424,8 @@ export default {
       
       this.fogDuration = e.target.value;
     },
-    ChangeFogTarget(e){
-      this.fogTarget = e.target.value;
+    ChangeFogTarget(value){
+      this.fogTarget = value;
     },
     Toggle() {
       this.open = !this.open;
