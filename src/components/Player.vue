@@ -22,7 +22,9 @@ import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
 import triangleUtils from "../scripts/triangleUtils";
 
-import AudioController from './Audio/AudioController';
+import TWEEN from "@tweenjs/tween.js";
+
+import AudioController from "./Audio/AudioController";
 
 function ease(x) {
   const c1 = 5.70158;
@@ -59,7 +61,7 @@ export default {
       explodingFactor: 0.7,
       ringOffset: 0.15,
       bottomColor: new Color(0xff0000),
-      keyArray: ["w", "a", "s", "d", "e"],
+      keyArray: ["w", "a", "s", "d", "e", "j"],
       speed: 0.05,
       data: Object.assign({}, UserData),
       raycaster: null,
@@ -72,7 +74,9 @@ export default {
       lazyFollower: null,
       dummyObject: null,
       inVR: false,
-      AudioController : null,
+      AudioController: null,
+      jumpOffset: 0,
+      jump: false,
 
       currentColor: new Color(0x0000ff),
       key: {
@@ -113,12 +117,7 @@ export default {
         this.data.color.a
       );
       this.currentColor = color;
-      /*var target = new Vector3(
-        this.data.transform.position.x,
-        this.data.transform.position.y,
-        this.data.transform.position.z
-      );
-      var origin = new Vector3(0, 0, 0);*/
+
       var count = 10;
       for (var i = 0; i <= count; i++) {
         let scale = (1 / (count + 1)) * (i + 1);
@@ -205,17 +204,17 @@ export default {
         new Vector3(0, 0, 7)
       );
 
-      var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera( this.$store.state.xr.Camera.instance );
+      var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera(
+        this.$store.state.xr.Camera.instance
+      );
 
-        vrCamera.matrixWorld.decompose(
-          this.transform.position,
-          this.transform.rotation,
-          this.transform.scale
-        );
+      vrCamera.matrixWorld.decompose(
+        this.transform.position,
+        this.transform.rotation,
+        this.transform.scale
+      );
 
       this.data.transform.headHeight = this.transform.position.y;
-
-
     },
     ConvertPlayerToVR() {
       this.inVR = true;
@@ -260,6 +259,9 @@ export default {
           break;
         case "e":
           this.EmitExplode();
+          break;
+        case "j":
+          this.EmitJump();
           break;
       }
 
@@ -319,10 +321,11 @@ export default {
 
       this.player.position.x += dir.x * this.speed;
       this.player.position.z += dir.z * this.speed;
-      this.player.position.y = 1.75;
+      this.player.position.y = 1.75// + this.jumpOffset;
 
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
+      this.playerGroup.position.y = this.jumpOffset;
     },
     EmitExplode() {
       console.log("EXPLOSION");
@@ -334,6 +337,55 @@ export default {
           b: this.currentColor.b,
         },
       });
+    },
+
+    EmitJump() {
+      console.log("JUMP");
+      this.Jump();
+      this.$socket.emit("client-player-jump", {
+        position: this.playerGroup.position,
+        color: {
+          r: this.currentColor.r,
+          g: this.currentColor.g,
+          b: this.currentColor.b,
+        },
+      });
+    },
+
+    Jump() {
+      var start = {
+        offset: 0,
+      };
+
+      var end = {
+        offset: 10,
+      };
+
+      new TWEEN.Tween(start)
+        .to(end, 200)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate((v) => {
+          this.jumpOffset = v.offset;
+        })
+        .start()
+        .onComplete(() => {
+          new TWEEN.Tween({
+            offset: 10,
+          })
+            .to(
+              {
+                offset: 0,
+              },
+              6000
+            )
+            .easing(TWEEN.Easing.Quartic.InOut)
+            .onUpdate((v) => {
+              this.jumpOffset = v.offset;
+            })
+            .start();
+        });
+
+      
     },
 
     Animate(t) {
@@ -402,7 +454,6 @@ export default {
       var currentY = target.y == 0 ? 0.01 : target.y;
 
       var heightOffset = this.data.transform.headHeight * this.explodingFactor;
-      
 
       this.currentColor = colorBottomHSL
         .clone()
@@ -428,6 +479,9 @@ export default {
           this.$store.state.xr.Camera.instance
         );
 
+        this.$store.state.xr.Camera.instance.parent.position.y =
+          this.jumpOffset;
+
         vrCamera.matrixWorld.decompose(
           this.transform.position,
           this.transform.rotation,
@@ -436,7 +490,7 @@ export default {
 
         this.player.position.set(
           this.transform.position.x,
-          this.transform.position.y,
+          this.transform.position.y + this.jumpOffset,
           this.transform.position.z
         );
         this.playerGroup.position.set(
@@ -452,8 +506,7 @@ export default {
 
         //RESET INTERSECTION CHECK
 
-        if(this.$store.state.canCalibrate){
-
+        if (this.$store.state.canCalibrate) {
           console.log("canCalibrate");
 
           var pos = new Vector3();
@@ -492,7 +545,7 @@ export default {
         }
       } // end of only VR
 
-      this.head.position = ring_pos.clone(); //new Vector3(this.player.position.x ,this.player.position.y,this.player.position.z);
+      this.head.position = ring_pos.clone(); 
       this.head.rotation.copy(this.$store.state.xr.Camera.instance.rotation);
 
       this.lazyFollower.position.lerp(
@@ -514,8 +567,10 @@ export default {
       this.rings.map((ring, index) => {
         var lerpAlpha = (1 / this.rings.length) * index;
         var _origin = this.lazyFollower.position.clone();
+        _origin.y = this.jumpOffset * 1.3;
         var _target = ring_pos.clone();
         _target.y *= 0.78;
+        _target.y += this.jumpOffset;
         var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha);
         var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha);
 
@@ -544,6 +599,19 @@ export default {
           this.data.transform.headHeight * this.explodingFactor
       ) {
         this.explosition = false;
+      }
+
+      if (
+        !this.jump &&
+        this.player.position.y > this.data.transform.headHeight * 1.2
+      ) {
+        this.EmitJump();
+        this.jump = true;
+      } else if (
+        this.jump &&
+        this.player.position.y < this.data.transform.headHeight * 0.8
+      ) {
+        this.jump = false;
       }
 
       if (this.delta > this.fps) {
