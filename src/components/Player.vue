@@ -608,7 +608,11 @@ Cubic.InOut)
       var fac = -0.2;
 
       this.rings.map((ring, index) => {
-        var scale = this.ringScales[index]*(1+this.jumpFollowOffset*0.2)
+        if(index<3){
+          ring.visible = false;
+          return
+        }
+        var scale = this.ringScales[index]*(1.1+this.jumpFollowOffset*0.2)
         ring.scale.set(scale,scale,scale)
         var lerpAlpha = (1 / this.rings.length) * index;
         var _origin = this.lazyFollower.position.clone();
