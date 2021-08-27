@@ -21,7 +21,7 @@ import Timer from "../Timer";
 import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
 import triangleUtils from "../scripts/triangleUtils";
-
+import Particles from "./Particles"
 import TWEEN from "@tweenjs/tween.js";
 
 import AudioController from "./Audio/AudioController";
@@ -343,11 +343,10 @@ export default {
     },
 
     EmitJump() {
-      console.log("JUMP");
-      this.Jump();
       this.$socket.emit("client-player-jump", {
-        id: this.store.state.socketID
+        id: this.$store.state.socketID
       });
+      this.Jump();
     },
 
     Jump() {
@@ -365,6 +364,7 @@ export default {
         })
         .start()
         .onComplete(() => {
+         
           new TWEEN.Tween({
             offset: 10,
           })
@@ -396,6 +396,11 @@ export default {
         })
         .start()
         .onComplete(() => {
+           var particlePosition =  this.player.position.clone();
+          particlePosition.y =  15;
+          console.log("PART POS ",particlePosition)
+          new Particles(this.$store, particlePosition);
+
           new TWEEN.Tween({
             offset: 15,
           })
@@ -641,6 +646,7 @@ Cubic.InOut)
       ) {
         this.jump = false;
       }
+
 
       if (this.delta > this.fps) {
         // The draw or time dependent code are here

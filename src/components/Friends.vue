@@ -75,13 +75,22 @@ export default {
           return;
         }
         if (!localFriends.hasOwnProperty(f)) {
-          localFriends[f] = new SingleFriend(this.$store, serverFriends[f]);
+          localFriends[f] = new SingleFriend(this.$store, serverFriends[f], f);
         } else {
           localFriends[f].updateData(serverFriends[f], index);
         }
       });
 
       this.friends = localFriends;
+    },
+    "server-player-jump": function (data) {
+      console.log("JUMP ", data.id);
+      Object.values(this.friends).map((friend) => {
+        if(friend.id == data.id){
+          friend.Jump();
+        }
+      });
+
     },
   },
   methods: {

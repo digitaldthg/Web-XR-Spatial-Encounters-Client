@@ -1,14 +1,18 @@
 const { Group, Vector3, MeshBasicMaterial, DoubleSide, Mesh, Color, Object3D, BoxGeometry, CylinderGeometry, SphereGeometry, Quaternion, MeshNormalMaterial } = require("three");
 import Ring from "../Model/player_cylinder.glb";
 import Utils from "../scripts/utils";
-import {Text} from 'troika-three-text'
+import { Text } from 'troika-three-text'
+import TWEEN from "@tweenjs/tween.js";
+import Particles from "./Particles";
 
 
 class SingleFriend {
-  constructor(store, data) {
+  constructor(store, data, id) {
     this.store = store;
     this.xr = store.state.xr;
+    this.id = id;
     this.rings = [];
+    this.ringScales= [],
     this.bottomColor = new Color(0xffffff);
 
     this.mainColor = new Color(0xffffff);
@@ -17,25 +21,27 @@ class SingleFriend {
 
     this.headFactor = 1;
     this.Init(data);
+    this.jumpFollowOffset = 0;
+
   }
 
   Init(data) {
 
     this.instance = this.Create(data);
-    this.lazyFollower = new Mesh(new BoxGeometry(.1,.1,.1),  new MeshNormalMaterial());
-    this.lazyFollower.scale.set(0,0,0);
+    this.lazyFollower = new Mesh(new BoxGeometry(.1, .1, .1), new MeshNormalMaterial());
+    this.lazyFollower.scale.set(0, 0, 0);
     this.xr.Scene.add(this.lazyFollower);
 
   }
 
   Create(data) {
-    
+
     this.group = new Object3D();
     this.group.name = "Friend";
     this.xr.Scene.add(this.group);
 
-    this.head = new Mesh(new BoxGeometry(.1,.1,.1) , new MeshNormalMaterial());
-    this.head.scale.set(0,0,0);
+    this.head = new Mesh(new BoxGeometry(.1, .1, .1), new MeshNormalMaterial());
+    this.head.scale.set(0, 0, 0);
     this.xr.Scene.add(this.head);
 
     //var target = new Vector3(data.transform.headPosition.x, data.transform.headPosition.y, data.transform.headPosition.z);
@@ -43,13 +49,14 @@ class SingleFriend {
 
     var count = 15;
     for (var i = 0; i <= count; i++) {
-      
-      let scale = 1 / (count + 1)  * (i + 1);
+
+      let scale = 1 / (count + 1) * (i + 1);
 
       const geometry = new CylinderGeometry(scale, scale, .06, 64, 2, true);
       const material = new MeshBasicMaterial({ side: DoubleSide, color: 0xffff00, transparent: true, alphaTest: 0.001 });
       const ring = new Mesh(geometry, material);
       this.xr.Scene.add(ring);
+      this.ringScales.push(scale);
       this.rings.push(ring);
     }
     console.log("creat", data.transform, data.transform.headPosition);
@@ -91,19 +98,19 @@ class SingleFriend {
     this.myText.text = data.id;
     this.myText.fontSize = 0.1
     this.myText.position.y = .5;
-    this.myText.anchorX ="center";
+    this.myText.anchorX = "center";
     this.myText.color = this.mainColor;
-    
 
-    this.xr.Events.addEventListener("OnChangeXRView", (xrMode)=>{
+
+    this.xr.Events.addEventListener("OnChangeXRView", (xrMode) => {
       //console.log("xrMode" , xrMode.xrMode);
 
-      if(xrMode.xrMode == "VR"){
+      if (xrMode.xrMode == "VR") {
         this.HideText(true);
       }
     });
 
-    this.store.watch(state => state.presentation, (bool)=>{
+    this.store.watch(state => state.presentation, (bool) => {
       this.HideText(bool);
     });
 
@@ -111,8 +118,43 @@ class SingleFriend {
     return this.group;
   }
 
-  HideText(boolean){
+  HideText(boolean) {
     this.myText.visible = !boolean;
+  }
+
+  Jump() {
+    console.log("JUMP Friend")
+    var startFollow = {
+      offset: 0,
+    };
+    var endFollow = {
+      offset: 15,
+    };
+
+    new TWEEN.Tween(startFollow)
+      .to(endFollow, 2000)
+      .easing(TWEEN.Easing.Cubic.InOut)
+      .onUpdate((v) => {
+        this.jumpFollowOffset = v.offset;
+      })
+      .start()
+      .onComplete(() => {
+        new TWEEN.Tween({
+          offset: 15,
+        })
+          .to(
+            {
+              offset: 0,
+            },
+            6000
+          )
+          .easing(TWEEN.Easing.
+            Cubic.InOut)
+          .onUpdate((v) => {
+            this.jumpFollowOffset = v.offset;
+          })
+          .start();
+      });
   }
 
   updateData = (data, idx) => {
@@ -129,16 +171,16 @@ class SingleFriend {
     this.instance.userData.lastPosition.y = this.head.position.y;
 
     this.instance.userData.lerpAlpha = 0;
-    
-    this.mainColor.setRGB(data.color.r,data.color.g,data.color.b);
-    
-    this.instance.userData.color = this.mainColor; 
-    
-    if(this.myText != null){
+
+    this.mainColor.setRGB(data.color.r, data.color.g, data.color.b);
+
+    this.instance.userData.color = this.mainColor;
+
+    if (this.myText != null) {
       this.myText.color = this.mainColor;
     }
   }
-  
+
   LerpFloat(start, end, alpha) {
     return start * (1 - alpha) + end * alpha;
   }
@@ -156,30 +198,34 @@ class SingleFriend {
     //dann wird sie auf null gesetzt => ziel erreicht
     if (this.instance.userData.targetPosition == null) { return; }
 
-    this.instance.position.lerp(this.instance.userData.targetPosition , .1);
+    this.instance.position.lerp(this.instance.userData.targetPosition, .1);
     this.head.position.lerp(this.instance.userData.targetPosition, .1);// = this.instance.userData.targetPosition.clone();
-    
-    var lazyPos =this.instance.position.clone();
-        lazyPos.y = 0;
+
+    var lazyPos = this.instance.position.clone();
+    lazyPos.y = 0;
     this.lazyFollower.position.lerp(lazyPos, .05);
-    
-    this.mainColor.setRGB(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);
+
+    this.mainColor.setRGB(this.instance.userData.color.r, this.instance.userData.color.g, this.instance.userData.color.b);
 
     var target = this.instance.position.clone();
+
     var origin = this.lazyFollower.position.clone();
+    origin.y = this.jumpFollowOffset;
 
     this.rings.map((ring, index) => {
+      var scale = this.ringScales[index]*(1+this.jumpFollowOffset*0.2)
+      ring.scale.set(scale,scale,scale)
       var lerpAlpha = (1 / (this.rings.length - 1)) * index;
       var lerper = (target.clone()).lerp(origin, lerpAlpha);
-      ring.position.x  = lerper.x;
-      ring.position.y  = lerper.y;
-      ring.position.z  = lerper.z;
+      ring.position.x = lerper.x;
+      ring.position.y = lerper.y;
+      ring.position.z = lerper.z;
 
       //Ringfarbe lerpen
-      ring.material.color.setRGB(this.instance.userData.color.r,this.instance.userData.color.g,this.instance.userData.color.b);// = this.mainColor;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
+      ring.material.color.setRGB(this.instance.userData.color.r, this.instance.userData.color.g, this.instance.userData.color.b);// = this.mainColor;// this.bottomColor.clone().lerp(color, Math.min(1, Math.max(0, this.instance.position.y / this.instance.userData.headHeight)));
     });
 
-    if(this.myText  != null){
+    if (this.myText != null) {
       this.myText.lookAt(this.xr.Controls.GetCameraPosition());
 
       this.myText.sync();
@@ -188,7 +234,7 @@ class SingleFriend {
 
   delete = () => {
     this.xr.Scene.remove(this.instance);
-    this.rings.map((ring)=>{
+    this.rings.map((ring) => {
       this.xr.Scene.remove(ring);
     });
     this.xr.Scene.remove(this.head);
