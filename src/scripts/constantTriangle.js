@@ -27,25 +27,25 @@ class ConstantTriangle {
     }
 
     UpdateTriangle() {
-        this.positions = this.nextPositions.map((pos, index)=>{
-          //if(this.positionAlphas[index] == null){return pos;}
-          if(typeof(this.lastPositions[index]) == "undefined"){return pos;}
-          if(typeof(pos) == "undefined"){return this.lastPositions[index];}
+      this.positions = this.nextPositions.map((pos, index)=>{
+        //if(this.positionAlphas[index] == null){return pos;}
+        if(typeof(this.lastPositions[index]) == "undefined"){return pos;}
+        if(typeof(pos) == "undefined"){return this.lastPositions[index];}
 
-          return this.lastPositions[index].lerp( pos , .05);
-        });
+        return this.lastPositions[index].lerp( pos , .05);
+      });
 
-        this.triGeometry = triangleUtils.GetGeometry(this.positions,this.height, this.triGeometry);
-        this.triUniforms = triangleUtils.GetUniforms(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
+      this.triGeometry = triangleUtils.GetGeometry(this.positions,this.height, this.triGeometry);
+      this.triUniforms = triangleUtils.GetUniforms(this.triData.Color,this.xr.Scene.fog.color,0,20,this.store.state.fogDistance)
 
-        //MeshBasicMaterial
+      //MeshBasicMaterial
 
-        this.triMaterial = triangleUtils.getMaterial(this.triUniforms);
+      this.triMaterial = triangleUtils.getMaterial(this.triUniforms);
 
-        this.mesh.material = this.triMaterial;
-        this.mesh.geometry = this.triGeometry;
+      this.mesh.material = this.triMaterial;
+      this.mesh.geometry = this.triGeometry;
 
-        triangleUtils.UpdateMaterial(this.triMaterial,this.store,this.xr)
+      triangleUtils.UpdateMaterial(this.triMaterial,this.store,this.xr)
     }
 
     UpdateTriangleData(triData){
