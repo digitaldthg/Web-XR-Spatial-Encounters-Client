@@ -75,7 +75,13 @@ export default {
 
     this.multiCamController.Init();
 
-    console.log("mount Scene");
+    // console.log("mount Scene");
+    
+    // navigator.getBattery().then((batteryState)=>{
+    //   console.log(batteryState);
+    // console.log("batteryState" , batteryState.level);
+    // });
+
   },
   destroyed() {
     this.$store.state.xr.Events.removeEventListener(
