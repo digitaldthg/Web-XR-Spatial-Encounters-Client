@@ -54,7 +54,7 @@
               <label>{{$store.state.rotationSpeed}} RotationSpeed</label>
             </div>
           </div>
-          <div class="grid-1 info-panel">
+          <!--<div class="grid-1 info-panel">
               <div class="flex">
                 <div class="flex margin-right">
                   <div class="input-checkbox">
@@ -75,7 +75,7 @@
                   <input id="sessionFileName" type="text" :value="recordName" @input="ChangeRecordName" />
                 </div>
               </div>
-          </div>
+          </div>-->
 
           
           <div class="grid-1">
@@ -337,7 +337,6 @@
   </div>
 </template>
 <script>
-import TriangleMesh from "../scripts/triangle.js";
 import { ColorPicker } from "vue-color-gradient-picker";
 import Dropdown from "./Dropdown.vue";
 
@@ -373,8 +372,6 @@ export default {
       this.$store.commit("ChangeTriangleRotationSpeed" , d.triangleRotationSpeed);
     },
     "server-change-calibration" : function(d){
-      console.log("canCalibrate " ,d.canCalibrate);
-
       this.$store.commit("ChangeCalibrate", d.canCalibrate);
     },
     "server-fog-animate" : function(fogData){
@@ -424,8 +421,6 @@ export default {
   methods: {
 
     ChangeTriangleRotationSpeed(e){
-      console.log(e.target.value);
-
       var speed = parseFloat(e.target.value);
       this.$store.commit("ChangeTriangleRotationSpeed", speed );
 
@@ -434,7 +429,6 @@ export default {
       })
     },
     ToggleCanCalibrate(e){
-      console.log("Calibrate" , e.target.checked);
       this.$socket.emit("client-change-calibration", {
         canCalibrate : e.target.checked
       });
@@ -511,13 +505,11 @@ export default {
       });
     },
     updateOpacitySlider(event) {
-      //console.log("CHANGE OP ",event.target.value)
       this.$socket.emit("client-change-opacity", {
         opacity: parseFloat(event.target.value),
       });
     },
     updateSliderTeppich(event) {
-      //console.log("CHANGE OP ",event.target.value)
       this.$socket.emit("client-change-teppich", {
         opacity: parseFloat(event.target.value),
       });
@@ -552,8 +544,6 @@ export default {
       });
     },
     ToggleFriend(friend, boolean) {
-      console.log(friend, boolean);
-
       this.$socket.emit("client-hide-friend", {
         friend: friend,
         room: this.$store.state.room,

@@ -13,14 +13,11 @@ import {
   Quaternion,
   Raycaster,
   CircleGeometry,
-  BackSide,
   TorusGeometry,
 } from "three";
 import UserData from "../class/UserData";
 import Timer from "../Timer";
-import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
-import triangleUtils from "../scripts/triangleUtils";
 import Particles from "./Particles"
 import TWEEN from "@tweenjs/tween.js";
 
@@ -97,20 +94,14 @@ export default {
   watch: {
     "$store.state.presentation" : function(boolean){
       this.player.visible = !boolean;
-
-      console.log("presentation " , boolean);
-
       this.rings.map((r)=>{
         r.visible = !boolean;
       })
     
     },
     "$store.state.xr": function (state) {
-      console.log("state player", state);
       this.ready = true;
-
       this.InitPlayer();
-
       this.InitTimer();
     },
   },
@@ -257,8 +248,6 @@ export default {
 
       var keyCopy = Object.assign({}, this.key);
 
-      console.log("Key down ", keyName);
-
       switch (keyName) {
         case "w":
           keyCopy.w = 1;
@@ -284,9 +273,6 @@ export default {
     },
     keyUp(e) {
       const keyName = e.key;
-
-      //console.log(keyName);
-
       if (keyName == "f") {
         this.ResetCamera();
       }
@@ -343,7 +329,6 @@ export default {
       this.playerGroup.position.y = this.jumpOffset;
     },
     EmitExplode() {
-      console.log("EXPLOSION");
       this.$socket.emit("client-player-explode", {
         position: this.playerGroup.position,
         color: {
@@ -410,7 +395,6 @@ export default {
         .onComplete(() => {
            var particlePosition =  this.player.position.clone();
           particlePosition.y =  10;
-          console.log("PART POS ",particlePosition)
           new Particles(this.$store, particlePosition);
 
           new TWEEN.Tween({
@@ -548,10 +532,7 @@ Cubic.InOut)
         );
 
         //RESET INTERSECTION CHECK
-
         if (this.$store.state.canCalibrate) {
-          console.log("canCalibrate");
-
           var pos = new Vector3();
           var dir = new Vector3();
           vrCamera.getWorldPosition(pos);
@@ -639,7 +620,6 @@ Cubic.InOut)
         this.player.position.y <
           this.data.transform.headHeight * this.explodingFactor
       ) {
-        console.log("EXPLOION");
         this.EmitExplode();
         this.explosition = true;
       } else if (

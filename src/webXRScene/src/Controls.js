@@ -256,7 +256,6 @@ class Controls{
   }
 
   SetPosition (x,y,z){
-    console.log("B. Set Position()");
     switch (this.currentControls) {
       case "Desktop":
         this.context.Camera.instance.position.set(x,y,z);
@@ -270,8 +269,6 @@ class Controls{
     }
   }
   SetTarget (x,y,z){
-
-    console.log("B. Set Target");
     this.target = new Vector3(x,y,z);
     
      switch (this.currentControls) {

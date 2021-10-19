@@ -54,15 +54,10 @@ export default {
   sockets:{
     "room-success" : function(d){
       this.$store.commit("room" , d.room);
-      this.$router.push("/room/"+  d.room);
-
-      console.log("weiterleitung zum Raum");
-      
+      this.$router.push("/room/"+  d.room);    
     },
     "room-error" : function(d){
-      console.log("error data",  d);
       this.errorMsg = d.message;
-
       this.Join();
     }
   },
@@ -81,22 +76,17 @@ export default {
         id: this.$socket.id,
         room : roomNumber
       });
-
-      console.log("submit");
     },
     GetRoomNumber(){
       var roomID = Object.values(this.room).reduce((a,b) => a +""+ b);
-      console.log("roomID " , roomID);
       return roomID; 
     },
     ChangeCurrentRoomNumber(number){
       this.currentNumber = number;
     },
     ChangeRoomNumber(roomNumber, number){
-
       if (number > 9){
         number = parseFloat(number.toString().slice(0, 1));
-
         this.$refs["no"+roomNumber].value = number;
       }
 
@@ -108,7 +98,6 @@ export default {
       }else{
         this.$refs.submit.focus();  
       }
-
       
       var checker = Object.values(this.room).filter(o => o == null).length;
       if(checker == 0){

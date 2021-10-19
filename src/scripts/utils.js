@@ -274,23 +274,11 @@ labToRGB(lab){
     var finalArr = [];
 
     if (arr1.length != arr2.length) {
-      console.log("lerpColor: themes haben verschiedene color themes ");
       return;
     }
     for (var i = 0; i < arr1.length; i++) {
-
-      // var val1 = this.hexToHSL(arr1[i].value);
-      // var val2 = this.hexToHSL(arr2[i].value);
-      // var hsv = this.LerpHSV(val1, val2, alpha);
-
-      //console.log("HSV ",hsv) 
-
       var lerpHexValue = this.lerpHexColor(arr1[i].value, arr2[i].value, alpha );
-
-      //console.log(lerpHexValue);
-      
       var lerpedHSL = this.hexToHSL(lerpHexValue);
-      //console.log(lerpedHSL);
 
       finalArr.push({
         stop: this.lerp(arr1[i].stop, arr2[i].stop, alpha),
@@ -302,7 +290,6 @@ labToRGB(lab){
       })
 
     }
-    //console.log("lerpColor", arr1, arr2, finalArr);
     return finalArr;
 
   },

@@ -58,12 +58,9 @@ export default {
       this.$store.commit("setTeppichOpacity", data);
     },
     "server-opacity-update": function (data) {
-      console.log("Op from Server ",data)
       this.$store.commit("setTriangleOpacity", data);
     },
     "server-theme-lerp": function (data) {
-      //console.log("From Server lerp value ",data)
-      console.log("SERVER START LERP ", data);
       var next = this.$store.state.allThemes.find((t) => {
         return t.name == data.next;
       });

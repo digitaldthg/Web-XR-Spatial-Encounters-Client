@@ -51,15 +51,11 @@ class Gradient{
   }
 
   SetGradient(gradientArray){    
-
-
     // Create gradient
-    this.gradient = this.c.createLinearGradient(0,0,0,this.size.y * this.dpr);
-    
+    this.gradient = this.c.createLinearGradient(0,0,0,this.size.y * this.dpr); 
     for(var i=0;i<gradientArray.length;i++){
       let gradientItem = gradientArray[i];
       let g = gradientArray[i].value;
-      //console.log("SET GRADIENT ",this.gradient, gradientItem,g)
       if(isNaN(gradientItem.stop)){
         gradientItem.stop = 0
       }

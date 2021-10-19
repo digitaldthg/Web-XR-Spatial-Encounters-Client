@@ -26,12 +26,8 @@ export default {
       initData: null,
     };
   },
-  mounted(){
-    //window.console.log = ()=>{}
-  },
   methods: {
     sendInitData() {
-      console.log("INIT DATA",this.initData,store.state.allThemes)
       var next = store.state.allThemes.find((t) => {
         return t.name == this.initData.next;
       });
@@ -51,20 +47,15 @@ export default {
   },
   sockets: {
     connect: function (d) {
-      console.log(this.$socket.id);
       this.id = this.$socket.id;
 
       this.$store.commit("socketID", this.id);
     },
     connectResponse: function (d) {
-      console.log("on connection", d, store.state.allThemes);
       this.initData = d;
 
       this.$store.commit("ChangeCalibrate" ,d.canCalibrate);
       this.$store.commit("ChangeTriangleRotationSpeed" ,d.triangleRotationSpeed);
-
-      console.log("triangleRotationSpeed" , d.triangleRotationSpeed);
-
       if (store.state.allThemes != null) {
         this.sendInitData();
       }
@@ -72,7 +63,6 @@ export default {
       store.watch(
         (state) => state.allThemes,
         (newValue, oldViewMode) => {
-          console.log("ON UPDATE ALL THEMES")
           this.sendInitData();
         }
       );

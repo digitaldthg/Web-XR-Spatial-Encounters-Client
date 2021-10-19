@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, AdditiveBlending, Color, Mesh, DoubleSide, FrontSide } from "three";
+import { MeshBasicMaterial,  Color, DoubleSide, FrontSide } from "three";
 
 import Skybox from './Skybox';
 import FogFloorDiffuse from './FogFloorDiffuse';
@@ -183,17 +183,9 @@ class MaterialController {
     this.tex_bg_back.SetMaterial("BG_Back", bg_back_obj);
     this.tex_bg_moving.SetMaterial("BG_Moving", bg_moving_obj);
 
-    //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
-
-    this.xr.Events.addEventListener("OnTextureLoad", () => {
-      //console.log("LERP ON TEXTURE LOAD");
-      //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
-    });
-
     this.store.watch(state => state.nextTheme, (newValue) => {
       this.StartLerpThemes();
     })
-
 
     this.store.watch(state => state.fogDistance, (newValue) => {
       this.ChangeFogDistance(newValue);
@@ -246,21 +238,15 @@ class MaterialController {
       if (themeA == null) { themeA = ThemeFactory.Get(); }
       if (themeB == null) { themeB = ThemeFactory.Get(); }
     }
-    // console.log("themeA", themeA, "themeB", themeB);
 
     Object.keys(final).map((keyName) => {
-
       if (Array.isArray(themeA[keyName])) {
-
         final[keyName] = Utils.lerpColor(themeA[keyName], themeB[keyName], alpha);
-        //console.log(final[keyName])
       }
     })
     this.gradient_skybox.SetGradient(final.gradient_skybox);
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
-
-    //this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
 
     this.gradient_bg_front.SetGradient(final.gradient_bg_front);
     this.gradient_bg_back.SetGradient(final.gradient_bg_back);
@@ -276,8 +262,6 @@ class MaterialController {
     this.tex_bg_front.lerpMaterial(this.gradient_bg_front.GetTexture(), this.gradient_bg_front.GetTexture(), alpha, themeA.tex_bg_front, themeB.tex_bg_front);
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
     this.tex_bg_moving.lerpMaterial(this.gradient_bg_moving.GetTexture(), this.gradient_bg_moving.GetTexture(), alpha, themeA.tex_bg_moving, themeB.tex_bg_moving);
-
-
 
     this.ChangeFogDistance();
 
@@ -308,9 +292,7 @@ class MaterialController {
     if (this.materials.hasOwnProperty(name)) {
       return this.materials[name];
     } else {
-      console.warn(`Achtung ${name} existiert nicht in den Materials`);
       return new MeshBasicMaterial({ color: 0xff0000 });
-
     }
   }
 }

@@ -21,6 +21,7 @@
     "vue-color-gradient-picker": "^0.1.2",
     "vue-router": "^3.5.1",
     "vue-socket.io": "^3.0.10",
+    "vue-unused-components-checker": "^1.1.2",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

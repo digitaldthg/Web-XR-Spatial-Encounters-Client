@@ -23,8 +23,6 @@ export default {
   },
   beforeDestroy(){
 
-    console.log("room-leave");
-
     this.$socket.emit( "room-leave" , {
       id : this.$socket.id,
       room : this.$store.state.room

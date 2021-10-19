@@ -3,7 +3,6 @@
     <Player />
     <Friends />
     <Environment />
-
     <div id="vr-button" ref="vrButton" v-show="$store.state.uiVisible"></div>
   </div>
 </template>
@@ -24,23 +23,8 @@ import {
   PlaneGeometry,
   Mesh,
   FrontSide,
-  PointsMaterial,
-  Points,
-  BufferGeometry,
-  BufferAttribute,
-  Texture,
-  FloatType,
-  OneMinusSrcAlphaFactor, CustomBlending, OneFactor
 } from "three";
 import envModel from "../Model/environment/environment.glb";
-
-import {
-  BloomEffect,
-  EffectComposer,
-  EffectPass,
-  RenderPass,
-  UnrealBloomPass,
-} from "postprocessing";
 import MaterialController from "./MaterialController";
 import MultiCameraController from "./MultiCameraController";
 
@@ -74,21 +58,12 @@ export default {
     });
 
     this.multiCamController.Init();
-
-    // console.log("mount Scene");
-    
-    // navigator.getBattery().then((batteryState)=>{
-    //   console.log(batteryState);
-    // console.log("batteryState" , batteryState.level);
-    // });
-
   },
   destroyed() {
     this.$store.state.xr.Events.removeEventListener(
       "OnAnimationLoop",
       this.RenderLoop
     );
-    console.log("destroy Scene");
   },
   sockets: {
     "server-fog-update": function (value) {
@@ -103,7 +78,6 @@ export default {
       this.xr.Controls.Desktop.orbit.autoRotateSpeed = newSpeed;
     },
     "$store.state.autoOrbit": function (autoOrbit) {
-      console.log("AutoOrbit", autoOrbit);
 
       if (autoOrbit) {
         this.xr.Controls.Desktop.orbit.autoRotateSpeed =
@@ -184,7 +158,6 @@ export default {
         onprogress: () => {},
         url: envModel,
       }).then((model) => {
-        console.log("loaded", model);
         this.envModel = model.scene;
         this.xr.Scene.add(this.envModel);
         this.SetEnvironmentModel();
@@ -203,13 +176,9 @@ export default {
         onprogress: () => {},
         url: Scheune,
       }).then((model) => {
-        console.log("SCheune ", model);
-        // console.log("loaded", model);
         this.scheunenModel = model.scene;
         this.scheunenModel.position.set(-7, 0, -8);
         this.scheunenModel.traverse((child) => {
-          console.log(child);
-
           if (child.hasOwnProperty("material")) {
             child.material = this.scheunenMaterial;
             this.scheunenMaterial.opacity = this.$store.state.teppichOpacity;
@@ -218,8 +187,6 @@ export default {
 
         this.scheunenModel.renderOrder = 9;
         this.xr.Scene.add(this.scheunenModel);
-        // this.SetEnvironmentModel();
-        // this.materialController.StartLerpThemes();
       });
 
       this.$store.commit("xr", this.xr);
@@ -232,7 +199,6 @@ export default {
       var btn = this.$store.state.xr.Controls.GetVRButton();
 
       btn.addEventListener("click", () => {
-        console.log(this.$store.state.audioController);
         this.$store.state.audioController.EnableSounds();
       });
 
@@ -254,7 +220,6 @@ export default {
       this.teppich.renderOrder = 9;
       this.teppich.position.set(-7, 0.02, -8);
       this.teppich.rotation.set(Math.PI * -0.5, 0, 0);
-      //this.xr.Scene.add(this.teppich);
       this.xr.CustomTextureLoader.load(TeppichTex).then((map) => {
         this.teppichMaterial.map = map;
         this.teppichMaterial.opacity = this.$store.state.teppichOpacity;
@@ -299,8 +264,6 @@ export default {
       if (gp.buttons[0].pressed && !this.pressed) {
         this.pressed = true;
         this.$socket.emit("client-gamepad-event", null);
-
-        console.log("set pressed true", gp.buttons[0].pressed);
       } else if (!gp.buttons[0].pressed) {
         this.pressed = false;
       }

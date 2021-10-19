@@ -34,22 +34,12 @@ export default {
   },
   sockets: {
     "server-friends-delete": function (friend) {
-      console.log("%c smth disconnected", "background:#000; color:#fff;");
-      console.log(
-        friend.id,
-        this.$store.state.socketID,
-        friend.id == this.$store.state.socketID
-      );
-
       if (
         this.friends.hasOwnProperty(friend.id) &&
         friend.id != this.$store.state.socketID
       ) {
-        //this.$store.state.xr.Scene.remove(this.friends[friend.id]);
         this.friends[friend.id].delete();
         delete this.friends[friend.id];
-
-        console.log("delete friend with id ", friend.id);
       }
     },
     "server-friends-update": function (d) {
@@ -62,14 +52,12 @@ export default {
       );
 
       this.$store.commit("serverFriends", serverFriends);
-      //delete serverFriends[this.$socket.id];
 
       Object.keys(serverFriends).map((f, index) => {
         if (this.$socket.id == f || !serverFriends[f].visible) {
           if (localFriends.hasOwnProperty(f)) {
             localFriends[f].delete();
             delete localFriends[f];
-            console.log("delete local friend because invisible");
           }
 
           return;
@@ -84,7 +72,6 @@ export default {
       this.friends = localFriends;
     },
     "server-player-jump": function (data) {
-      console.log("JUMP ", data.id);
       Object.values(this.friends).map((friend) => {
         if(friend.id == data.id){
           friend.Jump();

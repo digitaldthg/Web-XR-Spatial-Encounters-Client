@@ -59,7 +59,7 @@ class SingleFriend {
       this.ringScales.push(scale);
       this.rings.push(ring);
     }
-    console.log("creat", data.transform, data.transform.headPosition);
+
     this.group.userData.headHeight = data.transform.headHeight * this.headFactor;
     this.group.userData.targetPosition = new Vector3(
       data.transform.headPosition.x,
@@ -103,7 +103,6 @@ class SingleFriend {
 
 
     this.xr.Events.addEventListener("OnChangeXRView", (xrMode) => {
-      //console.log("xrMode" , xrMode.xrMode);
 
       if (xrMode.xrMode == "VR") {
         this.HideText(true);
@@ -240,7 +239,6 @@ class SingleFriend {
     this.xr.Scene.remove(this.head);
     this.xr.Scene.remove(this.lazyFollower);
 
-    console.log("friend =>  delete myself");
   }
 
 }

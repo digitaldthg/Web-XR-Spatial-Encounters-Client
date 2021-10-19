@@ -14,9 +14,6 @@ class BGFrontTexture extends TextureBackground{
 
   constructor(props){
     super(props);
-
-    console.log(this);
-
     this.Load("Mountains", Mountains).then((texture)=>{
       texture.repeat.set( 4, 1 );
       texture.offset.set(1,0)

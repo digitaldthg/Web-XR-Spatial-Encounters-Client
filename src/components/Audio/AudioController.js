@@ -22,7 +22,6 @@ class AudioController {
   }
 
   Init() {
-    //console.log(AudioFiles);
     var loadArray = [];
 
     Object.keys(AudioFiles).map((category) => {
@@ -47,9 +46,7 @@ class AudioController {
     });
 
     return Promise.all(loadArray).then(buffers => {
-      //console.log("Everything is loaded in audio" , buffers, this.buffers);
       this.loaded = true;
-
       return this.buffers;
     });
 
@@ -67,7 +64,6 @@ class AudioController {
 
 
   PlaySound = (name, loop = false, volume = 1.0) => {
-    console.log("PLAY SOUND ",name)
     var [category, soundName] = name.split(".");
     if (this.store.state.mute) {
       volume = 0;
@@ -101,22 +97,16 @@ class AudioController {
 
 
       if (loop) {
-        //connect sound mit gainnode
         this.buffers[category][soundName].source.connect(this.buffers[category][soundName].gainNode);
-
       } else {
         this.buffers[category][soundName].source.connect(this.buffers[category][soundName].gainNode);
       }
 
-
-      //console.log("onended" , this.buffers[category][soundName].source.onended);
       if (this.buffers[category][soundName].source.onended == null) {
         this.buffers[category][soundName].source.onended = () => {
           this.buffers[category][soundName].isPlaying = false;
-          //console.log("ended sound", this.buffers[category][soundName] );
         };
       }
-
 
       this.buffers[category][soundName].source.start(0);
 
@@ -143,11 +133,8 @@ class AudioController {
     });
   }
   Resume = () => {
-
-    //console.log("Resume");
     Object.keys(this.buffers).map(category => {
       Object.keys(this.buffers[category]).filter(sound => this.buffers[category][sound].paused && this.buffers[category][sound].loop).map(sounds => {
-        //console.log(this.buffers[category][sounds]);
         this.buffers[category][sounds].paused = false;
         var volume = this.buffers[category][sounds].volume;
         this.PlaySound(category + "." + sounds, true, volume);

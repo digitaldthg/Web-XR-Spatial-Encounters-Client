@@ -18,7 +18,6 @@ import {
 
 class Particles {
     constructor(store, position) {
-        console.log("New Particles ", store)
         this.store = store;
         this.xr = store.state.xr;
         this.position = position
@@ -26,7 +25,6 @@ class Particles {
     }
 
     InitParticles() {
-        console.log("INIT PARTICLES");
         this.textureSize = 32.0;
         const pointGeometry = new BufferGeometry();
         var verts = [];
@@ -45,9 +43,6 @@ class Particles {
         pointGeometry.setAttribute("position", new BufferAttribute(vertices, 3));
         
         let colorHSL = new Color(this.store.state.nextTheme.triangle_color_bottom);
-
-        console.log(colorHSL);
-
         const pointMaterial = new PointsMaterial({
             size: 0.05,
             color: colorHSL,

@@ -119,14 +119,9 @@ class MultiCameraController{
     }
   }
   FollowPlayer = (view)=>{
-
     view.camera.parent.position.set(this.store.state.playerPosition.x,0,this.store.state.playerPosition.z);
     view.camera.parent.rotation.y += (view.animationSpeed * view.animationDirection);
     view.camera.lookAt(this.store.state.playerPosition.x,this.store.state.playerPosition.y / 1.25,this.store.state.playerPosition.z);
-
-    console.log(this.store.state.playerPosition)
-
-
   }
 
 
