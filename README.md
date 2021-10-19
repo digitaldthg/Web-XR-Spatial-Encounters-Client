@@ -23,7 +23,7 @@ Das User Interface ist nur im Desktop-View zu sehen.
 | Präsentationsmodus  | Startet den Präsentationsmodus in Fullscreen - der Präsentationsmodus zeigt die 3D Szene gleichzeitig aus drei verschiedenen Perspektiven | 
 | Autorotate Kamera | Rotiert die Kamera in der angegebenen Geschwindigkeit | 
 | Visible | Unter dem 'Autorotate Kamera' Feld werden alle verbunden ID's aufgelistet. Durch die Toggle Buttons können diese einzeln sichtbar und unsichtbar gemacht werden. Man selber ist grau hinterlegt. |
-| Teppich Opacity | Transparenz der türkis-pinken Fläche |
+| Teppich Opacity | Transparenz der türkis-pinken Fläche und des 'Daches' |
 | Sek. zwischen Dreiecken | Sekunden zwischen den automatisch gespawnten Dreiecken. Wird diese auf 3 (Maximalwert) gesetzt erscheinen gar keine regelmäßigen Dreiecke. Dreicke können dann immer noch über den manuellen externen Input gespawnt werden. |
 | Dreiecks Opacity | Transparenz des aktuellen Dreiecks |
 | Geschwindigkeit der Dreiecke | Geschwindigkeit mit der alle sichtbaren Dreiecke in die Höhe fliegen|
@@ -33,7 +33,9 @@ Das User Interface ist nur im Desktop-View zu sehen.
 | Transitionzeit Slider | Definiert in wie viele Sekunden der Übergang von einem Theme zum nächsten dauert soll |
 | Themes | Unter dem Transitionzeit Slider sind alle definerten Themes mit jeweiligem Play button aufgelistet. Durch Klicken auf einen Playbutton beginnt der Übergang vom aktuellen Theme zu diesem Theme.|
  
+## Themes
 
+Während einer Session ist die Umgebung der 3D Szene durch Themes definiert, die gewechselt werden können. Jedes Theme wird durch eine .json definiert, die unter <em>/Themes</em> zu finden sind. Im <em>MaterialController.js</em> wird definiert welche des hinterlegt Themes auch in der UI sichtbar und damit auswählbar sein sollen.
 
 ## Konfiguration im Raum
 Momentan ist die Spielfläche durch das importierte Guardian-Mesh und die Guardian-Aktivierungs-Grenzen auf ca 10x16m festgelegt (<em>Guardian.js</em>). 
@@ -64,4 +66,4 @@ Klonen oder downloaden Sie das Projekt auf Ihren Rechner und installieren Sie di
 
 **3D**
 
-??
+`src > components > Scene.vue`
