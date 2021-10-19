@@ -49,7 +49,7 @@ Bestimmen Sie eine Richtung in die alle VR-Brillen ausgerichtet werden und drüc
 Bestimmen Sie einen Punkt im realen Raum. Stellen Sie sich mit aufgesetzter VR-Brille auf diesen Punkt und schauen Sie nach unten.
 
 ## Installation & Entwicklung
-Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework.
+Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework. Über [Sockets](https://www.npmjs.com/package/vue-socket.io) kommunzieren Client und Server miteinander. 
 
 Klonen oder downloaden Sie das Projekt auf Ihren Rechner und installieren Sie die Dependencies mit den nachstehenden Befehlen. 
 
@@ -69,8 +69,6 @@ Klonen oder downloaden Sie das Projekt auf Ihren Rechner und installieren Sie di
 `src > components > Scene.vue`
 
 ### Projektaufbau
-Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework. Über [Sockets](https://www.npmjs.com/package/vue-socket.io) kommunzieren Client und Server miteinander. 
-
 Die Anwendung ist hauptsächlich durch 
 - Raum (Scene.vue, Environment.vue)
 - Spieler (Player.vue)
