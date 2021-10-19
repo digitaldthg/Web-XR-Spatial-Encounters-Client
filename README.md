@@ -1,31 +1,26 @@
 # tp9_client
+Dieses Repository enthält den Client-Code des WebXR-Multiplayer-Projektes “Spatial Encounters”. Der Server-Code befindet [hier](https://github.com/digitaldthg/tp9_webserver).
 
 Die VR Experience “Spatial Encounters” hat im thüringischen Kloster Volkenroda am 27. und 28. August 2021 Premiere gefeiert und im Rahmen des Sommerkonzerte-Festivals  experimentelle und virtuelle Akzente gesetzt!
 
 [Weiterlesen...](https://digital.dthg.de/spatial-encounters-sommerkonzerte-volkenroda/)
 
-## Project setup
+## Installation & Entwicklung
+Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework.
 
-Repository des Servers: https://github.com/digitaldthg/tp9_webserver
+Klonen oder downloaden Sie das Projekt auf Ihren Rechner und installieren Sie die Dependencies mit den nachstehenden Befehlen.
 
-```
-npm install
-```
+**Installation** `npm install`
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+**Development** `npm run serve`
 
-### Compiles and minifies for production
-```
-npm run build
-```
+**Build** `npm run build`
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Entry Points
+**2D**
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+`src > main.js`
+
+**3D**
+
+`src > Components > Editor > XRScene.vue`
