@@ -67,3 +67,20 @@ Klonen oder downloaden Sie das Projekt auf Ihren Rechner und installieren Sie di
 **3D**
 
 `src > components > Scene.vue`
+
+### Projektaufbau
+Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework. Über [Sockets](https://www.npmjs.com/package/vue-socket.io) kommunzieren Client und Server miteinander. 
+
+Die Anwendung ist hauptsächlich durch 
+- Raum (Scene.vue, Environment.vue)
+- Spieler (Player.vue)
+- andere Spieler (Friends.vue, SingleFriend.js)
+- Dreiecke (constantTriangle.js, triangle.js, triangleUtils.js) 
+- und UI (Controls.vue)
+
+definiert. 
+
+
+
+
+
