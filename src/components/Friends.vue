@@ -1,17 +1,5 @@
 <template></template>
 <script>
-import {
-  Mesh,
-  SphereGeometry,
-  ConeGeometry,
-  MeshNormalMaterial,
-  MeshBasicMaterial,
-  Vector3,
-  Color,
-  DoubleSide,
-  Group,
-} from "three";
-import Ring from "../Model/player_cylinder.glb";
 import SingleFriend from "./SingleFriend";
 
 export default {

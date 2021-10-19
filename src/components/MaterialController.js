@@ -40,22 +40,21 @@ class MaterialController {
   constructor(xr, store) {
     this.xr = xr;
     this.store = store;
-    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertThunder,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
-
-    var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
-    
-    this.store.commit("setAllThemes", allThemes);
 
     this.store.commit("setMaterialController", this);
 
-    //GRADIENT
+    //definiert welche themes zu verfügung stehen soll
+    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertThunder,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
+    var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
+    this.store.commit("setAllThemes", allThemes);
+
+    //GRADIENTS
     this.gradient_skybox = new Skybox({
       name: "skybox"
     });
     this.gradient_sun = new SunGradient({
       name: "sun"
     });
-
     this.gradient_fogFloor = new FogFloorDiffuse({
       name: "fogColor"
     });
@@ -64,7 +63,6 @@ class MaterialController {
         name: "fogAlpha"
       }
     );
-
     this.gradient_bg_front = new BGGradientFront({
       name: "bg_front"
     });
@@ -143,7 +141,6 @@ class MaterialController {
     var skybox_texture = skybox_texture_obj.material;
 
 
-
     this.materials = {
       base_floor: new MeshBasicMaterial({
         color: 0x000000,
@@ -153,7 +150,6 @@ class MaterialController {
         transparent: true,
         map: this.gradient_fogFloor.GetTexture(),
         alphaMap: this.gradient_fogFloorAlpha.GetTexture(),
-        //depthWrite: false
       }),
       skybox_gradient: new MeshBasicMaterial({
         map: this.gradient_skybox.GetTexture()
@@ -165,8 +161,9 @@ class MaterialController {
       bg_front,
       bg_moving,
       skybox_texture
-
     }
+
+    //OBJECTS
     this.tex_guardian = new Guardian({ xr: this.xr, store: this.store })
     this.tex_floor = new Floor(this.xr);
     this.tex_skybox = new SkyboxTexture(this.xr);
@@ -175,6 +172,7 @@ class MaterialController {
     this.tex_bg_back = new BGBackTexture(this.xr);
     this.tex_sun = new Sun(this.xr);
 
+    //MATERIALIEN -> OBJECTS
     this.tex_sun.SetMaterial("Sun", sun_obj)
     this.tex_skybox.SetMaterial("Sky", skybox_texture_obj);
     this.tex_floor.SetMaterial("Floor", grid_floor_obj);

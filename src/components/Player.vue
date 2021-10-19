@@ -2,7 +2,6 @@
 <script>
 import {
   Mesh,
-  CylinderGeometry,
   DoubleSide,
   BoxGeometry,
   Group,

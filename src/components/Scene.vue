@@ -272,12 +272,10 @@ export default {
 
     RenderLoop() {
       this.GamePadLoop();
-
       return;
 
     },
     HandleXRView(xrMode) {
-      console.log("session", xrMode);
     },
 
     SetEnvironmentModel() {
@@ -285,10 +283,7 @@ export default {
         if (child.name != "Scene") {
           var material = this.materialController.GetMaterial(child.name);
           child.material = material;
-          //console.log("CHILD Mat ", child.material)
         }
-
-        console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":

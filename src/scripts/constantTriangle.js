@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import triangleUtils from './triangleUtils';
-import { Color, DoubleSide, Vector2, Vector3 } from 'three';
+import {Vector3 } from 'three';
 
 class ConstantTriangle {
     constructor(props) {
