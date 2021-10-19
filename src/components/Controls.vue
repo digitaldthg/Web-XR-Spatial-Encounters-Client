@@ -6,7 +6,23 @@
     <div id="controls" :class="{ hidden: !config.showDevTools || !$store.state.uiVisible }">
       <div class="controls-inner" v-if="open">
         <div class="grid">
-          
+          <div class="grid-1 flex info-panel">
+            <div class="flex margin-bottom">
+              <div class="input-checkbox">
+                  <input
+                    id="can-calibrate"
+                    class="invisible"
+                    type="checkbox"
+                    :checked="$store.state.canCalibrate"
+                    @input="ToggleCanCalibrate"
+                  />
+                  <label class="checkbox-label" for="can-calibrate"
+                    ></label
+                  >
+                </div>
+                <p>Kalibrierung</p>
+            </div>
+          </div>          
           <div class="grid-1 flex info-panel">
             <button class="cta-button" @click="e=>ToggleUI(false)">Hide User Interface</button>
           </div>
@@ -219,6 +235,25 @@
                 @input="updateFog"
               />
             </div>
+
+            <div class="slider">
+              <label for="teppichOpacity"
+                >Triangle Rotation Speed: {{ this.$store.state.triangleRotationSpeed}}</label
+              >
+              <input
+                class="slider"
+                type="range"
+                id="teppichOpacity"
+                name="teppichOpacity"
+                min="-.01"
+                max=".01"
+                step="0.0001"
+                :value="this.$store.state.triangleRotationSpeed"
+                @change="ChangeTriangleRotationSpeed"
+                @input="ChangeTriangleRotationSpeed"
+              />
+            </div>
+
           </div>
 
           <div class="grid-1">
@@ -227,12 +262,17 @@
                 <input type="number" @input="ChangeFogDuration" :value="fogDuration" />
                 <label>in sek</label>
               </div>
-              <button class="cta-button" @click="AnimateFog">Animate to</button>
-
+              
               <div class="">
-                <input type="number" @input="ChangeFogTarget" :value="fogTarget" />
+                <input type="number" @input="e => ChangeFogTarget(e.target.value)" :value="fogTarget" />
                 <label>Target fogDistance</label>
               </div>
+              <button class="cta-button" @click="e => ChangeFogTarget(0)">0</button>
+              <button class="cta-button" @click="e => ChangeFogTarget(0.5)">0.5</button>
+            </div>
+            <div class="info-panel flex flex-between">
+
+              <button class="cta-button --large" @click="AnimateFog">Animate to</button>
             </div>
           </div>
 
@@ -244,7 +284,7 @@
               </div>
               <div class="margin-bottom">
                 <label>Transitionzeit: {{$store.state.lerpDuration}}Sekunden</label>
-                <input type="range" :value="$store.state.lerpDuration" min="1" max="25" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
+                <input type="range" :value="$store.state.lerpDuration" min="1" max="60" step=".1" @input="e => ChangeThemeLerpDuration(e.target.value)"/>
               </div>
               <div
                 class="theme flex flex-between flex-align-center"
@@ -321,7 +361,7 @@ export default {
       scale: 1.25,
       config: config,
       friends: {},
-      fogDuration : 2,
+      fogDuration : 30,
       fogTarget : 0,
       recording : false,
       recordName : "SessionFile",
@@ -329,6 +369,14 @@ export default {
     };
   },
   sockets:{
+    "server-change-triangleRotationSpeed" : function(d){
+      this.$store.commit("ChangeTriangleRotationSpeed" , d.triangleRotationSpeed);
+    },
+    "server-change-calibration" : function(d){
+      console.log("canCalibrate " ,d.canCalibrate);
+
+      this.$store.commit("ChangeCalibrate", d.canCalibrate);
+    },
     "server-fog-animate" : function(fogData){
       var start = {
         fogDistance : fogData.current,
@@ -374,6 +422,23 @@ export default {
     this.id = this._uid;
   },
   methods: {
+
+    ChangeTriangleRotationSpeed(e){
+      console.log(e.target.value);
+
+      var speed = parseFloat(e.target.value);
+      this.$store.commit("ChangeTriangleRotationSpeed", speed );
+
+      this.$socket.emit("client-change-triangleRotationSpeed", {
+        triangleRotationSpeed : speed
+      })
+    },
+    ToggleCanCalibrate(e){
+      console.log("Calibrate" , e.target.checked);
+      this.$socket.emit("client-change-calibration", {
+        canCalibrate : e.target.checked
+      });
+    },
     ChangeRecordName(e){
       this.recordName = e.target.value;
     },
@@ -392,8 +457,8 @@ export default {
       
       this.fogDuration = e.target.value;
     },
-    ChangeFogTarget(e){
-      this.fogTarget = e.target.value;
+    ChangeFogTarget(value){
+      this.fogTarget = value;
     },
     Toggle() {
       this.open = !this.open;
@@ -402,10 +467,16 @@ export default {
       if(boolean){
         this.$store.commit("ToggleUI", false);
         this.$store.commit("TogglePresenterMode" , boolean);
+
+        document.body.requestFullscreen();
       }
     },
     ToggleUI(boolean){
       this.$store.commit("ToggleUI", boolean);
+
+      if(boolean && document.fullscreenElement){
+        document.exitFullscreen();
+      }
     }, 
     ChangeAutoOrbit(e){
       

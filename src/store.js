@@ -19,21 +19,32 @@ export default new Vuex.Store({
     lastTheme: null,
     nextTheme: null,
     lerpDuration: 2,
+    triangleRotationSpeed : .001,
     allThemes: null,
     previews : null,
     themePreview : null,
     materialController: null,
     fogDistance: 0.2,
     playerPosition: null,
-    startPosition:{x:0,y:0,z:-6},
+    startPosition:{x:0,y:0,z:-4},
     autoOrbit : false,
     uiVisible : true,
     rotationSpeed : -1,
     presentation : false,
     triangleOpacity : 0.0,
-    teppichOpacity: 1
+    teppichOpacity: 1,
+    canCalibrate : true,
+    audioController : null,
+    mute : false
+
   },
   mutations: {
+    SetAudioController(state, value) {
+      state.audioController = value;
+    },
+    ChangeCalibrate(state, data){
+      state.canCalibrate = data;
+    },
     ChangeRotationSpeed(state,data){
       state.rotationSpeed = data;
     },
@@ -110,6 +121,9 @@ export default new Vuex.Store({
     },
     setTeppichOpacity(state,op){
       state.teppichOpacity = op;
+    },
+    ChangeTriangleRotationSpeed(state,value){
+      state.triangleRotationSpeed = value;
     }
 
   },

@@ -21,6 +21,10 @@ import Timer from "../Timer";
 import explodingRing from "../scripts/explodingRing";
 import Utils from "../scripts/utils";
 import triangleUtils from "../scripts/triangleUtils";
+import Particles from "./Particles"
+import TWEEN from "@tweenjs/tween.js";
+
+import AudioController from "./Audio/AudioController";
 
 function ease(x) {
   const c1 = 5.70158;
@@ -45,19 +49,25 @@ export default {
       delta: 0,
       fps: 0.1,
       player: null,
+      playerMaterial : new MeshBasicMaterial({
+          side: DoubleSide,
+          transparent:false,
+          opacity :1
+      }),
       ready: false,
       timer: null,
       timerTimeout: false,
-      maxTimeout: 500, //Ladezeit
-      timerTimeoutTime: 4000, //Zeit bis zum naechsten Reset
+      maxTimeout: 300, //Ladezeit
+      timerTimeoutTime: 3000, //Zeit bis zum naechsten Reset
       timeout: 0,
       thumb: false,
       rings: [],
+      ringScales: [],
       explosition: false,
       explodingFactor: 0.7,
       ringOffset: 0.15,
       bottomColor: new Color(0xff0000),
-      keyArray: ["w", "a", "s", "d", "e"],
+      keyArray: ["w", "a", "s", "d", "e", "j"],
       speed: 0.05,
       data: Object.assign({}, UserData),
       raycaster: null,
@@ -70,6 +80,11 @@ export default {
       lazyFollower: null,
       dummyObject: null,
       inVR: false,
+      AudioController: null,
+      jumpOffset: 0,
+      jumpFollowOffset: 0,
+      jump: false,
+
       currentColor: new Color(0x0000ff),
       key: {
         w: 0,
@@ -80,6 +95,16 @@ export default {
     };
   },
   watch: {
+    "$store.state.presentation" : function(boolean){
+      this.player.visible = !boolean;
+
+      console.log("presentation " , boolean);
+
+      this.rings.map((r)=>{
+        r.visible = !boolean;
+      })
+    
+    },
     "$store.state.xr": function (state) {
       console.log("state player", state);
       this.ready = true;
@@ -90,7 +115,9 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() {
+    this.AudioController = new AudioController(this.$store);
+  },
   methods: {
     InitPlayer() {
       this.$store.state.xr.Events.addEventListener(
@@ -107,24 +134,17 @@ export default {
         this.data.color.a
       );
       this.currentColor = color;
-      /*var target = new Vector3(
-        this.data.transform.position.x,
-        this.data.transform.position.y,
-        this.data.transform.position.z
-      );
-      var origin = new Vector3(0, 0, 0);*/
+
       var count = 10;
       for (var i = 0; i <= count; i++) {
         let scale = (1 / (count + 1)) * (i + 1);
         const geometry = new TorusGeometry(scale, 0.008, 6, 64); //new CylinderGeometry(scale, scale, 0.06, 64, 2, true);
-        const material = new MeshBasicMaterial({
-          side: DoubleSide,
-          color: color,
-        });
-        const ring = new Mesh(geometry, material);
+        const ring = new Mesh(geometry, this.playerMaterial);
+        this.playerMaterial.color = color;
         ring.rotation.x = (90 * Math.PI) / 180;
 
         this.$store.state.xr.Scene.add(ring);
+        this.ringScales.push(scale);
         this.rings.push(ring);
       }
 
@@ -189,6 +209,7 @@ export default {
     },
 
     ResetCamera() {
+      this.AudioController.PlaySound("menu.click");
       this.$store.state.xr.Controls.SetPositionAndRotation(
         new Vector3(
           this.$store.state.startPosition.x,
@@ -198,17 +219,17 @@ export default {
         new Vector3(0, 0, 7)
       );
 
-      var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera( this.$store.state.xr.Camera.instance );
+      var vrCamera = this.$store.state.xr.Renderer.instance.xr.getCamera(
+        this.$store.state.xr.Camera.instance
+      );
 
-        vrCamera.matrixWorld.decompose(
-          this.transform.position,
-          this.transform.rotation,
-          this.transform.scale
-        );
+      vrCamera.matrixWorld.decompose(
+        this.transform.position,
+        this.transform.rotation,
+        this.transform.scale
+      );
 
       this.data.transform.headHeight = this.transform.position.y;
-
-
     },
     ConvertPlayerToVR() {
       this.inVR = true;
@@ -253,6 +274,9 @@ export default {
           break;
         case "e":
           this.EmitExplode();
+          break;
+        case "j":
+          this.EmitJump();
           break;
       }
 
@@ -312,10 +336,11 @@ export default {
 
       this.player.position.x += dir.x * this.speed;
       this.player.position.z += dir.z * this.speed;
-      this.player.position.y = 1.75;
+      this.player.position.y = 1.75; // + this.jumpOffset;
 
       this.playerGroup.position.x += dir.x * this.speed;
       this.playerGroup.position.z += dir.z * this.speed;
+      this.playerGroup.position.y = this.jumpOffset;
     },
     EmitExplode() {
       console.log("EXPLOSION");
@@ -327,6 +352,83 @@ export default {
           b: this.currentColor.b,
         },
       });
+    },
+
+    EmitJump() {
+      this.$socket.emit("client-player-jump", {
+        id: this.$store.state.socketID
+      });
+      this.Jump();
+    },
+
+    Jump() {
+      var start = {
+        offset: 0,
+      };
+      var end = {
+        offset: 10,
+      };
+      new TWEEN.Tween(start)
+        .to(end, 200)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate((v) => {
+          this.jumpOffset = v.offset;
+        })
+        .start()
+        .onComplete(() => {
+         
+          new TWEEN.Tween({
+            offset: 10,
+          })
+            .to(
+              {
+                offset: 0,
+              },
+              8000
+            )
+            .easing(TWEEN.Easing.Quartic.InOut)
+            .onUpdate((v) => {
+              this.jumpOffset = v.offset;
+            })
+            .start();
+        });
+
+      var startFollow = {
+        offset: 0,
+      };
+      var endFollow = {
+        offset: 15,
+      };
+
+      new TWEEN.Tween(startFollow)
+        .to(endFollow, 2000)
+        .easing(TWEEN.Easing.Cubic.InOut)
+        .onUpdate((v) => {
+          this.jumpFollowOffset = v.offset;
+        })
+        .start()
+        .onComplete(() => {
+           var particlePosition =  this.player.position.clone();
+          particlePosition.y =  10;
+          console.log("PART POS ",particlePosition)
+          new Particles(this.$store, particlePosition);
+
+          new TWEEN.Tween({
+            offset: 15,
+          })
+            .to(
+              {
+                offset: 0,
+              },
+              8000
+            )
+            .easing(TWEEN.Easing.
+Cubic.InOut)
+            .onUpdate((v) => {
+              this.jumpFollowOffset = v.offset;
+            })
+            .start();
+        });
     },
 
     Animate(t) {
@@ -395,7 +497,6 @@ export default {
       var currentY = target.y == 0 ? 0.01 : target.y;
 
       var heightOffset = this.data.transform.headHeight * this.explodingFactor;
-      
 
       this.currentColor = colorBottomHSL
         .clone()
@@ -421,6 +522,9 @@ export default {
           this.$store.state.xr.Camera.instance
         );
 
+        this.$store.state.xr.Camera.instance.parent.position.y =
+          this.jumpOffset;
+
         vrCamera.matrixWorld.decompose(
           this.transform.position,
           this.transform.rotation,
@@ -429,7 +533,7 @@ export default {
 
         this.player.position.set(
           this.transform.position.x,
-          this.transform.position.y,
+          this.transform.position.y + this.jumpOffset,
           this.transform.position.z
         );
         this.playerGroup.position.set(
@@ -444,42 +548,47 @@ export default {
         );
 
         //RESET INTERSECTION CHECK
-        var pos = new Vector3();
-        var dir = new Vector3();
-        vrCamera.getWorldPosition(pos);
-        vrCamera.getWorldDirection(dir);
-        this.raycaster.set(pos, dir);
-        var intersection = this.raycaster.intersectObjects(
-          [this.playerFloor],
-          true
-        );
 
-        ring_pos = pos.clone();
+        if (this.$store.state.canCalibrate) {
+          console.log("canCalibrate");
 
-        if (intersection.length > 0 && !this.timerTimeout) {
-          this.timer.SetVisible(true);
-          if (this.timeout < this.maxTimeout) {
-            this.timeout++;
+          var pos = new Vector3();
+          var dir = new Vector3();
+          vrCamera.getWorldPosition(pos);
+          vrCamera.getWorldDirection(dir);
+          this.raycaster.set(pos, dir);
+          var intersection = this.raycaster.intersectObjects(
+            [this.playerFloor],
+            true
+          );
+
+          ring_pos = pos.clone();
+
+          if (intersection.length > 0 && !this.timerTimeout) {
+            this.timer.SetVisible(true);
+            if (this.timeout < this.maxTimeout) {
+              this.timeout++;
+            } else {
+              this.timeout = 0;
+              this.ResetCamera();
+              this.thumb = false;
+              this.timer.SetVisible(false);
+              this.timerTimeout = true;
+
+              setTimeout(() => {
+                this.timerTimeout = false;
+              }, this.timerTimeoutTime);
+            }
+
+            this.timer.Progress(this.timeout, this.maxTimeout);
+            this.reset = true;
           } else {
-            this.timeout = 0;
-            this.ResetCamera();
-            this.thumb = false;
             this.timer.SetVisible(false);
-            this.timerTimeout = true;
-
-            setTimeout(() => {
-              this.timerTimeout = false;
-            }, this.timerTimeoutTime);
           }
-
-          this.timer.Progress(this.timeout, this.maxTimeout);
-          this.reset = true;
-        } else {
-          this.timer.SetVisible(false);
         }
       } // end of only VR
 
-      this.head.position = ring_pos.clone(); //new Vector3(this.player.position.x ,this.player.position.y,this.player.position.z);
+      this.head.position = ring_pos.clone();
       this.head.rotation.copy(this.$store.state.xr.Camera.instance.rotation);
 
       this.lazyFollower.position.lerp(
@@ -499,10 +608,18 @@ export default {
       var fac = -0.2;
 
       this.rings.map((ring, index) => {
+        if(index<3){
+          ring.visible = false;
+          return
+        }
+        var scale = this.ringScales[index]*(1.1+this.jumpFollowOffset*0.2)
+        ring.scale.set(scale,scale,scale)
         var lerpAlpha = (1 / this.rings.length) * index;
         var _origin = this.lazyFollower.position.clone();
+        _origin.y = this.jumpFollowOffset;
         var _target = ring_pos.clone();
         _target.y *= 0.78;
+        _target.y += this.jumpOffset;
         var lerper = _target.clone().lerp(_origin.clone(), lerpAlpha);
         var lerperPos = _target.clone().lerp(_origin.clone(), lerpAlpha);
 
@@ -532,6 +649,20 @@ export default {
       ) {
         this.explosition = false;
       }
+
+      if (
+        !this.jump &&
+        this.player.position.y > this.data.transform.headHeight * 1.2
+      ) {
+        this.EmitJump();
+        this.jump = true;
+      } else if (
+        this.jump &&
+        this.player.position.y < this.data.transform.headHeight * 0.9
+      ) {
+        this.jump = false;
+      }
+
 
       if (this.delta > this.fps) {
         // The draw or time dependent code are here

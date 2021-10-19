@@ -39,7 +39,8 @@ class explodingRing {
             color: color,
             opacity: 1,
             transparent: true,
-            alphaMap: null
+            alphaMap: null,
+            depthWrite: false
         });
 
         var Prom1 = new Promise((resolve) => {
@@ -114,7 +115,7 @@ class explodingRing {
 
         var mesh = new Mesh(geometry, material);
         mesh.position.set(this.position.x, this.position.y, this.position.z)
-        //mesh.renderOrder = 15
+        mesh.renderOrder = 15
         this.xr.Scene.add(mesh);
         return mesh;
     }

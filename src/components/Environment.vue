@@ -37,6 +37,7 @@ export default {
         color: data.color,
       });
     },
+
     "server-environment-update": function (data) {
       this.data = data;
 

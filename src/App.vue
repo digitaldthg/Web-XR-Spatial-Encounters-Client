@@ -26,6 +26,9 @@ export default {
       initData: null,
     };
   },
+  mounted(){
+    //window.console.log = ()=>{}
+  },
   methods: {
     sendInitData() {
       console.log("INIT DATA",this.initData,store.state.allThemes)
@@ -56,6 +59,11 @@ export default {
     connectResponse: function (d) {
       console.log("on connection", d, store.state.allThemes);
       this.initData = d;
+
+      this.$store.commit("ChangeCalibrate" ,d.canCalibrate);
+      this.$store.commit("ChangeTriangleRotationSpeed" ,d.triangleRotationSpeed);
+
+      console.log("triangleRotationSpeed" , d.triangleRotationSpeed);
 
       if (store.state.allThemes != null) {
         this.sendInitData();

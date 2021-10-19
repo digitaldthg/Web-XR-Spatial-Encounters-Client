@@ -5,29 +5,30 @@ class MultiCameraController{
   windowHeight = window.innerHeight;
   windowWidth = window.innerWidth;
   views = [
+    
     {
-      left: 0,
-      bottom: 0,
+      left: 0.5,
+      bottom: 0.33,
       width: 0.5,
-      height: 1.0,
+      height: 0.336,
       up: [ 0, 1, 0 ],
       fov: 30,
       camera : null,
-      lookAt: new Vector3(-7,0,-8),
-      pos: new Vector3(25,15,25),
+      lookAt: new Vector3(-7,0,-7),
+      pos: new Vector3(5.5,1.8,5.5),
       animate : true,
       animationDirection : 1,
-      animationSpeed : .001,
-      updateCamera: this.UpdateCamera
+      animationSpeed : .003,
+      updateCamera: (v)=>this.FollowPlayer(v)
     },{
       left: 0.5,
       bottom: 0,
       width: 0.5,
-      height: 0.5,
+      height: 0.336,
       up: [ 0, 0, 1 ],
       fov: 45,
       camera : null,
-      lookAt: new Vector3(-7,0,-8),
+      lookAt: new Vector3(-7,0,-7),
       pos: new Vector3(0,15,0),
       animate : true,
       animationDirection : 1,
@@ -35,20 +36,35 @@ class MultiCameraController{
       updateCamera: this.UpdateCamera
     },
     {
-      left: 0.5,
-      bottom: 0.5,
+      left: 0,
+      bottom: 0,
       width: 0.5,
-      height: 0.5,
+      height: 1.0,
       up: [ 0, 1, 0 ],
       fov: 60,
       camera : null,
-      lookAt: new Vector3(-7,0,-8),
+      lookAt: new Vector3(-7,0,-7),
       pos: new Vector3(0,10,25),
       animate : false,
       animationDirection : 1,
       animationSpeed : .001,
       updateCamera: this.UpdateCamera
-    }
+    },
+    {
+      left: 0.5,
+      bottom: 0.66,
+      width: 0.5,
+      height: 0.336,
+      up: [ 0, 1, 0 ],
+      fov: 30,
+      camera : null,
+      lookAt: new Vector3(-7,0,-7),
+      pos: new Vector3(25,15,25),
+      animate : true,
+      animationDirection : 1,
+      animationSpeed : .001,
+      updateCamera: this.UpdateCamera
+    },
   ]
   constructor(opts){
     var {store} = opts;
@@ -56,6 +72,7 @@ class MultiCameraController{
     this.scene = store.state.xr.Scene;
     this.store = store;
 
+    this.FollowPlayer = this.FollowPlayer.bind(this);
 
     this.store.state.xr.Events.addEventListener(
       "OnAfterRenderLoop",
@@ -87,7 +104,7 @@ class MultiCameraController{
           camGroup.add(cam);
       this.store.state.xr.Scene.add(camGroup);
       
-      camGroup.position.set(-7,0,-8);
+      camGroup.position.set(-7,0,-7);
     }
 
     this.windowWidth = window.innerWidth;
@@ -101,6 +118,17 @@ class MultiCameraController{
       view.camera.parent.rotation.y += (view.animationSpeed * view.animationDirection);
     }
   }
+  FollowPlayer = (view)=>{
+
+    view.camera.parent.position.set(this.store.state.playerPosition.x,0,this.store.state.playerPosition.z);
+    view.camera.parent.rotation.y += (view.animationSpeed * view.animationDirection);
+    view.camera.lookAt(this.store.state.playerPosition.x,this.store.state.playerPosition.y / 1.25,this.store.state.playerPosition.z);
+
+    console.log(this.store.state.playerPosition)
+
+
+  }
+
 
   OnAfterRenderLoop = (clock) => {
 
