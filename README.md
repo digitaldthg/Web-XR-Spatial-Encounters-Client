@@ -1,4 +1,4 @@
-# tp9_client
+# Spatial Encounters (Client)
 Dieses Repository enthält den Client-Code des WebXR-Multiplayer-Projektes “Spatial Encounters”. Der Server-Code befindet  sich [hier](https://github.com/digitaldthg/tp9_webserver). Für die Premiere des Projektes wurden Oculus Quests 2 verwendet.
 
 Die VR Experience “Spatial Encounters” hat im thüringischen Kloster Volkenroda am 27. und 28. August 2021 Premiere gefeiert und im Rahmen des Sommerkonzerte-Festivals  experimentelle und virtuelle Akzente gesetzt!
