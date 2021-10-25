@@ -32,6 +32,8 @@ Das User Interface ist nur im Desktop-View zu sehen.
 | Animate to | Startet die Fog-Animation. Über dem Button kann festgelegt werden in welcher Zeit sich der FogDistance-Wert zu einen manuelle festegelegten Wert, 0 oder 0.5 verändern soll|
 | Transitionzeit Slider | Definiert in wie viele Sekunden der Übergang von einem Theme zum nächsten dauert soll |
 | Themes | Unter dem Transitionzeit Slider sind alle definerten Themes mit jeweiligem Play button aufgelistet. Durch Klicken auf einen Playbutton beginnt der Übergang vom aktuellen Theme zu diesem Theme.|
+
+![UI](https://github.com/digitaldthg/TP9_frontendController/blob/main/images/UI.png)
  
 ## Themes
 
