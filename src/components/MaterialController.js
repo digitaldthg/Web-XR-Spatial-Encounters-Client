@@ -260,7 +260,9 @@ class MaterialController {
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
 
-    //this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
+    if(final.hasOwnProperty("base_floor")){
+      this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
+    }
 
     this.gradient_bg_front.SetGradient(final.gradient_bg_front);
     this.gradient_bg_back.SetGradient(final.gradient_bg_back);

@@ -7,6 +7,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: Home },
     { path: '/room/:roomID', component: Room },
+    { path: '/editor', component: Room },
     // { path: '/about', component: About }
   ]
 })

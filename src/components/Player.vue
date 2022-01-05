@@ -68,7 +68,7 @@ export default {
       ringOffset: 0.15,
       bottomColor: new Color(0xff0000),
       keyArray: ["w", "a", "s", "d", "e", "j"],
-      speed: 0.05,
+      speed: 0.01,
       data: Object.assign({}, UserData),
       raycaster: null,
       transform: {

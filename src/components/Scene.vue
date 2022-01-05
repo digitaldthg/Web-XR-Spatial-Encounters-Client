@@ -355,6 +355,7 @@ export default {
             break;
           case "guardian":
             child.renderOrder = 13;
+            child.visible = false;
             break;
           case "sun":
             child.renderOrder = 8;

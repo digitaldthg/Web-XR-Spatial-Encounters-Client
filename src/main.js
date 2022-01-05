@@ -8,6 +8,7 @@ import App from './App.vue';
 import store from './store';
 import VueSocketIO from 'vue-socket.io';
 import config from "../main.config";
+import InputColorPicker from "vue-native-color-picker";
 
 const socketConnection = new VueSocketIO({
   debug: false,
@@ -29,6 +30,7 @@ const socketConnection = new VueSocketIO({
 
 Vue.use(VueRouter);
 Vue.use(socketConnection);
+Vue.use(InputColorPicker);
 
 
 Vue.config.productionTip = false;

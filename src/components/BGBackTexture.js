@@ -15,7 +15,8 @@ class BGBackTexture extends TextureBackground{
     this.Load("Mountains", Mountains).then((texture)=>{
       texture.repeat.set( 10, 1 );
       texture.offset.set(1,0)
-      texture.wrapT = ClampToEdgeWrapping;})
+      texture.wrapT = ClampToEdgeWrapping;
+    });
 
     this.Load("Forrest", Forrest).then((texture)=>{
       texture.repeat.set( 4 , 1 );

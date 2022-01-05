@@ -7,6 +7,12 @@
       <div class="controls-inner" v-if="open">
         <div class="grid">
           <div class="grid-1 flex info-panel">
+            <router-link to="/editor">Editor</router-link>
+          </div>
+
+          <EditorControls/>
+
+          <div class="grid-1 flex info-panel">
             <div class="flex margin-bottom">
               <div class="input-checkbox">
                   <input
@@ -347,6 +353,8 @@ import Debug from "../Mixins/Debug";
 
 import TWEEN from "@tweenjs/tween.js";
 
+import EditorControls from './EditorControls.vue';
+
 
 export default {
   name: "Controls",
@@ -354,6 +362,7 @@ export default {
   components: {
     ColorPicker,
     Dropdown,
+    EditorControls
   },
   data() {
     return {
@@ -793,7 +802,7 @@ input[type="checkbox"]:checked + .checkbox-label:after {
 
 
 
-<style scoped>
+<style >
 input[type="range"] {
   width: 100%;
   margin: 0px 0;

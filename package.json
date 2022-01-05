@@ -19,6 +19,7 @@
     "tween": "^0.9.0",
     "vue": "^2.6.11",
     "vue-color-gradient-picker": "^0.1.2",
+    "vue-native-color-picker": "^1.2.0",
     "vue-router": "^3.5.1",
     "vue-socket.io": "^3.0.10",
     "vuex": "^3.6.2"
