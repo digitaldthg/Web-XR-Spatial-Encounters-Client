@@ -7,11 +7,13 @@
       <div class="controls-inner" v-if="open">
         <div class="grid">
           <div class="grid-1 flex info-panel">
-            <router-link to="/editor">Editor</router-link>
+            <router-link v-if="$route.name != 'Editor'" to="/editor">Editor</router-link>
+            <router-link  v-if="$route.name == 'Editor'" to="/">zurück</router-link>
           </div>
 
-          <EditorControls/>
+        <EditorControls v-if="$route.name == 'Editor'"/>
 
+        <div class="wrapper" v-if="$route.name != 'Editor'">
           <div class="grid-1 flex info-panel">
             <div class="flex margin-bottom">
               <div class="input-checkbox">
@@ -337,7 +339,7 @@
           <button @click="(e) => SaveTheme($store.state.lastTheme)">Save</button>
         </div> -->
       </div>
-
+      </div>
       <!-- <button class="toggle-button" @click="Toggle">open / close</button> -->
     </div>
   </div>
@@ -374,7 +376,8 @@ export default {
       fogTarget : 0,
       recording : false,
       recordName : "SessionFile",
-      id: null
+      id: null,
+      previews : {}
     };
   },
   sockets:{
@@ -421,6 +424,8 @@ export default {
       this.$nextTick().then(()=>{
 
         Object.keys(previews).map((pName) => {
+          if(this.previews.hasOwnProperty(pName)){return;}
+          this.previews[pName] = previews[pName];
           this.$refs[pName][0].appendChild(previews[pName]);
         });
       })
@@ -504,6 +509,7 @@ export default {
     },
     InitEvents() {
       window.addEventListener("keydown", (e) => {
+        if(this.$route.name == "Editor"){return;}
         if (e.key == "p") {
           this.open = !this.open;
         }

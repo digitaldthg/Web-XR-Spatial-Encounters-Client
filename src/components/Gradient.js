@@ -52,7 +52,6 @@ class Gradient{
 
   SetGradient(gradientArray){    
 
-
     // Create gradient
     this.gradient = this.c.createLinearGradient(0,0,0,this.size.y * this.dpr);
     

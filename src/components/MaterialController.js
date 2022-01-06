@@ -35,18 +35,16 @@ import SunGradient from "./SunGradient";
 import TWEEN from "@tweenjs/tween.js";
 
 import ThemePreviewGenerator from "./ThemePreviewGenerator";
+import CustomThemeLoader from "./CustomThemeLoader/CustomThemeLoader";
 
 class MaterialController {
   constructor(xr, store) {
     this.xr = xr;
     this.store = store;
-    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertThunder,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
 
-    var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
+    this.customThemeLoader = new CustomThemeLoader({xr : xr, materialController : this});
+
     
-    this.store.commit("setAllThemes", allThemes);
-
-    this.store.commit("setMaterialController", this);
 
     //GRADIENT
     this.gradient_skybox = new Skybox({
@@ -190,6 +188,11 @@ class MaterialController {
       //this.LerpThemes(this.store.state.lastTheme, this.store.state.nextTheme, this.store.state.themeLerp);
     });
 
+    
+
+    this.Init();
+
+
     this.store.watch(state => state.nextTheme, (newValue) => {
       this.StartLerpThemes();
     })
@@ -198,8 +201,21 @@ class MaterialController {
     this.store.watch(state => state.fogDistance, (newValue) => {
       this.ChangeFogDistance(newValue);
     })
+  }
 
+  async Init(){
+    var allThemes = [DunkelConcrete, DunkelConcreteMorning, ThueringerLandschaft, DesertGelb,DesertHell,DesertPistachio,DesertSun,DesertThunder,CyberpunkSun,GridDunkelWolken,GridDunkel,GridWhite];
 
+    const custom_themes = await this.customThemeLoader.LoadThemes();
+
+    console.log(allThemes, custom_themes);
+    allThemes.push(...custom_themes);
+
+    var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
+    
+    this.store.commit("setAllThemes", allThemes);
+
+    this.store.commit("setMaterialController", this);
   }
 
   hsv_to_hsl(arr) {

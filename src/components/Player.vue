@@ -249,6 +249,7 @@ export default {
     },
 
     keyDown(e) {
+
       const keyName = e.key;
 
       if (!this.keyArray.includes(keyName)) {
@@ -283,6 +284,8 @@ export default {
       this.key = keyCopy;
     },
     keyUp(e) {
+
+      
       const keyName = e.key;
 
       //console.log(keyName);
@@ -432,7 +435,7 @@ Cubic.InOut)
     },
 
     Animate(t) {
-      if (!this.ready) {
+      if (!this.ready || this.$store.state.lastTheme == null) {
         return;
       }
 
@@ -440,6 +443,7 @@ Cubic.InOut)
       var target = this.transform.position.clone();
       var origin = this.lazyFollower.position.clone();
 
+      
       //TOP COLOR
       var colorIdxLast =
         this.$store.state.ownIdx %

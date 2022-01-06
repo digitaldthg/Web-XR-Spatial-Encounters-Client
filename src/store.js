@@ -105,6 +105,27 @@ export default new Vuex.Store({
     setNextTheme(state, theme) {
        state.nextTheme = theme
     },
+
+    SetTriangleColorsForEditor(state,colors){
+      const lastThemeCopy = Object.assign({}, state.lastTheme);
+      const nextThemeCopy = Object.assign({}, state.nextTheme);
+
+      lastThemeCopy.triangle_colors = colors;
+      nextThemeCopy.triangle_colors = colors;
+
+      state.lastTheme = lastThemeCopy;
+      state.nextTheme = nextThemeCopy;
+    },
+    SetTriangleFloorColorForEditor(state,color){
+      const lastThemeCopy = Object.assign({}, state.lastTheme);
+      const nextThemeCopy = Object.assign({}, state.nextTheme);
+
+      lastThemeCopy.triangle_color_bottom = color;
+      nextThemeCopy.triangle_color_bottom = color;
+
+      state.lastTheme = lastThemeCopy;
+      state.nextTheme = nextThemeCopy;
+    },
     setAllThemes(state, themes) {
       if(state.allThemes == null){
         state.allThemes = themes;

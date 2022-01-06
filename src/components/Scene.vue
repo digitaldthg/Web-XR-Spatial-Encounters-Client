@@ -139,7 +139,10 @@ export default {
     ChangeFogColor() {
       if (
         typeof this.$store.state.lastTheme == "undefined" ||
-        typeof this.$store.state.nextTheme == "undefined"
+        typeof this.$store.state.nextTheme == "undefined" ||
+        this.$store.state.lastTheme == null ||
+        this.$store.state.nextTheme == null
+        
       ) {
         return;
       }
@@ -203,13 +206,11 @@ export default {
         onprogress: () => {},
         url: Scheune,
       }).then((model) => {
-        console.log("SCheune ", model);
+        //console.log("SCheune ", model);
         // console.log("loaded", model);
         this.scheunenModel = model.scene;
         this.scheunenModel.position.set(-7, 0, -8);
         this.scheunenModel.traverse((child) => {
-          console.log(child);
-
           if (child.hasOwnProperty("material")) {
             child.material = this.scheunenMaterial;
             this.scheunenMaterial.opacity = this.$store.state.teppichOpacity;
@@ -325,7 +326,7 @@ export default {
           //console.log("CHILD Mat ", child.material)
         }
 
-        console.log("CHILDREN ", child.name);
+        //console.log("CHILDREN ", child.name);
 
         switch (child.name) {
           case "base_floor":
@@ -355,7 +356,9 @@ export default {
             break;
           case "guardian":
             child.renderOrder = 13;
-            child.visible = false;
+
+            //Toggle Guardian
+            //child.visible = false;
             break;
           case "sun":
             child.renderOrder = 8;

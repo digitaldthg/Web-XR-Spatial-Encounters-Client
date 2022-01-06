@@ -13,6 +13,8 @@ class ThemePreviewGenerator{
   }
 
   GenerateCanvas(theme){
+
+
     var canvas = document.createElement("canvas");
     canvas.style.width = 64 + "px";
     canvas.style.height = 64 + "px";

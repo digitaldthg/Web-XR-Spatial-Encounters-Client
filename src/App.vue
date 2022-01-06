@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     sendInitData() {
-      console.log("INIT DATA",this.initData,store.state.allThemes)
+      //console.log("INIT DATA",this.initData,store.state.allThemes)
       var next = store.state.allThemes.find((t) => {
         return t.name == this.initData.next;
       });
