@@ -648,7 +648,7 @@
   gradient_bg_front_color_1
 -->
         <div class="panel">
-          <label>Gradient Background Front</label>
+          <label>Gradient Background Front Alpha</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_bg_front_color_1"
@@ -778,7 +778,7 @@
   gradient_bg_back_color_1
 -->
         <div class="panel">
-          <label>Gradient Background Back</label>
+          <label>Gradient Background Back Alpha</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_bg_back_color_1"
@@ -905,7 +905,7 @@
         </div>
 
         <div class="panel">
-          <label>Gradient Background Moving</label>
+          <label>Gradient Background Moving Alpha</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_bg_moving_color_1"
@@ -1034,7 +1034,7 @@
   Gradient Sun Color
 -->
         <div class="panel">
-          <label>Gradient Sun Color</label>
+          <label>Gradient Sun Alpha</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_sun_color_1"

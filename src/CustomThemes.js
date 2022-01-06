@@ -1,0 +1,1 @@
+export default ["Simpons", "OwnTheme", "ThemeName"];

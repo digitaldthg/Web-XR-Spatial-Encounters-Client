@@ -1,10 +1,11 @@
 import axios from "axios";
 import config from "../../../main.config";
 import {RepeatWrapping, Texture} from 'three';
+import CustomThemes from "../../CustomThemes";
 
 class CustomThemeLoader{
   constructor({xr, materialController}){
-    this.themes = ["Simpons", "OwnTheme", "ThemeName"];
+    this.themes = CustomThemes;
 
     this.xr = xr;
     this.materialController = materialController;
@@ -27,15 +28,6 @@ class CustomThemeLoader{
     if(themeJSON.tex_floor != null){
       await this.LoadTexture("tex_floor", themeJSON, themeFolder, name);
     }
-
-  //   "tex_floor" : "GridPink",
-  // "tex_skybox" : null,
-  // "tex_bg_front" : "Mountains4",
-  // "tex_bg_back" : "Wolken",
-  // "tex_bg_moving": "Black",
-  // "tex_guardian":"Grid",
-  // "tex_sun":"Sun"
-
 
     if(themeJSON.tex_skybox != null){
       await this.LoadTexture("tex_skybox", themeJSON, themeFolder, name);
