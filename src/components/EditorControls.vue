@@ -648,7 +648,7 @@
   gradient_bg_front_color_1
 -->
         <div class="panel">
-          <label>Gradient Background Front Alpha</label>
+          <label>Gradient Background Front Color</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_bg_front_color_1"
@@ -778,7 +778,7 @@
   gradient_bg_back_color_1
 -->
         <div class="panel">
-          <label>Gradient Background Back Alpha</label>
+          <label>Gradient Background Back Color</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_bg_back_color_1"
@@ -904,7 +904,7 @@
           </div>
         </div>
 
-        <div class="panel">
+        <!-- <div class="panel">
           <label>Gradient Background Moving Alpha</label>
           <div class="flex width-12">
             <v-input-colorpicker
@@ -943,7 +943,7 @@
               /><span class="value-label">{{ gradient_bg_moving_stop_2 }}</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -1034,7 +1034,7 @@
   Gradient Sun Color
 -->
         <div class="panel">
-          <label>Gradient Sun Alpha</label>
+          <label>Gradient Sun</label>
           <div class="flex width-12">
             <v-input-colorpicker
               v-model="gradient_sun_color_1"
@@ -1179,48 +1179,48 @@ export default {
       triangle_color_bottom: "#ffc000",
 
       //Gradient Sun
-      gradient_sun_color_1: "#d43511",
+      gradient_sun_color_1: "#000000",
       gradient_sun_stop_1: 0,
 
-      gradient_sun_color_2: "#d43511",
+      gradient_sun_color_2: "#000000",
       gradient_sun_stop_2: 0.7,
 
       //Base floor
-      base_floor_color: "#d43511",
+      base_floor_color: "#000000",
       base_floor_stop: 0.7,
 
       //Gradient Skybox
-      gradient_skybox_color_1: "#0f1336",
+      gradient_skybox_color_1: "#000000",
       gradient_skybox_stop_1: 0,
 
-      gradient_skybox_color_2: "#0f1336",
+      gradient_skybox_color_2: "#000000",
       gradient_skybox_stop_2: 0.6,
 
-      gradient_skybox_color_3: "#0f1336",
+      gradient_skybox_color_3: "#000000",
       gradient_skybox_stop_3: 0.8,
 
-      gradient_skybox_color_4: "#0f1336",
+      gradient_skybox_color_4: "#000000",
       gradient_skybox_stop_4: 0.9,
 
       //Gradient Fog Skybox
-      gradient_fogFloor_color_1: "#0f1336",
+      gradient_fogFloor_color_1: "#000000",
       gradient_fogFloor_stop_1: 0,
 
-      gradient_fogFloor_color_2: "#0f1336",
-      gradient_fogFloor_stop_2: 0.6,
+      gradient_fogFloor_color_2: "#000000",
+      gradient_fogFloor_stop_2: 0.5,
 
-      gradient_fogFloor_color_3: "#0f1336",
-      gradient_fogFloor_stop_3: 0.8,
+      gradient_fogFloor_color_3: "#000000",
+      gradient_fogFloor_stop_3: 1,
 
       //Gradient Fog Skybox
       gradient_fogFloorAlpha_color_1: "#000000",
       gradient_fogFloorAlpha_stop_1: 0,
 
-      gradient_fogFloorAlpha_color_2: "#ffffff",
-      gradient_fogFloorAlpha_stop_2: 0.6,
+      gradient_fogFloorAlpha_color_2: "#000000",
+      gradient_fogFloorAlpha_stop_2: 0.5,
 
-      gradient_fogFloorAlpha_color_3: "#ffffff",
-      gradient_fogFloorAlpha_stop_3: 0.8,
+      gradient_fogFloorAlpha_color_3: "#000000",
+      gradient_fogFloorAlpha_stop_3: 1,
 
       gradient_fogFloorAlpha_color_4: "#000000",
       gradient_fogFloorAlpha_stop_4: 1,
@@ -1281,6 +1281,11 @@ export default {
       element.click();
 
       document.body.removeChild(element);
+
+
+      
+
+
     },
   },
   methods: {
@@ -1307,38 +1312,26 @@ export default {
       image.onload = () => {
         var texture = new Texture();
         texture.image = image;
-        texture.needsUpdate = true;
         texture.wrapS = texture.wrapT = RepeatWrapping;
 
         document.body.appendChild(image);
 
-        //texture.repeat.set(3, 3);
-        this.$store.state.materialController[
-          name
-        ].material.material.uniforms.texture_1.value = texture;
-        this.$store.state.materialController[
-          name
-        ].material.material.uniforms.texture_2.value = texture;
+        texture.repeat.set(this[name + "_x"].x, this[name + "_x"].y);
+        texture.needsUpdate = true;
+        this.$store.state.materialController[name].material.material.uniforms.texture_1.value = texture;
 
-        if (name != "tex_floor") {
+        if(["tex_sun", "tex_bg_front", "tex_bg_back", "tex_bg_moving"].includes(name)){
+          this.$store.state.materialController[name].material.material.uniforms.texture_2.value = this.$store.state.materialController[name.replace("tex_", "gradient_")].texture;
+          this.$store.state.materialController[name].material.material.uniforms.alpha.value = 0.5;
           
-          this.$store.state.materialController[
-            name
-          ].material.material.uniforms.alpha_texture_1.value = this.$store.state.materialController[
-            name.replace("tex_", "gradient_")
-          ].texture;
-          this.$store.state.materialController[
-            name
-          ].material.material.uniforms.alpha_texture_2.value = this.$store.state.materialController[
-            name.replace("tex_", "gradient_")
-          ].texture;
-
-          this.$store.state.materialController[
-            name
-          ].material.material.uniforms.hasAlphaMap_1.value = true;
-          this.$store.state.materialController[
-            name
-          ].material.material.uniforms.hasAlphaMap_2.value = true;
+          this.$store.state.materialController[name].material.material.uniforms.hasAlphaMap_1.value = false;
+          this.$store.state.materialController[name].material.material.uniforms.hasAlphaMap_2.value = true;
+        }else if(["tex_skybox","tex_floor", "tex_guardian",  ].includes(name)){
+          this.$store.state.materialController[name].material.material.uniforms.alpha.value = 1;
+          this.$store.state.materialController[name].material.material.uniforms.texture_2.value = texture;
+          this.$store.state.materialController[name].material.material.uniforms.hasAlphaMap_1.value = false;
+          this.$store.state.materialController[name].material.material.uniforms.hasAlphaMap_2.value = false;
+          //
         }
       };
     },
@@ -1376,12 +1369,12 @@ export default {
         name
       ].material.material.uniforms.textureRepeat_1.value.set(x, y);
 
-      this.$store.state.materialController[
-        name
-      ].material.material.uniforms.alpha_texture_1.value.repeat.set(x, y);
-      this.$store.state.materialController[
-        name
-      ].material.material.uniforms.alpha_texture_1.value.needsUpdate = true;
+      // this.$store.state.materialController[
+      //   name
+      // ].material.material.uniforms.alpha_texture_1.value.repeat.set(x, y);
+      // this.$store.state.materialController[
+      //   name
+      // ].material.material.uniforms.alpha_texture_1.value.needsUpdate = true;
 
       this.$store.state.materialController[
         name
@@ -1392,13 +1385,18 @@ export default {
       this.$store.state.materialController[
         name
       ].material.material.uniforms.textureRepeat_2.value.set(x, y);
+      // }
 
-      this.$store.state.materialController[
-        name
-      ].material.material.uniforms.alpha_texture_2.value.repeat.set(x, y);
-      this.$store.state.materialController[
-        name
-      ].material.material.uniforms.alpha_texture_2.value.needsUpdate = true;
+      // if(this.$store.state.materialController[name].material.material.uniforms.alpha_texture_2.value != null){
+      //   this.$store.state.materialController[
+      //     name
+      //   ].material.material.uniforms.alpha_texture_2.value.repeat.set(x, y);
+      //   this.$store.state.materialController[
+      //     name
+      //   ].material.material.uniforms.alpha_texture_2.value.needsUpdate = true;
+      // }
+      
+
 
       this.$store.state.materialController[
         name

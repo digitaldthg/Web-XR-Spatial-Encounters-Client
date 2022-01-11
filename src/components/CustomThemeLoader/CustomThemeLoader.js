@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../../main.config";
-import {RepeatWrapping, Texture} from 'three';
+import {RepeatWrapping, Texture,ClampToEdgeWrapping,TextureLoader} from 'three';
 import CustomThemes from "../../CustomThemes";
 
 class CustomThemeLoader{
@@ -11,7 +11,7 @@ class CustomThemeLoader{
     this.materialController = materialController;
 
   }
-  async LoadThemes(){
+  LoadThemes(){
     const themePromises = this.themes.map((themeName)=>{
       return this.LoadTheme(themeName);
     });
@@ -34,7 +34,10 @@ class CustomThemeLoader{
     }
     
     if(themeJSON.tex_bg_front != null){
+      console.log("Wait for tex_bg_front");
       await this.LoadTexture("tex_bg_front", themeJSON, themeFolder, name);
+
+      console.log("Loaded tex_bg_front", themeJSON);
     }
     
     if(themeJSON.tex_bg_back != null){
@@ -54,36 +57,45 @@ class CustomThemeLoader{
     }
 
 
+    console.log("themeJSON" , themeJSON);
     return themeJSON;
   }
 
   async LoadTexture(textureNameToLoad, themeJSON, themeFolder, themeName){
+
+    console.log("LoadTexture" , themeJSON[textureNameToLoad]);
+
+    if(themeJSON[textureNameToLoad] == "Black"){return themeJSON}
+
     const blobResponse = await axios.get(themeFolder + "/" + themeJSON[textureNameToLoad], {responseType: "blob"});
-      
+
+    
       const loadedTexture = await new Promise((resolve,reject) => {
 
-        var image = new Image();
-        var texture = new Texture();
+        const texture = new TextureLoader().load( URL.createObjectURL( blobResponse.data ) );
+        texture.premultiplyAlpha = true;
+
+        if(["tex_bg_front", "tex_bg_back", "tex_bg_moving"].includes(textureNameToLoad )){
+           texture.wrapT = ClampToEdgeWrapping;
+           texture.wrapS = RepeatWrapping;
+           
+          }else{
+              texture.wrapS = texture.wrapT = RepeatWrapping;
+          }
+
+        texture.name = themeName + "_"+ textureNameToLoad;
+        texture.repeat.set(themeJSON[textureNameToLoad + "_tile"].x,themeJSON[textureNameToLoad + "_tile"].y);
+        texture.offset.set(themeJSON[textureNameToLoad + "_offset"].x,themeJSON[textureNameToLoad + "_offset"].y);
+        //texture.needsUpdate = true;
+        let textureName = themeName + "_"+ textureNameToLoad;
+      
+        this.materialController[textureNameToLoad].textures[textureName] = texture;
+
+        themeJSON[textureNameToLoad] = textureName;
+       
+        resolve(texture);
         
-        console.log("load image");
-        image.onload = ()=> { 
-          texture.image = image; 
-          texture.needsUpdate = true;
-          texture.wrapS = texture.wrapT = RepeatWrapping;
-
-          console.log(themeJSON , themeJSON[textureNameToLoad + "_tile"] , themeJSON[textureNameToLoad + "_offset"])
-
-          texture.repeat.set(themeJSON[textureNameToLoad + "_tile"].x,themeJSON[textureNameToLoad + "_tile"].y)
-          texture.offset.set(themeJSON[textureNameToLoad + "_offset"].x,themeJSON[textureNameToLoad + "_offset"].y)
-
-          resolve(texture);
-        };
-        image.src = URL.createObjectURL( blobResponse.data );
       });
-
-      this.materialController[textureNameToLoad].textures[themeName + "_"+ textureNameToLoad] = loadedTexture;
-
-      themeJSON[textureNameToLoad] = themeName + "_"+ textureNameToLoad;
 
       return themeJSON;
   }

@@ -44,7 +44,7 @@ class MaterialController {
 
     this.customThemeLoader = new CustomThemeLoader({xr : xr, materialController : this});
 
-    
+    window._materialController = this;
 
     //GRADIENT
     this.gradient_skybox = new Skybox({
@@ -208,7 +208,6 @@ class MaterialController {
 
     const custom_themes = await this.customThemeLoader.LoadThemes();
 
-    console.log(allThemes, custom_themes);
     allThemes.push(...custom_themes);
 
     var themePreviewGenerator = new ThemePreviewGenerator(this.store, allThemes);
@@ -262,7 +261,7 @@ class MaterialController {
       if (themeA == null) { themeA = ThemeFactory.Get(); }
       if (themeB == null) { themeB = ThemeFactory.Get(); }
     }
-    // console.log("themeA", themeA, "themeB", themeB);
+   // console.log("themeA", themeA, "themeB", themeB,  this.gradient_bg_back);
 
     Object.keys(final).map((keyName) => {
 
@@ -276,9 +275,9 @@ class MaterialController {
     this.gradient_fogFloor.SetGradient(final.gradient_fogFloor);
     this.gradient_fogFloorAlpha.SetGradient(final.gradient_fogFloorAlpha);
 
-    if(final.hasOwnProperty("base_floor")){
-      this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
-    }
+    // if(final.hasOwnProperty("base_floor")){
+    //   this.materials.base_floor.color = this.GetHSLColor(final.base_floor[0].value);
+    // }
 
     this.gradient_bg_front.SetGradient(final.gradient_bg_front);
     this.gradient_bg_back.SetGradient(final.gradient_bg_back);
@@ -294,9 +293,7 @@ class MaterialController {
     this.tex_bg_front.lerpMaterial(this.gradient_bg_front.GetTexture(), this.gradient_bg_front.GetTexture(), alpha, themeA.tex_bg_front, themeB.tex_bg_front);
     this.tex_bg_back.lerpMaterial(this.gradient_bg_back.GetTexture(), this.gradient_bg_back.GetTexture(), alpha, themeA.tex_bg_back, themeB.tex_bg_back);
     this.tex_bg_moving.lerpMaterial(this.gradient_bg_moving.GetTexture(), this.gradient_bg_moving.GetTexture(), alpha, themeA.tex_bg_moving, themeB.tex_bg_moving);
-
-
-
+    
     this.ChangeFogDistance();
 
   }

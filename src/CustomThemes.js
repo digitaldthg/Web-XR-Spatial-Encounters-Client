@@ -1,1 +1,1 @@
-export default ["Simpons", "OwnTheme", "ThemeName"];
+export default ["ThemeName"];

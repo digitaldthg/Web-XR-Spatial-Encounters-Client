@@ -35,7 +35,6 @@ class TextureLerpBackground {
   }
 
   lerpMaterial(texName1, texName2, alpha, alphaTex1 = null, alphaTex2 = null) {
-
     var tex_1 = null;
     if (typeof (texName1) == 'string') {
       tex_1 = this.textures[texName1];
@@ -71,24 +70,26 @@ class TextureLerpBackground {
     this.material.material.uniforms.hasAlphaMap_2.value = false;
 
     if (alphaTex1 != null) {
+
       this.material.material.uniforms.hasAlphaMap_1.value = true;
       this.material.material.uniforms.alpha_texture_1.value = this.textures[alphaTex1];
       if (this.textures[alphaTex1] != undefined) {
         this.material.material.uniforms.textureRepeat_1.value = this.textures[alphaTex1].repeat;
-        this.material.material.uniforms.textureOffset_1.value = this.textures[alphaTex1].offset
+        this.material.material.uniforms.textureOffset_1.value = this.textures[alphaTex1].offset;
       }
+      //console.log(texName1, texName2, "alphaTex1 is not nuklk", this.material.material.uniforms.hasAlphaMap_1.value);
     }
-
-
+    
+    
     if (alphaTex2 != null) {
       this.material.material.uniforms.hasAlphaMap_2.value = true;
       this.material.material.uniforms.alpha_texture_2.value = this.textures[alphaTex2];
       if (this.textures[alphaTex2] != undefined) {
         this.material.material.uniforms.textureRepeat_2.value = this.textures[alphaTex2].repeat;
-        this.material.material.uniforms.textureOffset_2.value = this.textures[alphaTex2].offset
+        this.material.material.uniforms.textureOffset_2.value = this.textures[alphaTex2].offset;
       }
+      //console.log(texName1, texName2,alphaTex2,alphaTex1, "alphaTex2 is not nuklk", alpha,this.material.material.uniforms.hasAlphaMap_2.value);
     }
-
 
     this.material.material.uniforms.alpha.value = alpha;
     this.material.uniformsNeedsUpdate = true;
